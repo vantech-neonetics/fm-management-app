@@ -9,7 +9,7 @@ def load_config():
         "GIT_REPO_URL": "https://github.com/songquanpeng/one-api.git",
         "SOURCE_LANGUAGE": "Chinese",
         "TARGET_LANGUAGE": "English",
-        "API_KEY": "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",
+        "API_KEY": "",
         "I18N_SURFIX": "",
         "ADDITIONAL_PROMPT": "",
         "FILE_TYPES": "md,mdx,rst,txt,py,js,json,html,cpp,c,ipynb",
