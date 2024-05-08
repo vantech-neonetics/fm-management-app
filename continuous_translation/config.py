@@ -6,14 +6,14 @@ class ConfigurationError(Exception):
 
 def load_config():
     config = {
-        "GIT_REPO_URL": os.environ.get("INPUT_GIT_REPO_URL", ""),
-        "SOURCE_LANGUAGE": os.environ.get("INPUT_SOURCE_LANGUAGE", "English"),
-        "TARGET_LANGUAGE": os.environ.get("INPUT_TARGET_LANGUAGE", "Chinese"),
-        "API_KEY": os.environ.get("INPUT_API_KEY", ""),
-        "I18N_SURFIX": os.environ.get("INPUT_I18N_SURFIX", ""),
-        "ADDITIONAL_PROMPT": os.environ.get("INPUT_ADDITIONAL_PROMPT", ""),
-        "FILE_TYPES": os.environ.get("INPUT_FILE_TYPES", "md,mdx,rst,txt,py,js,json,html,cpp,c,ipynb"),
-        "FILE_PATHS_FILTER": os.environ.get("INPUT_FILE_PATHS_FILTER", ".*"),
+        "GIT_REPO_URL": "https://github.com/songquanpeng/one-api.git",
+        "SOURCE_LANGUAGE": "Chinese",
+        "TARGET_LANGUAGE": "English",
+        "API_KEY": "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",
+        "I18N_SURFIX": "",
+        "ADDITIONAL_PROMPT": "",
+        "FILE_TYPES": "md,mdx,rst,txt,py,js,json,html,cpp,c,ipynb",
+        "FILE_PATHS_FILTER": ".*",
     }
 
     missing_keys = not config["API_KEY"] or not config["GIT_REPO_URL"]

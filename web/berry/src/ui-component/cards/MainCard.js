@@ -1,0 +1,1 @@
+The card component uses Material-UI library for styling and displaying content.

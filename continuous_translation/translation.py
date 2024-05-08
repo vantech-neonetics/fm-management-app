@@ -70,7 +70,7 @@ format: Return only the translated content, not including the original text."""
             logging.info(f"User prompt: {user_prompt}")
 
             time.sleep(3)  # Sleep for 3 seconds before each API call
-            # 调用 ChatGPT API
+            #ChatGPT API
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -103,4 +103,4 @@ format: Return only the translated content, not including the original text."""
 
     logging.error(
         "Failed to translate text after 3 retries due to rate limit.")
-    return None  # Return None if all retries have been exhausted
+    return None  

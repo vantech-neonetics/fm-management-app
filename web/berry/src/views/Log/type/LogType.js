@@ -1,0 +1,9 @@
+const LOG_TYPE = {
+  0: { value: '0', text: 'All', color: '' },
+  1: { value: '1', text: 'Recharge', color: 'primary' },
+  2: { value: '2', text: 'Consumption', color: 'orange' },
+  3: { value: '3', text: 'Management', color: 'default' },
+  4: { value: '4', text: 'System', color: 'secondary' }
+};
+
+export default LOG_TYPE;
