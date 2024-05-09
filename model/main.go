@@ -2,12 +2,12 @@ package model
 
 import (
 	"fmt"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/env"
-	"github.com/songquanpeng/one-api/common/helper"
-	"github.com/songquanpeng/one-api/common/logger"
-	"github.com/songquanpeng/one-api/common/random"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/env"
+	"github.com/vantech-neonetics/fm-management-app/common/helper"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/random"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
