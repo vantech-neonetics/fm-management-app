@@ -1,9 +1,9 @@
 package model
 
 import (
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/logger"
-	billingratio "github.com/songquanpeng/one-api/relay/billing/ratio"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/logger"
+	billingratio "github.com/vantech-neonetics/fm-management-app/relay/billing/ratio"
 	"strconv"
 	"strings"
 	"time"
