@@ -8,9 +8,9 @@ Description=One API Service
 After=network.target
 
 [Service]
-User=ubuntu  # 注意修改用户名
-WorkingDirectory=/path/to/one-api  # 注意修改路径
-ExecStart=/path/to/one-api/one-api --port 3000 --log-dir /path/to/one-api/logs  # 注意修改路径和端口号
+User=ubuntu 
+WorkingDirectory=/path/to/o-api #change here
+ExecStart=/path/to/fm-management-app/fm-management-app --port 3000 --log-dir /path/to/fm-management-app/logs #change here
 Restart=always
 RestartSec=5
 
