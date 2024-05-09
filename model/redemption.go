@@ -3,8 +3,8 @@ package model
 import (
 	"errors"
 	"fmt"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/helper"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/helper"
 	"gorm.io/gorm"
 )
 
