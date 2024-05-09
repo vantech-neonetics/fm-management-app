@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"net/http"
 	"time"
 )
