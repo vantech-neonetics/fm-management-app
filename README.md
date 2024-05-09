@@ -2,7 +2,7 @@
 
 Manage open-source and vendors FM 
 
-[Deployment Tutorial](#deployment) · [Usage](#usage) · [Feedback](https://github.com/songquanpeng/one-api/issues) · [Screenshots](#screenshots) · [Live Demo](https://openai.justsong.cn/) · [FAQ](#faq) · [Related Projects](#related-projects) · [Donate](https://iamazing.cn/page/reward) 
+[Deployment Tutorial](#deployment) · [Usage](#usage) · [Screenshots](#screenshots) · [FAQ](#faq) · [Related Projects](https://openai.justsong.cn) 
 
 ## Features
 1. Support for multiple foundational models for chatbot applications:
