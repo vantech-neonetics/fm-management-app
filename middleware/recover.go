@@ -3,8 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 	"net/http"
 	"runtime/debug"
 )
