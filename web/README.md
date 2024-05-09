@@ -1,19 +1,9 @@
-# Frontend Interface of One API
+# Frontend Interface of Magic Foundational Model and Prompt Management
 
 > Each folder represents a theme, feel free to submit your theme
 
 > [!WARNING]
 > Not every theme has all features promptly synced, due to limited resources, default theme is updated first, other themes are welcome & PRs are anticipated
-
-## Submit a New Theme
-
-> Please keep your copyright information and link to One API at the bottom of the page
-
-1. Create a new folder under `web` directory, name the folder with the theme name.
-2. Put your theme files into this folder.
-3. Modify your `package.json` file, change the `build` command to: `"build": "react-scripts build && mv -f build ../build/default"`, where `default` is your theme name.
-4. Modify `common/config/config.go`, register your theme name into `ValidThemes`.
-5. Modify the `web/THEMES` file, this also needs to be synchronized.
 
 ## Theme List
 
