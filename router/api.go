@@ -1,9 +1,9 @@
 package router
 
 import (
-	"github.com/songquanpeng/one-api/controller"
-	"github.com/songquanpeng/one-api/controller/auth"
-	"github.com/songquanpeng/one-api/middleware"
+	"github.com/vantech-neonetics/fm-management-app/controller"
+	"github.com/vantech-neonetics/fm-management-app/controller/auth"
+	"github.com/vantech-neonetics/fm-management-app/middleware"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
