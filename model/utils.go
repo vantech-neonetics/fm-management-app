@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 	"sync"
 	"time"
 )
