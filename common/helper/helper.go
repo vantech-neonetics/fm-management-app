@@ -3,7 +3,7 @@ package helper
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common/random"
+	"github.com/vantech-neonetics/fm-management-app/common/random"
 	"html/template"
 	"log"
 	"net"
