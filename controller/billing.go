@@ -2,9 +2,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/ctxkey"
-	"github.com/songquanpeng/one-api/model"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
+	"github.com/vantech-neonetics/fm-management-app/model"
 	relaymodel "github.com/songquanpeng/one-api/relay/model"
 )
 
