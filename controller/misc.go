@@ -3,10 +3,10 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/message"
-	"github.com/songquanpeng/one-api/model"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/message"
+	"github.com/vantech-neonetics/fm-management-app/model"
 	"net/http"
 	"strings"
 
