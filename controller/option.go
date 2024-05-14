@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/helper"
-	"github.com/songquanpeng/one-api/model"
+	"github.com/vantech-neonetics/fm-management-app/config"
+	"github.com/vantech-neonetics/fm-management-app/helper"
+	"github.com/vantech-neonetics/fm-management-app/model"
 	"net/http"
 	"strings"
 
