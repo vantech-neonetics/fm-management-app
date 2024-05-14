@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"fmt"
-	"github.com/songquanpeng/one-api/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"net/smtp"
 	"strings"
 	"time"
