@@ -2,11 +2,11 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common/config"
-	"github.com/songquanpeng/one-api/common/ctxkey"
-	"github.com/songquanpeng/one-api/common/helper"
-	"github.com/songquanpeng/one-api/common/random"
-	"github.com/songquanpeng/one-api/model"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
+	"github.com/vantech-neonetics/fm-management-app/common/helper"
+	"github.com/vantech-neonetics/fm-management-app/common/random"
+	"github.com/vantech-neonetics/fm-management-app/model"
 	"net/http"
 	"strconv"
 )
