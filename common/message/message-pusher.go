@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/vantech-neonetics/fm-management-app/config"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"net/http"
 )
 

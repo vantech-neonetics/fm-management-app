@@ -81,13 +81,13 @@ sudo certbot --nginx
    # Build the backend
    cd ../..
    go mod download
-   go build -ldflags "-s -w" -o one-api
+   go build -ldflags "-s -w" -o fm-management-app
    go mod tidy
    ```
 2. Run:
    ```shell
-   chmod u+x one-api
-   ./one-api --port 3000 --log-dir ./logs
+   chmod u+x fm-management-app
+   ./fm-management-app --port 3000 --log-dir ./logs
    ```
 3. Access [http://localhost:3000/](http://localhost:3000/) and log in. The initial account username is `root` and password is `123456`.
 

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/vantech-neonetics/fm-management-app/config"
-	"github.com/vantech-neonetics/fm-management-app/helper"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/helper"
 	"github.com/vantech-neonetics/fm-management-app/model"
 	"net/http"
 	"strings"

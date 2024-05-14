@@ -27,20 +27,20 @@ func (a *Adaptor) GetRequestURL(meta *meta.Meta) (string, error) {
 	switch meta.ChannelType {
 	case channeltype.Azure:
 		if meta.Mode == relaymode.ImagesGenerations {
-			// https://learn.microsoft.com/en-us/azure/ai-services/openai/dall-e-quickstart?tabs=dalle3%2Ccommand-vantech-neonetics/fm-management-app
-			// https://{resource_name}.openai.azure.com/openai/deployments/dall-e-3/imvantech-neonetics/fm-management-app-version=2024-03-01-preview
-			fullRequestURL := fmt.Sprintf("%s/openai/deployments/%s/imvantech-neonetics/fm-management-app-version=%s", meta.BaseURL, meta.ActualModelName, meta.Config.APIVersion)
+			// https://learn.microsoft.com/en-us/azure/ai-services/openai/dall-e-quickstart?tabs=dalle3%2Ccommand-line&pivots=rest-api
+			// https://{resource_name}.openai.azure.com/openai/deployments/dall-e-3/images/generations?api-version=2024-03-01-preview
+			fullRequestURL := fmt.Sprintf("%s/openai/deployments/%s/images/generations?api-version=%s", meta.BaseURL, meta.ActualModelName, meta.Config.APIVersion)
 			return fullRequestURL, nil
 		}
 
-		// https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quicksvantech-neonetics/fm-management-app&tabs=cvantech-neonetics/fm-management-app
+		// https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?pivots=rest-api&tabs=command-line#rest-api
 		requestURL := strings.Split(meta.RequestURLPath, "?")[0]
-		requestURL =vantech-neonetics/fm-management-app-version=%s", requestURL, meta.Config.APIVersion)
+		requestURL = fmt.Sprintf("%s?api-version=%s", requestURL, meta.Config.APIVersion)
 		task := strings.TrimPrefix(requestURL, "/v1/")
 		model_ := meta.ActualModelName
 		model_ = strings.Replace(model_, ".", "", -1)
-		//https://github.com/vantech-neonetics/fm-management-app/issues/1191
-		// {your endpoint}/openai/deployments/{your azure_model}/vantech-neonetics/fm-management-app-version={api_version}
+		//https://github.com/songquanpeng/one-api/issues/1191
+		// {your endpoint}/openai/deployments/{your azure_model}/chat/completions?api-version={api_version}
 		requestURL = fmt.Sprintf("/openai/deployments/%s/%s", model_, task)
 		return GetFullRequestURL(meta.BaseURL, requestURL, meta.ChannelType), nil
 	case channeltype.Minimax:
@@ -53,13 +53,13 @@ func (a *Adaptor) GetRequestURL(meta *meta.Meta) (string, error) {
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Request, meta *meta.Meta) error {
 	adaptor.SetupCommonRequestHeader(c, req, meta)
 	if meta.ChannelType == channeltype.Azure {
-	vantech-neonetics/fm-management-app-key", meta.APIKey)
+		req.Header.Set("api-key", meta.APIKey)
 		return nil
 	}
 	req.Header.Set("Authorization", "Bearer "+meta.APIKey)
 	if meta.ChannelType == channeltype.OpenRouter {
-		req.Header.Set("HTTP-Referer", "https://github.com/vantech-neonetics/fm-management-app")
-		req.Header.Set("X-Title", "One API")
+		req.Header.Set("HTTP-Referer", "vantech-neonetics/fm-management-app")
+		req.Header.Set("X-Title", "MAGIC FM Mgmt App")
 	}
 	return nil
 }

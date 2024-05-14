@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/vantech-neonetics/fm-management-app/common/config"
-	"github.com/vantech-neonetics/fm-management-app/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 	billingratio "github.com/vantech-neonetics/fm-management-app/relay/billing/ratio"
 	"strconv"
 	"strings"

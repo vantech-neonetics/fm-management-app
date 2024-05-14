@@ -15,7 +15,7 @@ func SetRouter(router *gin.Engine, buildFS embed.FS) {
 	SetApiRouter(router)
 	SetDashboardRouter(router)
 	SetRelayRouter(router)
-	frontendBaseUrl := os.Getenv("FRONTEND_BASE_URL") # NEED TO DEFINE THIS!
+	frontendBaseUrl := os.Getenv("FRONTEND_BASE_URL") 
 	if config.IsMasterNode && frontendBaseUrl != "" {
 		frontendBaseUrl = ""
 		logger.SysLog("FRONTEND_BASE_URL is ignored on master node")
