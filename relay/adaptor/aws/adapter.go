@@ -4,16 +4,16 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
-	"github.com/songquanpeng/one-api/common/ctxkey"
+	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
 	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/songquanpeng/one-api/relay/adaptor"
-	"github.com/songquanpeng/one-api/relay/adaptor/anthropic"
-	"github.com/songquanpeng/one-api/relay/meta"
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/anthropic"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor"
+	"github.com/vantech-neonetics/fm-management-app/relay/meta"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 var _ adaptor.Adaptor = new(Adaptor)

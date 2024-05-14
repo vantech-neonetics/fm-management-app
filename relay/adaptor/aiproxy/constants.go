@@ -1,6 +1,6 @@
 package aiproxy
 
-import "github.com/songquanpeng/one-api/relay/adaptor/openai"
+import "github.com/vantech-neonetics/fm-management-app/relay/adaptor/openai"
 
 var ModelList = []string{""}
 

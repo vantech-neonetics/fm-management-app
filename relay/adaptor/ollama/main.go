@@ -5,19 +5,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/songquanpeng/one-api/common/helper"
-	"github.com/songquanpeng/one-api/common/random"
+	"github.com/vantech-neonetics/fm-management-app/common/helper"
+	"github.com/vantech-neonetics/fm-management-app/common/random"
 	"io"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common"
-	"github.com/songquanpeng/one-api/common/image"
-	"github.com/songquanpeng/one-api/common/logger"
-	"github.com/songquanpeng/one-api/relay/adaptor/openai"
-	"github.com/songquanpeng/one-api/relay/constant"
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/common"
+	"github.com/vantech-neonetics/fm-management-app/common/image"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/openai"
+	"github.com/vantech-neonetics/fm-management-app/relay/constant"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 func ConvertRequest(request model.GeneralOpenAIRequest) *ChatRequest {

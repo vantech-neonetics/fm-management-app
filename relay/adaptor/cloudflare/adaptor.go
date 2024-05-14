@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/relay/adaptor"
-	"github.com/songquanpeng/one-api/relay/meta"
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor"
+	"github.com/vantech-neonetics/fm-management-app/relay/meta"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 type Adaptor struct {

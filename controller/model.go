@@ -6,7 +6,7 @@ import (
 	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
 	"github.com/vantech-neonetics/fm-management-app/model"
 	relay "github.com/vantech-neonetics/fm-management-app/relay"
-	"github.com/vantech-neonetics/fm-management-appi/relay/adaptor/openai"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/openai"
 	"github.com/vantech-neonetics/fm-management-app/relay/apitype"
 	"github.com/vantech-neonetics/fm-management-app/relay/channeltype"
 	"github.com/vantech-neonetics/fm-management-app/relay/meta"

@@ -2,7 +2,7 @@ package ratio
 
 import (
 	"encoding/json"
-	"github.com/songquanpeng/one-api/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 )
 
 var GroupRatio = map[string]float64{

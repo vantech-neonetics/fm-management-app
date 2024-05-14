@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/songquanpeng/one-api/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 )
 
 const (

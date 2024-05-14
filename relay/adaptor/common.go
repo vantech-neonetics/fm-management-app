@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/relay/client"
-	"github.com/songquanpeng/one-api/relay/meta"
+	"github.com/vantech-neonetics/fm-management-app/relay/client"
+	"github.com/vantech-neonetics/fm-management-app/relay/meta"
 	"io"
 	"net/http"
 )

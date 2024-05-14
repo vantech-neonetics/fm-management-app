@@ -5,7 +5,7 @@ import (
 	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
 	"github.com/vantech-neonetics/fm-management-app/model"
-	relaymodel "github.com/songquanpeng/one-api/relay/model"
+	relaymodel "github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 func GetSubscription(c *gin.Context) {

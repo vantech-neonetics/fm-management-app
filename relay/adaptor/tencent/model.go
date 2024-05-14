@@ -1,7 +1,7 @@
 package tencent
 
 import (
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 type Message struct {

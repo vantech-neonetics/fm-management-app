@@ -2,10 +2,10 @@ package meta
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/songquanpeng/one-api/common/ctxkey"
-	"github.com/songquanpeng/one-api/model"
-	"github.com/songquanpeng/one-api/relay/channeltype"
-	"github.com/songquanpeng/one-api/relay/relaymode"
+	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
+	"github.com/vantech-neonetics/fm-management-app/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/channeltype"
+	"github.com/vantech-neonetics/fm-management-app/relay/relaymode"
 	"strings"
 )
 

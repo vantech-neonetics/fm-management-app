@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/songquanpeng/one-api/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"net/http"
 	"time"
 )

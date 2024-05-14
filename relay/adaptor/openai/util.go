@@ -1,6 +1,6 @@
 package openai
 
-import "github.com/songquanpeng/one-api/relay/model"
+import "github.com/vantech-neonetics/fm-management-app/relay/model"
 
 func ErrorWrapper(err error, code string, statusCode int) *model.ErrorWithStatusCode {
 	Error := model.Error{

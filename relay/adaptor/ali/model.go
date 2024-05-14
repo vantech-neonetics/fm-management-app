@@ -1,8 +1,8 @@
 package ali
 
 import (
-	"github.com/songquanpeng/one-api/relay/adaptor/openai"
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/openai"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 )
 
 type Message struct {

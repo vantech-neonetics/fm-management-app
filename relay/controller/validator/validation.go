@@ -2,8 +2,8 @@ package validator
 
 import (
 	"errors"
-	"github.com/songquanpeng/one-api/relay/model"
-	"github.com/songquanpeng/one-api/relay/relaymode"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/relaymode"
 	"math"
 )
 

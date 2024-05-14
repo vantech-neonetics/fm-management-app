@@ -2,8 +2,8 @@ package openai
 
 import (
 	"fmt"
-	"github.com/songquanpeng/one-api/relay/channeltype"
-	"github.com/songquanpeng/one-api/relay/model"
+	"github.com/vantech-neonetics/fm-management-app/relay/channeltype"
+	"github.com/vantech-neonetics/fm-management-app/relay/model"
 	"strings"
 )
 

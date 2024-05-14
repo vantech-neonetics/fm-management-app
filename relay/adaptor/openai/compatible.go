@@ -1,17 +1,17 @@
 package openai
 
 import (
-	"github.com/songquanpeng/one-api/relay/adaptor/ai360"
-	"github.com/songquanpeng/one-api/relay/adaptor/baichuan"
-	"github.com/songquanpeng/one-api/relay/adaptor/deepseek"
-	"github.com/songquanpeng/one-api/relay/adaptor/groq"
-	"github.com/songquanpeng/one-api/relay/adaptor/lingyiwanwu"
-	"github.com/songquanpeng/one-api/relay/adaptor/minimax"
-	"github.com/songquanpeng/one-api/relay/adaptor/mistral"
-	"github.com/songquanpeng/one-api/relay/adaptor/moonshot"
-	"github.com/songquanpeng/one-api/relay/adaptor/stepfun"
-	"github.com/songquanpeng/one-api/relay/adaptor/togetherai"
-	"github.com/songquanpeng/one-api/relay/channeltype"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/ai360"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/baichuan"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/deepseek"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/groq"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/lingyiwanwu"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/minimax"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/mistral"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/moonshot"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/stepfun"
+	"github.com/vantech-neonetics/fm-management-app/relay/adaptor/togetherai"
+	"github.com/vantech-neonetics/fm-management-app/relay/channeltype"
 )
 
 var CompatibleChannels = []int{

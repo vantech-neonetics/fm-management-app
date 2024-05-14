@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vantech-neonetics/fm-management-app/common"
 	"github.com/vantech-neonetics/fm-management-app/common/helper"
-	"github.com/svantech-neonetics/fm-management-app/common/logger"
+	"github.com/vantech-neonetics/fm-management-app/common/logger"
 	"strings"
 )
 

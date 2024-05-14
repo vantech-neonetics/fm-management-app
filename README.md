@@ -69,9 +69,9 @@ sudo certbot --nginx
 # Restart Nginx".sudo service nginx restart
 
 ### Manual Deployment
-1. Download the executable file from [GitHub Releases](https://github.com/songquanpeng/one-api/releases/latest) or compile from source:
+1. Compile from source:
    ```shell
-   git clone https://github.com/songquanpeng/one-api.git
+   git clone https://github.com/vantech-neonetics/fm-management-app.git
    
    # Build the frontend
    cd one-api/web/default
@@ -82,6 +82,7 @@ sudo certbot --nginx
    cd ../..
    go mod download
    go build -ldflags "-s -w" -o one-api
+   go mod tidy
    ```
 2. Run:
    ```shell

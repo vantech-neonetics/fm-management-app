@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/vantech-neonetics/fm-management-app/common"
-	"github.com/vantech-neonetics/fm-management-appi/common/config"
+	"github.com/vantech-neonetics/fm-management-app/common/config"
 	"github.com/vantech-neonetics/fm-management-app/common/ctxkey"
 	"github.com/vantech-neonetics/fm-management-app/common/helper"
 	"github.com/vantech-neonetics/fm-management-app/common/logger"
