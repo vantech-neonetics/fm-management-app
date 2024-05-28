@@ -1,3 +1,6 @@
+import PropTypes from 'prop-types';
+import { forwardRef } from 'react';
+
 // material-ui
 import { Collapse, Fade, Box, Grow, Slide, Zoom } from '@mui/material';
 
@@ -88,7 +91,8 @@ const Transitions = forwardRef(({ children, position, type, direction, ...others
   );
 });
 
-Transitions.propTypes = // Translated text is not provided in the original Chinese text.children: PropTypes.node,
+Transitions.propTypes = {
+  children: PropTypes.node,
   type: PropTypes.oneOf(['grow', 'fade', 'collapse', 'slide', 'zoom']),
   position: PropTypes.oneOf(['top-left', 'top-right', 'top', 'bottom-left', 'bottom-right', 'bottom']),
   direction: PropTypes.oneOf(['up', 'down', 'left', 'right'])

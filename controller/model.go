@@ -63,55 +63,60 @@ func init() {
 		IsBlocking:         false,
 	})
 	// https://platform.openai.com/docs/models/model-endpoint-compatibility
-	for i := 0; i < apitype.Dummy; i++ {
-		if i == apitype.AIProxyLibrary {
-			continue
-		}
-		adaptor := relay.GetAdaptor(i)
-		channelName := adaptor.GetChannelName()
-		modelNames := adaptor.GetModelList()
-		for _, modelName := range modelNames {
-			models = append(models, OpenAIModels{
-				Id:         modelName,
-				Object:     "model",
-				Created:    1626777600,
-				OwnedBy:    channelName,
-				Permission: permission,
-				Root:       modelName,
-				Parent:     nil,
-			})
-		}
-	}
-	for _, channelType := range openai.CompatibleChannels {
-		if channelType == channeltype.Azure {
-			continue
-		}
-		channelName, channelModelList := openai.GetCompatibleChannelMeta(channelType)
-		for _, modelName := range channelModelList {
-			models = append(models, OpenAIModels{
-				Id:         modelName,
-				Object:     "model",
-				Created:    1626777600,
-				OwnedBy:    channelName,
-				Permission: permission,
-				Root:       modelName,
-				Parent:     nil,
-			})
-		}
-	}
-	modelsMap = make(map[string]OpenAIModels)
-	for _, model := range models {
-		modelsMap[model.Id] = model
-	}
-	channelId2Models = make(map[int][]string)
-	for i := 1; i < channeltype.Dummy; i++ {
-		adaptor := relay.GetAdaptor(channeltype.ToAPIType(i))
-		meta := &meta.Meta{
-			ChannelType: i,
-		}
-		adaptor.Init(meta)
-		channelId2Models[i] = adaptor.GetModelList()
-	}
+  for i := 0; i < apitype.Dummy; i++ {
+    if i == apitype.AIProxyLibrary {
+      continue
+    }
+    adaptor := relay.GetAdaptor(i)
+    fmt.Println(2222, i, adaptor)
+    if adaptor != nil {
+      channelName := adaptor.GetChannelName()
+      modelNames := adaptor.GetModelList()
+      for _, modelName := range modelNames {
+        models = append(models, OpenAIModels{
+          Id:         modelName,
+          Object:     "model",
+          Created:    1626777600,
+          OwnedBy:    channelName,
+          Permission: permission,
+          Root:       modelName,
+          Parent:     nil,
+        })
+      }
+    }
+    for _, channelType := range openai.CompatibleChannels {
+      if channelType == channeltype.Azure {
+        continue
+      }
+      channelName, channelModelList := openai.GetCompatibleChannelMeta(channelType)
+      for _, modelName := range channelModelList {
+        models = append(models, OpenAIModels{
+          Id:         modelName,
+          Object:     "model",
+          Created:    1626777600,
+          OwnedBy:    channelName,
+          Permission: permission,
+          Root:       modelName,
+          Parent:     nil,
+        })
+      }
+    }
+    modelsMap = make(map[string]OpenAIModels)
+    for _, model := range models {
+      modelsMap[model.Id] = model
+    }
+    channelId2Models = make(map[int][]string)
+    for i := 1; i < channeltype.Dummy; i++ {
+      adaptor := relay.GetAdaptor(channeltype.ToAPIType(i))
+      meta := &meta.Meta{
+        ChannelType: i,
+      }
+      if adaptor != nil {
+      adaptor.Init(meta)
+      channelId2Models[i] = adaptor.GetModelList()
+    }
+      }
+  }
 }
 
 func DashboardListModels(c *gin.Context) {

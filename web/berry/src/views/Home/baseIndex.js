@@ -1,6 +1,4 @@
-Instructions: Translate the following Chinese text to English
-while maintaining the original formatting: 
-"import { Box, Typography, Button, Container, Stack } from '@mui/material';
+import { Box, Typography, Button, Container, Stack } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { GitHub } from '@mui/icons-material';
 
@@ -21,9 +19,9 @@ const BaseIndex = () => (
               One API
             </Typography>
             <Typography variant="h4" sx={{ fontSize: '1.5rem', color: '#fff', lineHeight: 1.5 }}>
-              All in one OpenAI interface <br />
-              Integrating various API access methods <br />
-              One-click deployment, ready to use out of the box
+              All in one 的 OpenAI 接口 <br />
+              整合各种 API 访问方式 <br />
+              一键部署，开箱即用
             </Typography>
             <Button
               variant="contained"
@@ -41,4 +39,4 @@ const BaseIndex = () => (
   </Box>
 );
 
-export default BaseIndex;".
+export default BaseIndex;

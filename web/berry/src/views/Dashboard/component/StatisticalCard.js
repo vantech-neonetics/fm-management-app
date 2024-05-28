@@ -62,10 +62,8 @@ const StatisticalCard = ({ isLoading }) => {
                       backgroundColor: theme.palette.primary[800],
                       color: '#fff'
                     }}
-                  >".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting:
-```
-<TableChartOutlinedIcon fontSize="inherit" />
+                  >
+                    <TableChartOutlinedIcon fontSize="inherit" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -99,4 +97,3 @@ StatisticalCard.propTypes = {
 };
 
 export default StatisticalCard;
-```

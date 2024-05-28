@@ -1,11 +1,13 @@
-```javascript
-// Import the isAdmin function from 'utils/common'
-// Import the useNavigate function from 'react-router-dom'
-// Get the navigate function using useNavigate
+import { isAdmin } from 'utils/common';
+import { useNavigate } from 'react-router-dom';
+const navigate = useNavigate();
 
-// Define the useAuth custom hook
-// Check if the user is an admin using the isAdmin function
-// If the user is not an admin, navigate to '/panel/404'
+const useAuth = () => {
+  const userIsAdmin = isAdmin();
 
-// Export the useAuth custom hook
-```
+  if (!userIsAdmin) {
+    navigate('/panel/404');
+  }
+};
+
+export default useAuth;

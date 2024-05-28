@@ -1,17 +1,16 @@
+import { Link } from 'react-router-dom';
+
 // material-ui
-// Import essential components from the material-ui library
 import { useTheme } from '@mui/material/styles';
 import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
-// Import custom components for this project
 import AuthWrapper from '../AuthWrapper';
 import AuthCardWrapper from '../AuthCardWrapper';
 import AuthLogin from '../AuthForms/AuthLogin';
 import Logo from 'ui-component/Logo';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
-// Comment: Component for the Login page
 
 const Login = () => {
   const theme = useTheme();
@@ -35,7 +34,7 @@ const Login = () => {
                       <Grid item>
                         <Stack alignItems="center" justifyContent="center" spacing={1}>
                           <Typography color={theme.palette.primary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                           Login
+                            登录
                           </Typography>
                         </Stack>
                       </Grid>
@@ -47,9 +46,10 @@ const Login = () => {
                   <Grid item xs={12}>
                     <Divider />
                   </Grid>
-                  <Grid item xs={12}>`<Grid item container direction="column" alignItems="center" xs={12}>
+                  <Grid item xs={12}>
+                    <Grid item container direction="column" alignItems="center" xs={12}>
                       <Typography component={Link} to="/register" variant="subtitle1" sx={{ textDecoration: 'none' }}>
-                        Register
+                        注册
                       </Typography>
                     </Grid>
                   </Grid>
@@ -63,4 +63,4 @@ const Login = () => {
   );
 };
 
-export default Login;`
+export default Login;

@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 
 import TableSwitch from 'ui-component/Switch';
-import { renderQuota, showSuccess, timestamp2string } from 'utils/common';
+import { renderQuota, timestamp2string, copy } from 'utils/common';
 
 import { IconDotsVertical, IconEdit, IconTrash, IconCaretDownFilled } from '@tabler/icons-react';
 
@@ -71,102 +71,100 @@ export default function TokensTableRow({ item, manageToken, handleOpenModal, set
   const handleOpenMenu = (event, type) => {
     switch (type) {
       case 'copy':
-        setMenuItems(copyItems);Instructions: Translate the following content to English while maintaining the original formatting:
-```
-case 'link':
-  setMenuItems(linkItems);
-  break;
-default:
-  setMenuItems(actionItems);
-}
-setOpen(event.currentTarget);
-};
+        setMenuItems(copyItems);
+        break;
+      case 'link':
+        setMenuItems(linkItems);
+        break;
+      default:
+        setMenuItems(actionItems);
+    }
+    setOpen(event.currentTarget);
+  };
 
-const handleCloseMenu = () => {
-setOpen(null);
-};
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
 
-const handleStatus = async () => {
-const switchVlue = statusSwitch === 1 ? 2 : 1;
-const { success } = await manageToken(item.id, 'status', switchVlue);
-if (success) {
-  setStatusSwitch(switchVlue);
-}
-};
+  const handleStatus = async () => {
+    const switchVlue = statusSwitch === 1 ? 2 : 1;
+    const { success } = await manageToken(item.id, 'status', switchVlue);
+    if (success) {
+      setStatusSwitch(switchVlue);
+    }
+  };
 
-const handleDelete = async () => {
-handleCloseMenu();
-await manageToken(item.id, 'delete', '');
-};
-
-const actionItems = createMenu([
-{
-  text: 'Edit',
-  icon: <IconEdit style={{ marginRight: '16px' }} />,
-  onClick: () => {
+  const handleDelete = async () => {
     handleCloseMenu();
-    handleOpenModal();
-    setModalTokenId(item.id);
-  },
-  color: undefined
-},
-{
-  text: 'Delete',
-  icon: <IconTrash style={{ marginRight: '16px' }} />,
-  onClick: handleDeleteOpen,
-  color: 'error.main'
-}
-]);
+    await manageToken(item.id, 'delete', '');
+  };
 
-const handleCopy = (option, type) => {
-let serverAddress = '';
-if (siteInfo?.server_address) {
-  serverAddress = siteInfo.server_address;
-} else {
-  serverAddress = window.location.host;
-}
+  const actionItems = createMenu([
+    {
+      text: '编辑',
+      icon: <IconEdit style={{ marginRight: '16px' }} />,
+      onClick: () => {
+        handleCloseMenu();
+        handleOpenModal();
+        setModalTokenId(item.id);
+      },
+      color: undefined
+    },
+    {
+      text: '删除',
+      icon: <IconTrash style={{ marginRight: '16px' }} />,
+      onClick: handleDeleteOpen,
+      color: 'error.main'
+    }
+  ]);
 
-if (option.encode) {
-  serverAddress = encodeURIComponent(serverAddress);
-}
+  const handleCopy = (option, type) => {
+    let serverAddress = '';
+    if (siteInfo?.server_address) {
+      serverAddress = siteInfo.server_address;
+    } else {
+      serverAddress = window.location.host;
+    }
 
-let url = option.url;
+    if (option.encode) {
+      serverAddress = encodeURIComponent(serverAddress);
+    }
 
-if (option.key === 'next' && siteInfo?.chat_link) {
-  url = siteInfo.chat_link + `/#/?settings={"key":"sk-{key}","url":"{serverAddress}"}`;
-}
+    let url = option.url;
 
-const key = item.key;
-const text = replacePlaceholders(url, key, serverAddress);
-if (type === 'link') {
-  window.open(text);
-} else {
-  navigator.clipboard.writeText(text);
-  showSuccess('Copied to clipboard!');
-}
-handleCloseMenu();
-};
+    if (option.key === 'next' && siteInfo?.chat_link) {
+      url = siteInfo.chat_link + `/#/?settings={"key":"sk-{key}","url":"{serverAddress}"}`;
+    }
 
-const copyItems = createMenu(
-COPY_OPTIONS.map((option) => ({
-  text: option.text,
-  icon: undefined,
-  onClick: () => handleCopy(option, 'copy'),
-  color: undefined
-}))
-);
+    const key = item.key;
+    const text = replacePlaceholders(url, key, serverAddress);
+    if (type === 'link') {
+      window.open(text);
+    } else {
+      copy(text);
+    }
+    handleCloseMenu();
+  };
 
-const linkItems = createMenu(
-COPY_OPTIONS.map((option) => ({
-  text: option.text,
-```Icon: undefined,
-      onClick: () => handleCopy(option, 'link'),
-      Color: undefined
+  const copyItems = createMenu(
+    COPY_OPTIONS.map((option) => ({
+      text: option.text,
+      icon: undefined,
+      onClick: () => handleCopy(option, 'copy'),
+      color: undefined
     }))
-
   );
 
-  Return (
+  const linkItems = createMenu(
+    COPY_OPTIONS.map((option) => ({
+      text: option.text,
+      icon: undefined,
+      onClick: () => handleCopy(option, 'link'),
+      color: undefined
+    }))
+  );
+
+  return (
     <>
       <TableRow tabIndex={item.id}>
         <TableCell>{item.name}</TableCell>
@@ -176,15 +174,15 @@ COPY_OPTIONS.map((option) => ({
             title={(() => {
               switch (statusSwitch) {
                 case 1:
-                  return 'Enabled';
+                  return '已启用';
                 case 2:
-                  return 'Disabled';
+                  return '已禁用';
                 case 3:
-                  return 'Expired';
+                  return '已过期';
                 case 4:
-                  return 'Exhausted';
+                  return '已耗尽';
                 default:
-                  return 'Unknown';
+                  return '未知';
               }
             })()}
             placement="top"
@@ -193,18 +191,18 @@ COPY_OPTIONS.map((option) => ({
               id={`switch-${item.id}`}
               checked={statusSwitch === 1}
               onChange={handleStatus}
-            // disabled={statusSwitch !== 1 && statusSwitch !== 2}
+              // disabled={statusSwitch !== 1 && statusSwitch !== 2}
             />
           </Tooltip>
         </TableCell>
 
         <TableCell>{renderQuota(item.used_quota)}</TableCell>
 
-        <TableCell>{item.unlimited_quota ? 'Unlimited' : renderQuota(item.remain_quota, 2)}</TableCell>
+        <TableCell>{item.unlimited_quota ? '无限制' : renderQuota(item.remain_quota, 2)}</TableCell>
 
         <TableCell>{timestamp2string(item.created_time)}</TableCell>
 
-        <TableCell>{item.expired_time === -1 ? 'Never Expire' : timestamp2string(item.expired_time)}</TableCell>
+        <TableCell>{item.expired_time === -1 ? '永不过期' : timestamp2string(item.expired_time)}</TableCell>
 
         <TableCell>
           <Stack direction="row" spacing={1}>
@@ -212,18 +210,20 @@ COPY_OPTIONS.map((option) => ({
               <Button
                 color="primary"
                 onClick={() => {
-                  navigator.clipboard.writeText(`sk-${item.key}`);
-                  showSuccess('Copied to clipboard!');
+                  copy(`sk-${item.key}`);
                 }}
               >
-                Copy
+                复制
               </Button>
               <Button size="small" onClick={(e) => handleOpenMenu(e, 'copy')}>
                 <IconCaretDownFilled size={'16px'} />
               </Button>
             </ButtonGroup>
             <ButtonGroup size="small" aria-label="split button">
-              <Button color="primary" onClick={(e) => handleCopy(COPY_OPTIONS[0], 'link')}>Chat</Button>".<Button size="small" onClick={(e) => handleOpenMenu(e, 'link')}>
+              <Button color="primary" onClick={(e) => handleCopy(COPY_OPTIONS[0], 'link')}>
+                聊天
+              </Button>
+              <Button size="small" onClick={(e) => handleOpenMenu(e, 'link')}>
                 <IconCaretDownFilled size={'16px'} />
               </Button>
             </ButtonGroup>
@@ -247,14 +247,14 @@ COPY_OPTIONS.map((option) => ({
       </Popover>
 
       <Dialog open={openDelete} onClose={handleDeleteClose}>
-        <DialogTitle>Delete Token</DialogTitle>
+        <DialogTitle>删除Token</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete Token {item.name}?</DialogContentText>
+          <DialogContentText>是否删除Token {item.name}？</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose}>Close</Button>
+          <Button onClick={handleDeleteClose}>关闭</Button>
           <Button onClick={handleDelete} sx={{ color: 'error.main' }} autoFocus>
-            Delete
+            删除
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,8 +1,7 @@
-```js
-// Import React, { useEffect, useState } from 'react';
-// Import { Header, Segment } from 'semantic-ui-react';
-// Import { API, showError } from '../../helpers';
-// Import { marked } from 'marked';
+import React, { useEffect, useState } from 'react';
+import { Header, Segment } from 'semantic-ui-react';
+import { API, showError } from '../../helpers';
+import { marked } from 'marked';
 
 const About = () => {
   const [about, setAbout] = useState('');
@@ -21,7 +20,7 @@ const About = () => {
       localStorage.setItem('about', aboutContent);
     } else {
       showError(message);
-      setAbout('Loading about content failed...');
+      setAbout('加载关于内容失败...');
     }
     setAboutLoaded(true);
   };
@@ -35,9 +34,9 @@ const About = () => {
       {
         aboutLoaded && about === '' ? <>
           <Segment>
-            <Header as='h3'>About</Header>
-            <p>You can set the about content on the settings page, supports HTML & Markdown</p>
-            Repository link:
+            <Header as='h3'>关于</Header>
+            <p>可在设置页面设置关于内容，支持 HTML & Markdown</p>
+            项目仓库地址：
             <a href='https://github.com/songquanpeng/one-api'>
               https://github.com/songquanpeng/one-api
             </a>
@@ -57,4 +56,3 @@ const About = () => {
 
 
 export default About;
-```

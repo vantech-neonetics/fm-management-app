@@ -1,6 +1,4 @@
-Instructions: Translate the following Chinese text to English
-while maintaining the original formatting: 
-"import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Header, Segment } from 'semantic-ui-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API, downloadTextAsFile, showError, showSuccess } from '../../helpers';
@@ -60,18 +58,17 @@ const EditRedemption = () => {
     const { success, message, data } = res.data;
     if (success) {
       if (isEdit) {
-        showSuccess('Redemption code updated successfully!');
+        showSuccess('兑换码更新成功！');
       } else {
-        showSuccess('Redemption code created successfully!');
+        showSuccess('兑换码创建成功！');
         setInputs(originInputs);
       }
     } else {
       showError(message);
     }
     if (!isEdit && data) {
-      let text = '';".```jsx
-Instructions: Translate the following Chinese text to English
-while maintaining the original formatting: "for (let i = 0; i < data.length; i++) {
+      let text = "";
+      for (let i = 0; i < data.length; i++) {
         text += data[i] + "\n";
       }
       downloadTextAsFile(text, `${inputs.name}.txt`);
@@ -81,13 +78,13 @@ while maintaining the original formatting: "for (let i = 0; i < data.length; i++
   return (
     <>
       <Segment loading={loading}>
-        <Header as='h3'>{isEdit ? 'Update Redemption Code Info' : 'Create New Redemption Code'}</Header>
+        <Header as='h3'>{isEdit ? '更新兑换码信息' : '创建新的兑换码'}</Header>
         <Form autoComplete='new-password'>
           <Form.Field>
             <Form.Input
-              label='Name'
+              label='名称'
               name='name'
-              placeholder={'Enter name'}
+              placeholder={'请输入名称'}
               onChange={handleInputChange}
               value={name}
               autoComplete='new-password'
@@ -96,9 +93,9 @@ while maintaining the original formatting: "for (let i = 0; i < data.length; i++
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label={`Quota ${renderQuotaWithPrompt(quota)}`}
+              label={`额度${renderQuotaWithPrompt(quota)}`}
               name='quota'
-              placeholder={'Enter the quota included in a single redemption code'}
+              placeholder={'请输入单个兑换码中包含的额度'}
               onChange={handleInputChange}
               value={quota}
               autoComplete='new-password'
@@ -109,9 +106,9 @@ while maintaining the original formatting: "for (let i = 0; i < data.length; i++
             !isEdit && <>
               <Form.Field>
                 <Form.Input
-                  label='Generate Quantity'
+                  label='生成数量'
                   name='count'
-                  placeholder={'Enter quantity to generate'}
+                  placeholder={'请输入生成数量'}
                   onChange={handleInputChange}
                   value={count}
                   autoComplete='new-password'
@@ -120,13 +117,12 @@ while maintaining the original formatting: "for (let i = 0; i < data.length; i++
               </Form.Field>
             </>
           }
-          <Button positive onClick={submit}>Submit</Button>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button positive onClick={submit}>提交</Button>
+          <Button onClick={handleCancel}>取消</Button>
         </Form>
       </Segment>
     </>
   );
 };
 
-export default EditRedemption;".
-```
+export default EditRedemption;

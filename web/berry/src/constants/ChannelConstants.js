@@ -11,12 +11,18 @@ export const CHANNEL_OPTIONS = {
     value: 14,
     color: 'primary'
   },
-  // 33: {
-  //   key: 33,
-  //   text: 'AWS Claude',
-  //   value: 33,
-  //   color: 'primary'
-  // },
+  33: {
+    key: 33,
+    text: 'AWS Claude',
+    value: 33,
+    color: 'primary'
+  },
+  37: {
+    key: 37,
+    text: 'Cloudflare',
+    value: 37,
+    color: 'success'
+  },
   3: {
     key: 3,
     text: 'Azure OpenAI',
@@ -43,31 +49,31 @@ export const CHANNEL_OPTIONS = {
   },
   15: {
     key: 15,
-    text: 'Baidu Wenxin Qianfan',
+    text: '百度文心千帆',
     value: 15,
     color: 'primary'
   },
   17: {
     key: 17,
-    text: 'Alibaba Tongyi Qianwen',
+    text: '阿里通义千问',
     value: 17,
     color: 'primary'
   },
   18: {
     key: 18,
-    text: 'Xunfei Xinghuo Renci',
+    text: '讯飞星火认知',
     value: 18,
     color: 'primary'
   },
   16: {
     key: 16,
-    text: 'Zhipu ChatGLM',
+    text: '智谱 ChatGLM',
     value: 16,
     color: 'primary'
   },
   19: {
     key: 19,
-    text: '360 Zhi nao',
+    text: '360 智脑',
     value: 19,
     color: 'primary'
   },
@@ -79,13 +85,13 @@ export const CHANNEL_OPTIONS = {
   },
   23: {
     key: 23,
-    text: 'Tencent Hunyuan',
+    text: '腾讯混元',
     value: 23,
     color: 'primary'
   },
   26: {
     key: 26,
-    text: 'Baichuan Da Moxing',
+    text: '百川大模型',
     value: 26,
     color: 'primary'
   },
@@ -109,22 +115,22 @@ export const CHANNEL_OPTIONS = {
   },
   31: {
     key: 31,
-    text: 'Zero One Everything',
+    text: '零一万物',
     value: 31,
     color: 'primary'
   },
   32: {
     key: 32,
-    text: 'Jieyue Xingchen',
+    text: '阶跃星辰',
     value: 32,
     color: 'primary'
   },
-  // 34: {
-  //   key: 34,
-  //   text: 'Coze',
-  //   value: 34,
-  //   color: 'primary'
-  // },
+  34: {
+    key: 34,
+    text: 'Coze',
+    value: 34,
+    color: 'primary'
+  },
   35: {
     key: 35,
     text: 'Cohere',
@@ -141,8 +147,7 @@ export const CHANNEL_OPTIONS = {
     key: 38,
     text: 'DeepL',
     value: 38,
-".{
-  color: 'primary'
+    color: 'primary'
   },
   39: {
     key: 39,
@@ -152,79 +157,79 @@ export const CHANNEL_OPTIONS = {
   },
   8: {
     key: 8,
-    text: 'Custom Channel',
+    text: '自定义渠道',
     value: 8,
     color: 'error'
   },
   22: {
     key: 22,
-    text: 'Knowledge Base: FastGPT',
+    text: '知识库：FastGPT',
     value: 22,
     color: 'success'
   },
   21: {
     key: 21,
-    text: 'Knowledge Base: AI Proxy',
+    text: '知识库：AI Proxy',
     value: 21,
     color: 'success'
   },
   20: {
     key: 20,
-    text: 'Agent: OpenRouter',
+    text: '代理：OpenRouter',
     value: 20,
     color: 'success'
   },
   2: {
     key: 2,
-    text: 'Agent: API2D',
+    text: '代理：API2D',
     value: 2,
     color: 'success'
   },
   5: {
     key: 5,
-    text: 'Agent: OpenAI-SB',
+    text: '代理：OpenAI-SB',
     value: 5,
     color: 'success'
   },
   7: {
     key: 7,
-    text: 'Agent: OhMyGPT',
+    text: '代理：OhMyGPT',
     value: 7,
     color: 'success'
   },
   10: {
     key: 10,
-    text: 'Agent: AI Proxy',
+    text: '代理：AI Proxy',
     value: 10,
     color: 'success'
   },
   4: {
     key: 4,
-    text: 'Agent: CloseAI',
+    text: '代理：CloseAI',
     value: 4,
     color: 'success'
   },
   6: {
     key: 6,
-    text: 'Agent: OpenAI Max',
+    text: '代理：OpenAI Max',
     value: 6,
     color: 'success'
   },
   9: {
     key: 9,
-    text: 'Agent: AI.LS',
+    text: '代理：AI.LS',
     value: 9,
     color: 'success'
   },
   12: {
     key: 12,
-    text: 'Agent: API2GPT',
+    text: '代理：API2GPT',
     value: 12,
     color: 'success'
   },
   13: {
     key: 13,
-    text: 'Agent: AIGC2D',
+    text: '代理：AIGC2D',
     value: 13,
     color: 'success'
   }

@@ -1,5 +1,3 @@
-```javascript
-// Export the function to get the date of the last seven days
 export function getLastSevenDays() {
   const dates = [];
   for (let i = 6; i >= 0; i--) {
@@ -15,13 +13,11 @@ export function getLastSevenDays() {
   return dates;
 }
 
-// Export function to get the current day
 export function getTodayDay() {
   let today = new Date();
   return today.toISOString().slice(0, 10);
 }
 
-// Function to generate chart options using provided data and unit
 export function generateChartOptions(data, unit) {
   const dates = data.map((item) => item.date);
   const values = data.map((item) => item.value);
@@ -99,4 +95,3 @@ export function generateChartOptions(data, unit) {
     }
   };
 }
-```

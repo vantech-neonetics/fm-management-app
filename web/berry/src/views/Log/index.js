@@ -54,8 +54,104 @@ export default function Log() {
         setLogs(data);
       } else {
         let newLogs = [...logs];
-        newLogs.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);// Handle refresh
-const handleRefresh = () => {
-  setInitPage(true);
-};/* translated content */
-format: Return only the translated content, not including the original text.
+        newLogs.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);
+        setLogs(newLogs);
+      }
+    } else {
+      showError(message);
+    }
+    setSearching(false);
+  };
+
+  const onPaginationChange = (event, activePage) => {
+    (async () => {
+      if (activePage === Math.ceil(logs.length / ITEMS_PER_PAGE)) {
+        // In this case we have to load more data and then append them.
+        await loadLogs(activePage);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const searchLogs = async (event) => {
+    event.preventDefault();
+    await loadLogs(0);
+    setActivePage(0);
+    return;
+  };
+
+  const handleSearchKeyword = (event) => {
+    setSearchKeyword({ ...searchKeyword, [event.target.name]: event.target.value });
+  };
+
+  // 处理刷新
+  const handleRefresh = () => {
+    setInitPage(true);
+  };
+
+  useEffect(() => {
+    setSearchKeyword(originalKeyword);
+    setActivePage(0);
+    loadLogs(0)
+      .then()
+      .catch((reason) => {
+        showError(reason);
+      });
+    setInitPage(false);
+  }, [initPage]);
+
+  return (
+    <>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2.5}>
+        <Typography variant="h4">日志</Typography>
+      </Stack>
+      <Card>
+        <Box component="form" onSubmit={searchLogs} noValidate sx={{marginTop: 2}}>
+          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} userIsAdmin={userIsAdmin} />
+        </Box>
+        <Toolbar
+          sx={{
+            textAlign: 'right',
+            height: 50,
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: (theme) => theme.spacing(0, 1, 0, 3)
+          }}
+        >
+          <Container>
+            <ButtonGroup variant="outlined" aria-label="outlined small primary button group" sx={{marginBottom: 2}}>
+              <Button onClick={handleRefresh} startIcon={<IconRefresh width={'18px'} />}>
+                刷新/清除搜索条件
+              </Button>
+
+              <Button onClick={searchLogs} startIcon={<IconSearch width={'18px'} />}>
+                搜索
+              </Button>
+            </ButtonGroup>
+          </Container>
+        </Toolbar>
+        {searching && <LinearProgress />}
+        <PerfectScrollbar component="div">
+          <TableContainer sx={{ overflow: 'unset' }}>
+            <Table sx={{ minWidth: 800 }}>
+              <LogTableHead userIsAdmin={userIsAdmin} />
+              <TableBody>
+                {logs.slice(activePage * ITEMS_PER_PAGE, (activePage + 1) * ITEMS_PER_PAGE).map((row, index) => (
+                  <LogTableRow item={row} key={`${row.id}_${index}`} userIsAdmin={userIsAdmin} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </PerfectScrollbar>
+        <TablePagination
+          page={activePage}
+          component="div"
+          count={logs.length + (logs.length % ITEMS_PER_PAGE === 0 ? 1 : 0)}
+          rowsPerPage={ITEMS_PER_PAGE}
+          onPageChange={onPaginationChange}
+          rowsPerPageOptions={[ITEMS_PER_PAGE]}
+        />
+      </Card>
+    </>
+  );
+}

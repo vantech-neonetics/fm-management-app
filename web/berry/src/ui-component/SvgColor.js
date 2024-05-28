@@ -1,10 +1,10 @@
-// Importing necessary modules
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 
 import Box from '@mui/material/Box';
 
-// Defining a functional component for SVG color
+// ----------------------------------------------------------------------
+
 const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
   <Box
     component="span"
@@ -23,7 +23,6 @@ const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
   />
 ));
 
-// Prop types definition for SvgColor component
 SvgColor.propTypes = {
   src: PropTypes.string,
   sx: PropTypes.object

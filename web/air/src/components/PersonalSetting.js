@@ -51,7 +51,8 @@ const PersonalSetting = () => {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [transferAmount, setTransferAmount] = useState(0);
 
-  useEffect(() => {// let user = localStorage.getItem('user');
+  useEffect(() => {
+    // let user = localStorage.getItem('user');
     // if (user) {
     //   userDispatch({ type: 'login', payload: user });
     // }
@@ -99,7 +100,7 @@ const PersonalSetting = () => {
     if (success) {
       setSystemToken(data);
       await copy(data);
-      showSuccess(`Token has been reset and copied to clipboard`);
+      showSuccess(`令牌已重置并已复制到剪贴板`);
     } else {
       showError(message);
     }
@@ -126,85 +127,87 @@ const PersonalSetting = () => {
     }
   };
 
-  // const loadModels = async () =>//   let res = await API.get(`/api/user/models`);
-//   const { success, message, data } = res.data;
-//   if (success) {
-//     setModels(data);
-//     console.log(data);
-//   } else {
-//     showError(message);
-//   }
-// };
+  // const loadModels = async () => {
+  //   let res = await API.get(`/api/user/models`);
+  //   const { success, message, data } = res.data;
+  //   if (success) {
+  //     setModels(data);
+  //     console.log(data);
+  //   } else {
+  //     showError(message);
+  //   }
+  // };
 
-const handleAffLinkClick = async (e) => {
-  e.target.select();
-  await copy(e.target.value);
-  showSuccess(`Invitation link copied to clipboard`);
-};
+  const handleAffLinkClick = async (e) => {
+    e.target.select();
+    await copy(e.target.value);
+    showSuccess(`邀请链接已复制到剪切板`);
+  };
 
-const handleSystemTokenClick = async (e) => {
-  e.target.select();
-  await copy(e.target.value);
-  showSuccess(`System token copied to clipboard`);
-};
+  const handleSystemTokenClick = async (e) => {
+    e.target.select();
+    await copy(e.target.value);
+    showSuccess(`系统令牌已复制到剪切板`);
+  };
 
-const deleteAccount = async () => {
-  if (inputs.self_account_deletion_confirmation !== userState.user.username) {
-    showError('Please input your account name to confirm deletion!');
-    return;
-  }
-
-  const res = await API.delete('/api/user/self');
-  const { success, message } = res.data;
-
-  if (success) {
-    showSuccess('Account deleted!');
-    await API.get('/api/user/logout');
-    userDispatch({ type: 'logout' });
-    localStorage.removeItem('user');
-    navigate('/login');
-  } else {
-    showError(message);
-  }
-};
-
-const bindWeChat = async () => {
-  if (inputs.wechat_verification_code === '') return;
-  const res = await API.get(
-    `/api/oauth/wechat/bind?code=${inputs.wechat_verification_code}`
-  );
-  const { success, message } = res.data;
-  if (success) {
-    showSuccess('WeChat account bound successfully!');
-    setShowWeChatBindModal(false);
-  } else {
-    showError(message);
-  }
-};
-
-const changePassword = async () => {
-  if (inputs.set_new_password !== inputs.set_new_password_confirmation) {
-    showError('Passwords entered do not match!');
-    return;
-  }
-  const res = await API.put(
-    `/api/user/self`,
-    {
-      password: inputs.set_new_password
+  const deleteAccount = async () => {
+    if (inputs.self_account_deletion_confirmation !== userState.user.username) {
+      showError('请输入你的账户名以确认删除！');
+      return;
     }
-  );
-  const { success, message } = res.data;
-  if (success) {
-    showSuccess('Password changed successfully!');
-    setShowWeChatBindModal(false);
-  } else {
-    showError(message);
-  }
-  setShowChangePasswordModal(false);
-};
 
-const transfer = async () => {
-  if (transferAmount < getQuotaPerUnit()) ".minimum transfer amount is ' + renderQuota(getQuotaPerUnit()));
+    const res = await API.delete('/api/user/self');
+    const { success, message } = res.data;
+
+    if (success) {
+      showSuccess('账户已删除！');
+      await API.get('/api/user/logout');
+      userDispatch({ type: 'logout' });
+      localStorage.removeItem('user');
+      navigate('/login');
+    } else {
+      showError(message);
+    }
+  };
+
+  const bindWeChat = async () => {
+    if (inputs.wechat_verification_code === '') return;
+    const res = await API.get(
+      `/api/oauth/wechat/bind?code=${inputs.wechat_verification_code}`
+    );
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('微信账户绑定成功！');
+      setShowWeChatBindModal(false);
+    } else {
+      showError(message);
+    }
+  };
+
+  const changePassword = async () => {
+    if (inputs.set_new_password !== inputs.set_new_password_confirmation) {
+      showError('两次输入的密码不一致！');
+      return;
+    }
+    const res = await API.put(
+      `/api/user/self`,
+      {
+        password: inputs.set_new_password
+      }
+    );
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('密码修改成功！');
+      setShowWeChatBindModal(false);
+    } else {
+      showError(message);
+    }
+    setShowChangePasswordModal(false);
+  };
+
+  const transfer = async () => {
+    if (transferAmount < getQuotaPerUnit()) {
+      showError('划转金额最低为' + renderQuota(getQuotaPerUnit()));
       return;
     }
     const res = await API.post(
@@ -225,12 +228,12 @@ const transfer = async () => {
 
   const sendVerificationCode = async () => {
     if (inputs.email === '') {
-      showError('Please enter email!');
+      showError('请输入邮箱！');
       return;
     }
     setDisableButton(true);
     if (turnstileEnabled && turnstileToken === '') {
-      showInfo('Please try again in a few seconds, Turnstile is checking user environment!');
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
     setLoading(true);
@@ -239,7 +242,7 @@ const transfer = async () => {
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Verification code sent successfully, please check your email!');
+      showSuccess('验证码发送成功，请检查邮箱！');
     } else {
       showError(message);
     }
@@ -248,7 +251,7 @@ const transfer = async () => {
 
   const bindEmail = async () => {
     if (inputs.email_verification_code === '') {
-      showError('Please enter email verification code!');
+      showError('请输入邮箱验证码！');
       return;
     }
     setLoading(true);
@@ -257,7 +260,7 @@ const transfer = async () => {
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Email account bound successfully!');
+      showSuccess('邮箱账户绑定成功！');
       setShowEmailBindModal(false);
       userState.user.email = inputs.email;
     } else {
@@ -280,10 +283,10 @@ const transfer = async () => {
 
   const copyText = async (text) => {
     if (await copy(text)) {
-      showSuccess('Copied: ' + text);
+      showSuccess('已复制：' + text);
     } else {
       // setSearchKeyword(text);
-      Modal.error({ title: 'Cannot copy to clipboard, please copy manually', content: text });
+      Modal.error({ title: '无法复制到剪贴板，请手动复制', content: text });
     }
   };
 
@@ -292,8 +295,8 @@ const transfer = async () => {
       <Layout>
         <Layout.Content>
           <Modal
-            title="Please enter the quantity to transfer"```jsx
-visible={openTransfer}
+            title="请输入要划转的数量"
+            visible={openTransfer}
             onOk={transfer}
             onCancel={handleCancel}
             maskClosable={false}
@@ -301,11 +304,11 @@ visible={openTransfer}
             centered={true}
           >
             <div style={{ marginTop: 20 }}>
-              <Typography.Text>{`Available quota ${renderQuotaWithPrompt(userState?.user?.aff_quota)}`}</Typography.Text>
+              <Typography.Text>{`可用额度${renderQuotaWithPrompt(userState?.user?.aff_quota)}`}</Typography.Text>
               <Input style={{ marginTop: 5 }} value={userState?.user?.aff_quota} disabled={true}></Input>
             </div>
             <div style={{ marginTop: 20 }}>
-              <Typography.Text>{`Transfer quota ${renderQuotaWithPrompt(transferAmount)} minimum` + renderQuota(getQuotaPerUnit())}</Typography.Text>
+              <Typography.Text>{`划转额度${renderQuotaWithPrompt(transferAmount)} 最低` + renderQuota(getQuotaPerUnit())}</Typography.Text>
               <div>
                 <InputNumber min={0} style={{ marginTop: 5 }} value={transferAmount}
                   onChange={(value) => setTransferAmount(value)} disabled={false}></InputNumber>
@@ -321,7 +324,7 @@ visible={openTransfer}
                     {typeof getUsername() === 'string' && getUsername().slice(0, 1)}
                   </Avatar>}
                   title={<Typography.Text>{getUsername()}</Typography.Text>}
-                  description={isRoot() ? <Tag color="red">Administrator</Tag> : <Tag color="blue">Normal User</Tag>}
+                  description={isRoot() ? <Tag color="red">管理员</Tag> : <Tag color="blue">普通用户</Tag>}
                 ></Card.Meta>
               }
               headerExtraContent={
@@ -334,200 +337,229 @@ visible={openTransfer}
               }
               footer={
                 <Descriptions row>
-                  <Descriptions.Item itemKey="Current balance">{renderQuota(userState?.user?.quota)}</Descriptions.Item>
+                  <Descriptions.Item itemKey="当前余额">{renderQuota(userState?.user?.quota)}</Descriptions.Item>
+                  <Descriptions.Item itemKey="历史消耗">{renderQuota(userState?.user?.used_quota)}</Descriptions.Item>
+                  <Descriptions.Item itemKey="请求次数">{userState.user?.request_count}</Descriptions.Item>
                 </Descriptions>
               }
+            >
+              <Typography.Title heading={6}>调用信息</Typography.Title>
+              {/* <Typography.Title heading={6}>可用模型</Typography.Title>
+              <div style={{ marginTop: 10 }}>
+                <Space wrap>
+                  {models.map((model) => (
+                    <Tag key={model} color="cyan" onClick={() => {
+                      copyText(model);
+                    }}>
+                      {model}
+                    </Tag>
+                  ))}
+                </Space>
+              </div> */}
             </Card>
-          </div>
-```{/* <Typography.Title heading={6}>Call Information</Typography.Title> */}
-            <Typography.Title heading={6}>调用信息</Typography.Title>
-            {/* <Typography.Title heading={6}>Available Models</Typography.Title>
-            <div style={{ marginTop: 10 }}>
-              <Space wrap>
-                {models.map((model) => (
-                  <Tag key={model} color="cyan" onClick={() => {
-                    copyText(model);
-                  }}>
-                    {model}
-                  </Tag>
-                ))}
-              </Space>
-            </div> */}
-          </Card>
-          {/* <Card
-            footer={
-              <div>
-                <Typography.Text>Invitation Link</Typography.Text>
-                <Input
-                  style={{ marginTop: 10 }}
-                  value={affLink}
-                  onClick={handleAffLinkClick}
-                  readOnly
-                />
-              </div>
-            }
-          >
-            <Typography.Title heading={6}>Invitation Information</Typography.Title>
-            <div style={{ marginTop: 10 }}>
-              <Descriptions row>
-                <Descriptions.Item itemKey="Outstanding Earnings">
-                  <span style={{ color: 'rgba(var(--semi-red-5), 1)' }}>
-                    {
-                      renderQuota(userState?.user?.aff_quota)
-                    }
-                  </span>
-                  <Button type={'secondary'} onClick={() => setOpenTransfer(true)} size={'small'}
-                    style={{ marginLeft: 10 }}>Transfer</Button>
-                </Descriptions.Item>
-                <Descriptions.Item
-                  itemKey="Total Earnings">{renderQuota(userState?.user?.aff_history_quota)}</Descriptions.Item> */- Number of invitations: {userState?.user?.aff_count}
-            </Descriptions.Item>
-          </Descriptions>
-        </div>
-      </Card> */}
-      <Card>
-        <Typography.Title heading={6}>Invitation Link</Typography.Title>
-        <Input
-          style={{ marginTop: 10 }}
-          value={affLink}
-          onClick={handleAffLinkClick}
-          readOnly
-        />
-      </Card>
-      <Card>
-        <Typography.Title heading={6}>Personal Information</Typography.Title>
-        <div style={{ marginTop: 20 }}>
-          <Typography.Text strong>Email</Typography.Text>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <Input
-                value={userState.user && userState.user.email !== '' ? userState.user.email : 'Not bound'}
-                readonly={true}
-              ></Input>
-            </div>
-            <div>
-              <Button onClick={() => {
-                setShowEmailBindModal(true);
-              }}>
-              {
-                  userState.user && userState.user.email !== '' ? 'Modify binding' : 'Bind email'
+            {/* <Card
+              footer={
+                <div>
+                  <Typography.Text>邀请链接</Typography.Text>
+                  <Input
+                    style={{ marginTop: 10 }}
+                    value={affLink}
+                    onClick={handleAffLinkClick}
+                    readOnly
+                  />
+                </div>
               }
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div style={{ marginTop: 10 }}>
-          <Typography.Text strong>WeChat</Typography.Text>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
+            >
+              <Typography.Title heading={6}>邀请信息</Typography.Title>
+              <div style={{ marginTop: 10 }}>
+                <Descriptions row>
+                  <Descriptions.Item itemKey="待使用收益">
+                    <span style={{ color: 'rgba(var(--semi-red-5), 1)' }}>
+                      {
+                        renderQuota(userState?.user?.aff_quota)
+                      }
+                    </span>
+                    <Button type={'secondary'} onClick={() => setOpenTransfer(true)} size={'small'}
+                      style={{ marginLeft: 10 }}>划转</Button>
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    itemKey="总收益">{renderQuota(userState?.user?.aff_history_quota)}</Descriptions.Item>
+                  <Descriptions.Item itemKey="邀请人数">{userState?.user?.aff_count}</Descriptions.Item>
+                </Descriptions>
+              </div>
+            </Card> */}
+            <Card>
+              <Typography.Title heading={6}>邀请链接</Typography.Title>
               <Input
-                value={userState.user && userState.user.wechat_id !== '' ? 'Bound' : 'Not bound'}
-                readonly={true}
-              ></Input>
-            </div>
-            <div>
-              <Button disabled={(userState.user && userState.user.wechat_id !== '') || !status.wechat_login}>
-                {
-                  status.wechat_login ? 'Bind' : 'Not enabled'
-                }
-              </Button>{/* GitHub section */}
-<Typography.Text strong>GitHub</Typography.Text>
-<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-  <div>
-    <Input
-      value={userState.user && userState.user.github_id !== '' ? userState.user.github_id : 'Not bound'}
-      readonly={true}
-    ></Input>
-  </div>
-  <div>
-    <Button
-      onClick={() => {
-        onGitHubOAuthClicked(status.github_client_id);
-      }}
-      disabled={(userState.user && userState.user.github_id !== '') || !status.github_oauth}
-    >
-      {
-        status.github_oauth ? 'Bind' : 'Not enabled'
-      }
-    </Button>
-  </div>
-</div><Button onClick={generateAccessToken}>Generate system access token</Button>
-<Button onClick={() => {
-  setShowChangePasswordModal(true);
-}}>Change password</Button>
-<Button type={'danger'} onClick={() => {
-  setShowAccountDeleteModal(true);
-}}>Delete personal account</Button>
+                style={{ marginTop: 10 }}
+                value={affLink}
+                onClick={handleAffLinkClick}
+                readOnly
+              />
+            </Card>
+            <Card>
+              <Typography.Title heading={6}>个人信息</Typography.Title>
+              <div style={{ marginTop: 20 }}>
+                <Typography.Text strong>邮箱</Typography.Text>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div>
+                    <Input
+                      value={userState.user && userState.user.email !== '' ? userState.user.email : '未绑定'}
+                      readonly={true}
+                    ></Input>
+                  </div>
+                  <div>
+                    <Button onClick={() => {
+                      setShowEmailBindModal(true);
+                    }}>{
+                        userState.user && userState.user.email !== '' ? '修改绑定' : '绑定邮箱'
+                      }</Button>
+                  </div>
+                </div>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>微信</Typography.Text>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div>
+                    <Input
+                      value={userState.user && userState.user.wechat_id !== '' ? '已绑定' : '未绑定'}
+                      readonly={true}
+                    ></Input>
+                  </div>
+                  <div>
+                    <Button disabled={(userState.user && userState.user.wechat_id !== '') || !status.wechat_login}>
+                      {
+                        status.wechat_login ? '绑定' : '未启用'
+                      }
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>GitHub</Typography.Text>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div>
+                    <Input
+                      value={userState.user && userState.user.github_id !== '' ? userState.user.github_id : '未绑定'}
+                      readonly={true}
+                    ></Input>
+                  </div>
+                  <div>
+                    <Button
+                      onClick={() => {
+                        onGitHubOAuthClicked(status.github_client_id);
+                      }}
+                      disabled={(userState.user && userState.user.github_id !== '') || !status.github_oauth}
+                    >
+                      {
+                        status.github_oauth ? '绑定' : '未启用'
+                      }
+                    </Button>
+                  </div>
+                </div>
+              </div>
 
-{systemToken && (
-  <Input
-    readOnly
-    value={systemToken}
-    onClick={handleSystemTokenClick}
-    style={{ marginTop: '10px' }}
-  />
-)}
-{
-  status.wechat_login && (
-    <Button
-      onClick={() => {
-        setShowWeChatBindModal(true);
-      }}
-    >
-      Bind WeChat account
-    </Button>
-  )
-}
-<Modal
-  onCancel={() => setShowWeChatBindModal(false)}
-  // onOpen={() => setShowWeChatBindModal(true)}
-  visible={showWeChatBindModal}
-  size={'mini'}
->
-  <Image src={status.wechat_qrcode} />
-  <div style={{ textAlign: 'center' }}>
-    <p>
-      Scan the QR code with WeChat, enter the "verification code" to get the code (valid for three minutes)
-    </p>
-  </div>
-  <Input
-    placeholder="Verification Code"
-    name="wechat_verification_code"
-    value={inputs.wechat_verification_code}
-    onChange={(v) => handleInputChange('wechat_verification_code', v)}
-  />
-  <Button color="" fluid size="large" onClick={bindWeChat}>
-    Bind
-  </Button>
-</Modal>
-</div>
-</Card>
-<Modal
-  onCancel={() => setShowEmailBindModal(false)}".// onOpen={() => setShowEmailBindModal(true)}
+              {/* <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>Telegram</Typography.Text>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div>
+                    <Input
+                      value={userState.user && userState.user.telegram_id !== '' ? userState.user.telegram_id : '未绑定'}
+                      readonly={true}
+                    ></Input>
+                  </div>
+                  <div>
+                    {status.telegram_oauth ?
+                      userState.user.telegram_id !== '' ? <Button disabled={true}>已绑定</Button>
+                        : <TelegramLoginButton dataAuthUrl="/api/oauth/telegram/bind"
+                          botName={status.telegram_bot_name} />
+                      : <Button disabled={true}>未启用</Button>
+                    }
+                  </div>
+                </div>
+              </div> */}
+
+              <div style={{ marginTop: 10 }}>
+                <Space>
+                  <Button onClick={generateAccessToken}>生成系统访问令牌</Button>
+                  <Button onClick={() => {
+                    setShowChangePasswordModal(true);
+                  }}>修改密码</Button>
+                  <Button type={'danger'} onClick={() => {
+                    setShowAccountDeleteModal(true);
+                  }}>删除个人账户</Button>
+                </Space>
+
+                {systemToken && (
+                  <Input
+                    readOnly
+                    value={systemToken}
+                    onClick={handleSystemTokenClick}
+                    style={{ marginTop: '10px' }}
+                  />
+                )}
+                {
+                  status.wechat_login && (
+                    <Button
+                      onClick={() => {
+                        setShowWeChatBindModal(true);
+                      }}
+                    >
+                      绑定微信账号
+                    </Button>
+                  )
+                }
+                <Modal
+                  onCancel={() => setShowWeChatBindModal(false)}
+                  // onOpen={() => setShowWeChatBindModal(true)}
+                  visible={showWeChatBindModal}
+                  size={'mini'}
+                >
+                  <Image src={status.wechat_qrcode} />
+                  <div style={{ textAlign: 'center' }}>
+                    <p>
+                      微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+                    </p>
+                  </div>
+                  <Input
+                    placeholder="验证码"
+                    name="wechat_verification_code"
+                    value={inputs.wechat_verification_code}
+                    onChange={(v) => handleInputChange('wechat_verification_code', v)}
+                  />
+                  <Button color="" fluid size="large" onClick={bindWeChat}>
+                    绑定
+                  </Button>
+                </Modal>
+              </div>
+            </Card>
+            <Modal
+              onCancel={() => setShowEmailBindModal(false)}
+              // onOpen={() => setShowEmailBindModal(true)}
               onOk={bindEmail}
               visible={showEmailBindModal}
               size={'small'}
               centered={true}
               maskClosable={false}
             >
-              <Typography.Title heading={6}>Bind Email Address</Typography.Title>
+              <Typography.Title heading={6}>绑定邮箱地址</Typography.Title>
               <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between' }}>
                 <Input
                   fluid
-                  placeholder="Enter email address"
+                  placeholder="输入邮箱地址"
                   onChange={(value) => handleInputChange('email', value)}
                   name="email"
                   type="email"
                 />
                 <Button onClick={sendVerificationCode}
                   disabled={disableButton || loading}>
-                  {disableButton ? `Resend(${countdown})` : 'Get Verification Code'}
+                  {disableButton ? `重新发送(${countdown})` : '获取验证码'}
                 </Button>
               </div>
               <div style={{ marginTop: 10 }}>
                 <Input
                   fluid
-                  placeholder="Verification Code"
+                  placeholder="验证码"
                   name="email_verification_code"
                   value={inputs.email_verification_code}
                   onChange={(value) => handleInputChange('email_verification_code', value)}
@@ -554,19 +586,68 @@ visible={openTransfer}
               <div style={{ marginTop: 20 }}>
                 <Banner
                   type="danger"
-                  description="You are deleting your own account, all data will be cleared and cannot be recovered"
+                  description="您正在删除自己的帐户，将清空所有数据且不可恢复"
                   closeIcon={null}
                 />
-              </div>```
-Enter your account name ${userState?.user?.username} to confirm deletion
-New password
-Confirm new password
-``````javascript
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "</Layout>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Input
+                  placeholder={`输入你的账户名 ${userState?.user?.username} 以确认删除`}
+                  name="self_account_deletion_confirmation"
+                  value={inputs.self_account_deletion_confirmation}
+                  onChange={(value) => handleInputChange('self_account_deletion_confirmation', value)}
+                />
+                {turnstileEnabled ? (
+                  <Turnstile
+                    sitekey={turnstileSiteKey}
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            </Modal>
+            <Modal
+              onCancel={() => setShowChangePasswordModal(false)}
+              visible={showChangePasswordModal}
+              size={'small'}
+              centered={true}
+              onOk={changePassword}
+            >
+              <div style={{ marginTop: 20 }}>
+                <Input
+                  name="set_new_password"
+                  placeholder="新密码"
+                  value={inputs.set_new_password}
+                  onChange={(value) => handleInputChange('set_new_password', value)}
+                />
+                <Input
+                  style={{ marginTop: 20 }}
+                  name="set_new_password_confirmation"
+                  placeholder="确认新密码"
+                  value={inputs.set_new_password_confirmation}
+                  onChange={(value) => handleInputChange('set_new_password_confirmation', value)}
+                />
+                {turnstileEnabled ? (
+                  <Turnstile
+                    sitekey={turnstileSiteKey}
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            </Modal>
+          </div>
+
+        </Layout.Content>
+      </Layout>
     </div>
   );
 };
 
-export default PersonalSetting;".
-```
+export default PersonalSetting;

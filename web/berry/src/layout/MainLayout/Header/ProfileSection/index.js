@@ -74,8 +74,7 @@ const ProfileSection = () => {
           borderColor: theme.typography.menuChip.background,
           backgroundColor: theme.typography.menuChip.background,
           '&[aria-controls="menu-list-grow"], &:hover': {
-        // translated content goes here
-        "."borderColor: theme.palette.primary.main,
+            borderColor: theme.palette.primary.main,
             background: `${theme.palette.primary.main}!important`,
             color: theme.palette.primary.light,
             '& svg': {
@@ -138,8 +137,8 @@ const ProfileSection = () => {
                       maxWidth: 350,
                       minWidth: 150,
                       backgroundColor: theme.palette.background.paper,
-                      borderRadius: '10px',".```
-theme.breakpoints.down('md'): {
+                      borderRadius: '10px',
+                      [theme.breakpoints.down('md')]: {
                         minWidth: '100%'
                       },
                       '& .MuiListItemButton-root': {
@@ -151,14 +150,14 @@ theme.breakpoints.down('md'): {
                       <ListItemIcon>
                         <IconUserScan stroke={1.5} size="1.3rem" />
                       </ListItemIcon>
-                      <ListItemText primary={<Typography variant="body2">Settings</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">设置</Typography>} />
                     </ListItemButton>
 
                     <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} onClick={handleLogout}>
                       <ListItemIcon>
                         <IconLogout stroke={1.5} size="1.3rem" />
                       </ListItemIcon>
-                      <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">登出</Typography>} />
                     </ListItemButton>
                   </List>
                 </MainCard>
@@ -172,4 +171,3 @@ theme.breakpoints.down('md'): {
 };
 
 export default ProfileSection;
-```

@@ -46,30 +46,31 @@ const RegisterForm = () => {
 
   async function handleSubmit(e) {
     if (password.length < 8) {
-      showInfo('Password must be at least 8 characters long!');
+      showInfo('密码长度不得小于 8 位！');
       return;
     }
     if (password !== password2) {
-      showInfo('The passwords entered do not match');
+      showInfo('两次输入的密码不一致');
       return;
     }
     if (username && password) {
       if (turnstileEnabled && turnstileToken === '') {
-        showInfo('Please wait a few seconds and try again, Turnstile is checking user environment!');
+        showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
         return;
       }
       setLoading(true);
       if (!affCode) {
         affCode = localStorage.getItem('aff');
       }
-      inputs.aff_code = affCode;const res = await API.post(
+      inputs.aff_code = affCode;
+      const res = await API.post(
         `/api/user/register?turnstile=${turnstileToken}`,
         inputs
       );
       const { success, message } = res.data;
       if (success) {
         navigate('/login');
-        showSuccess('Registration successful!');
+        showSuccess('注册成功！');
       } else {
         showError(message);
       }
@@ -80,7 +81,7 @@ const RegisterForm = () => {
   const sendVerificationCode = async () => {
     if (inputs.email === '') return;
     if (turnstileEnabled && turnstileToken === '') {
-      showInfo('Please wait a few seconds before trying again, Turnstile is checking user environment!');
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
     setLoading(true);
@@ -89,7 +90,7 @@ const RegisterForm = () => {
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Verification code sent successfully, please check your email!');
+      showSuccess('验证码发送成功，请检查你的邮箱！');
     } else {
       showError(message);
     }
@@ -100,7 +101,7 @@ const RegisterForm = () => {
     <Grid textAlign="center" style={{ marginTop: '48px' }}>
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="" textAlign="center">
-          <Image src={logo} /> New User Registration
+          <Image src={logo} /> 新用户注册
         </Header>
         <Form size="large">
           <Segment>
@@ -108,7 +109,7 @@ const RegisterForm = () => {
               fluid
               icon="user"
               iconPosition="left"
-              placeholder="Enter username, max 12 characters"
+              placeholder="输入用户名，最长 12 位"
               onChange={handleChange}
               name="username"
             />
@@ -116,7 +117,7 @@ const RegisterForm = () => {
               fluid
               icon="lock"
               iconPosition="left"
-              placeholder="Enter password, min 8 characters, max 20 characters"
+              placeholder="输入密码，最短 8 位，最长 20 位"
               onChange={handleChange}
               name="password"
               type="password"
@@ -125,7 +126,7 @@ const RegisterForm = () => {
               fluid
               icon="lock"
               iconPosition="left"
-              placeholder="Confirm password, min 8 characters, max 20 characters"
+              placeholder="输入密码，最短 8 位，最长 20 位"
               onChange={handleChange}
               name="password2"
               type="password"
@@ -134,60 +135,60 @@ const RegisterForm = () => {
               <>
                 <Form.Input
                   fluid
-                  icon="mail"Instructions: 
-"iconPosition="left"
-placeholder="Enter email address"
-onChange={handleChange}
-name="email"
-type="email"
-action={
-   <Button onClick={sendVerificationCode} disabled={loading}>
-     Get Verification Code
-   </Button>
-}
-/>
-<Form.Input
-   fluid
-   icon="lock"
-   iconPosition="left"
-   placeholder="Enter verification code"
-   onChange={handleChange}
-   name="verification_code"
-/>
-<>
-) : (
-  <></>
-)}
-{turnstileEnabled ? (
-  <Turnstile
-     sitekey={turnstileSiteKey}
-     onVerify={(token) => {
-       setTurnstileToken(token);
-     }}
-  />
-) : (
-  <></>
-)}
-<Button
-   color="green"
-   fluid
-   size="large"
-   onClick={handleSubmit}
-   loading={loading}
->
-  Register
-</Button>
-</Segment>
-</Form>
-<Message>
-  Already have an account?
-  <Link to="/login" className="btn btn-link">
-    Click to Log in
-  </Link>
-</Message>
-</Grid.Column>
-</Grid>
-);
+                  icon="mail"
+                  iconPosition="left"
+                  placeholder="输入邮箱地址"
+                  onChange={handleChange}
+                  name="email"
+                  type="email"
+                  action={
+                    <Button onClick={sendVerificationCode} disabled={loading}>
+                      获取验证码
+                    </Button>
+                  }
+                />
+                <Form.Input
+                  fluid
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="输入验证码"
+                  onChange={handleChange}
+                  name="verification_code"
+                />
+              </>
+            ) : (
+              <></>
+            )}
+            {turnstileEnabled ? (
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <Button
+              color="green"
+              fluid
+              size="large"
+              onClick={handleSubmit}
+              loading={loading}
+            >
+              注册
+            </Button>
+          </Segment>
+        </Form>
+        <Message>
+          已有账户？
+          <Link to="/login" className="btn btn-link">
+            点击登录
+          </Link>
+        </Message>
+      </Grid.Column>
+    </Grid>
+  );
 };
 
-export default RegisterForm;"
+export default RegisterForm;

@@ -1,5 +1,4 @@
-Instructions: Translate the following Chinese text to English
-while maintaining the original formatting: "import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Container, Segment } from 'semantic-ui-react';
 import { getFooterHTML, getSystemName } from '../helpers';
@@ -44,16 +43,16 @@ const Footer = () => {
             >
               {systemName} {process.env.REACT_APP_VERSION}{' '}
             </a>
-            built by{' '}
+            由{' '}
             <a href='https://github.com/songquanpeng' target='_blank'>
               JustSong
             </a>{' '}
-            based on theme air from{' '}
+            构建，主题 air 来自{' '}
             <a href='https://github.com/Calcium-Ion' target='_blank'>
               Calon
-            </a>{' '}, source code follows{' '}
+            </a>{' '}，源代码遵循{' '}
             <a href='https://opensource.org/licenses/mit-license.php'>
-              MIT License
+              MIT 协议
             </a>
           </div>
         )}
@@ -62,4 +61,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;".
+export default Footer;

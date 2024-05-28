@@ -1,5 +1,4 @@
-Instruction: Translate the following Chinese text to English 
-while maintaining the original formatting: "import { API, showError } from '../helpers';
+import { API, showError } from '../helpers';
 
 export async function getOAuthState() {
   const res = await API.get('/api/oauth/state');
@@ -18,4 +17,4 @@ export async function onGitHubOAuthClicked(github_client_id) {
   window.open(
     `https://github.com/login/oauth/authorize?client_id=${github_client_id}&state=${state}&scope=user:email`
   );
-}".
+}

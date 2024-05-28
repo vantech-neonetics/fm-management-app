@@ -1,6 +1,6 @@
 const config = {
-  // basename: 仅在构建时设置，并且不要在 BASENAME 的末尾添加'/'，也不要只使用'/'，应该使用空白('')
-  // 例如 '/berry-material-react/react/default'
+  // basename: only at build time to set, and Don't add '/' at end off BASENAME for breadcrumbs, also Don't put only '/' use blank('') instead,
+  // like '/berry-material-react/react/default'
   basename: '/',
   defaultPath: '/panel/dashboard',
   fontFamily: `'Roboto', sans-serif, Helvetica, Arial, sans-serif`,

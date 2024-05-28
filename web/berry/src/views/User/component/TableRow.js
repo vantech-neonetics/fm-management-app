@@ -26,13 +26,13 @@ import { useTheme } from '@mui/material/styles';
 function renderRole(role) {
   switch (role) {
     case 1:
-      return <Label color="default">Regular User</Label>;
+      return <Label color="default">普通用户</Label>;
     case 10:
-      return <Label color="orange">Administrator</Label>;
+      return <Label color="orange">管理员</Label>;
     case 100:
-      return <Label color="success">Super Administrator</Label>;
+      return <Label color="success">超级管理员</Label>;
     default:
-      return <Label color="error">Unknown Identity</Label>;
+      return <Label color="error">未知身份</Label>;
   }
 }
 
@@ -60,10 +60,10 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
   };
 
   const handleStatus = async () => {
-    const switchValue = statusSwitch === 1 ? 2 : 1;
-    const { success } = await manageUser(item.username, 'status', switchValue);
+    const switchVlue = statusSwitch === 1 ? 2 : 1;
+    const { success } = await manageUser(item.username, 'status', switchVlue);
     if (success) {
-      setStatusSwitch(switchValue);
+      setStatusSwitch(switchVlue);
     }
   };
 
@@ -80,23 +80,24 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
         <TableCell>{item.username}</TableCell>
 
         <TableCell>
-          <Label>{item.group}</Label></TableCell>
+          <Label>{item.group}</Label>
+        </TableCell>
 
         <TableCell>
           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
-            <Tooltip title={'Remaining Quota'} placement="top">
+            <Tooltip title={'剩余额度'} placement="top">
               <Label color={'primary'} variant="outlined">
                 {' '}
                 {renderQuota(item.quota)}{' '}
               </Label>
             </Tooltip>
-            <Tooltip title={'Used Quota'} placement="top">
+            <Tooltip title={'已用额度'} placement="top">
               <Label color={'primary'} variant="outlined">
                 {' '}
                 {renderQuota(item.used_quota)}{' '}
               </Label>
             </Tooltip>
-            <Tooltip title={'Request Count'} placement="top">
+            <Tooltip title={'请求次数'} placement="top">
               <Label color={'primary'} variant="outlined">
                 {' '}
                 {renderNumber(item.request_count)}{' '}
@@ -107,13 +108,13 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
         <TableCell>{renderRole(item.role)}</TableCell>
         <TableCell>
           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
-            <Tooltip title={item.wechat_id ? item.wechat_id : 'Not Bound'} placement="top">
+            <Tooltip title={item.wechat_id ? item.wechat_id : '未绑定'} placement="top">
               <IconBrandWechat color={item.wechat_id ? theme.palette.success.dark : theme.palette.grey[400]} />
             </Tooltip>
-            <Tooltip title={item.github_id ? item.github_id : 'Not Bound'} placement="top">
+            <Tooltip title={item.github_id ? item.github_id : '未绑定'} placement="top">
               <IconBrandGithub color={item.github_id ? theme.palette.grey[900] : theme.palette.grey[400]} />
             </Tooltip>
-            <Tooltip title={item.email ? item.email : 'Not Bound'} placement="top">
+            <Tooltip title={item.email ? item.email : '未绑定'} placement="top">
               <IconMail color={item.email ? theme.palette.grey[900] : theme.palette.grey[400]} />
             </Tooltip>
           </Stack>
@@ -126,7 +127,8 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
         <TableCell>
           <IconButton onClick={handleOpenMenu} sx={{ color: 'rgb(99, 115, 129)' }}>
             <IconDotsVertical />
-          </IconButton><TableCell>
+          </IconButton>
+        </TableCell>
       </TableRow>
 
       <Popover
@@ -147,7 +149,7 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
             }}
           >
             <IconUser style={{ marginRight: '16px' }} />
-            {item.role === 1 ? 'Set as administrator' : 'Cancel administrator'}
+            {item.role === 1 ? '设为管理员' : '取消管理员'}
           </MenuItem>
         )}
 
@@ -159,23 +161,23 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
           }}
         >
           <IconEdit style={{ marginRight: '16px' }} />
-          Edit
+          编辑
         </MenuItem>
         <MenuItem onClick={handleDeleteOpen} sx={{ color: 'error.main' }}>
           <IconTrash style={{ marginRight: '16px' }} />
-          Delete
+          删除
         </MenuItem>
       </Popover>
 
       <Dialog open={openDelete} onClose={handleDeleteClose}>
-        <DialogTitle>Delete User</DialogTitle>
+        <DialogTitle>删除用户</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete user {item.name}?</DialogContentText>
+          <DialogContentText>是否删除用户 {item.name}？</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose}>Close</Button>
+          <Button onClick={handleDeleteClose}>关闭</Button>
           <Button onClick={handleDelete} sx={{ color: 'error.main' }} autoFocus>
-            Delete
+            删除
           </Button>
         </DialogActions>
       </Dialog>

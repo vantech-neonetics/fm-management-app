@@ -1,33 +1,22 @@
-// material-ui
-// Import PropTypes from 'prop-types';
 import PropTypes from 'prop-types';
-// Import necessary hooks from 'react'
 import { useEffect, useState } from 'react';
-// Import Link from 'react-router-dom'
 import { Link } from 'react-router-dom';
 
 // material-ui
-// Import 'useTheme' from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles';
-// Import specific components from '@mui/material'
 import { Box, Card, Divider, Grid, Typography } from '@mui/material';
-// Import 'MuiBreadcrumbs' from '@mui/material/Breadcrumbs'
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 // project imports
-// Import 'config' from 'config'
 import config from 'config';
-// Import 'gridSpacing' from 'store/constant'
 import { gridSpacing } from 'store/constant';
 
 // assets
-// Import specific icons from respective packages
 import { IconTallymark1 } from '@tabler/icons-react';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
 
-// Style for link elements
 const linkSX = {
   display: 'flex',
   color: 'grey.900',
@@ -38,12 +27,9 @@ const linkSX = {
 
 // ==============================|| BREADCRUMBS ||============================== //
 
-// Definition of Breadcrumbs component with props
 const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAlign, separator, title, titleBottom, ...others }) => {
-  // Access theme using useTheme hook
   const theme = useTheme();
 
-  // Icon style object
   const iconStyle = {
     marginRight: theme.spacing(0.75),
     marginTop: `-${theme.spacing(0.25)}`,
@@ -52,11 +38,10 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
     color: theme.palette.secondary.main
   };
 
-  // State variables for main and active item
   const [main, setMain] = useState();
   const [item, setItem] = useState();
 
-  // Function to set active item based on current path
+  // set active item state
   const getCollapse = (menu) => {
     if (menu.children) {
       menu.children.filter((collapse) => {
@@ -73,7 +58,6 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
     }
   };
 
-  // useEffect hook to handle navigation items
   useEffect(() => {
     navigation?.items?.map((menu) => {
       if (menu.type && menu.type === 'group') {
@@ -83,9 +67,9 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
     });
   });
 
-  // Define SeparatorIcon component
+  // item separator
   const SeparatorIcon = separator;
-};const separatorIcon = separator ? <SeparatorIcon stroke={1.5} size="1rem" /> : <IconTallymark1 stroke={1.5} size="1rem">;
+  const separatorIcon = separator ? <SeparatorIcon stroke={1.5} size="1rem" /> : <IconTallymark1 stroke={1.5} size="1rem" />;
 
   let mainContent;
   let itemContent;
@@ -149,4 +133,55 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
               {title && !titleBottom && (
                 <Grid item>
                   <Typography variant="h3" sx={{ fontWeight: 500 }}>
-                    {item.title}Return only the translated content, not including the original text.
+                    {item.title}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item>
+                <MuiBreadcrumbs
+                  sx={{ '& .MuiBreadcrumbs-separator': { width: 16, ml: 1.25, mr: 1.25 } }}
+                  aria-label="breadcrumb"
+                  maxItems={maxItems || 8}
+                  separator={separatorIcon}
+                >
+                  <Typography component={Link} to="/" color="inherit" variant="subtitle1" sx={linkSX}>
+                    {icons && <HomeTwoToneIcon sx={iconStyle} />}
+                    {icon && <HomeIcon sx={{ ...iconStyle, mr: 0 }} />}
+                    {!icon && 'Dashboard'}
+                  </Typography>
+                  {mainContent}
+                  {itemContent}
+                </MuiBreadcrumbs>
+              </Grid>
+              {title && titleBottom && (
+                <Grid item>
+                  <Typography variant="h3" sx={{ fontWeight: 500 }}>
+                    {item.title}
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
+          {card === false && divider !== false && <Divider sx={{ borderColor: theme.palette.primary.main, mb: gridSpacing }} />}
+        </Card>
+      );
+    }
+  }
+
+  return breadcrumbContent;
+};
+
+Breadcrumbs.propTypes = {
+  card: PropTypes.bool,
+  divider: PropTypes.bool,
+  icon: PropTypes.bool,
+  icons: PropTypes.bool,
+  maxItems: PropTypes.number,
+  navigation: PropTypes.object,
+  rightAlign: PropTypes.bool,
+  separator: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  title: PropTypes.bool,
+  titleBottom: PropTypes.bool
+};
+
+export default Breadcrumbs;

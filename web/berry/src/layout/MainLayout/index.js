@@ -60,5 +60,44 @@ const MainLayout = () => {
   // Handle left drawer
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
-  const handleLeftDrawerToggle = () => {{/* header */} 
-{/* Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign */}
+  const handleLeftDrawerToggle = () => {
+    dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      {/* header */}
+      <AppBar
+        enableColorOnDark
+        position="fixed"
+        color="inherit"
+        elevation={0}
+        sx={{
+          bgcolor: theme.palette.background.default,
+          transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+        }}
+      >
+        <Toolbar>
+          <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
+        </Toolbar>
+      </AppBar>
+
+      {/* drawer */}
+      <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
+
+      {/* main content */}
+      <Main theme={theme} open={leftDrawerOpened}>
+        {/* breadcrumb */}
+        <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
+        <AuthGuard>
+          <AdminContainer>
+            <Outlet />
+          </AdminContainer>
+        </AuthGuard>
+      </Main>
+    </Box>
+  );
+};
+
+export default MainLayout;

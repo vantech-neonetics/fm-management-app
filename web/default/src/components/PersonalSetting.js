@@ -1,5 +1,3 @@
-```javascript
-// Importing necessary modules and components
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Divider, Form, Header, Image, Message, Modal } from 'semantic-ui-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,12 +7,9 @@ import { UserContext } from '../context/User';
 import { onGitHubOAuthClicked, onLarkOAuthClicked } from './utils';
 
 const PersonalSetting = () => {
-  // Using useContext to access the UserContext
   const [userState, userDispatch] = useContext(UserContext);
-  // Initializing the navigate function using useNavigate
   let navigate = useNavigate();
 
-  // Setting up state variables using useState
   const [inputs, setInputs] = useState({
     wechat_verification_code: '',
     email_verification_code: '',
@@ -34,7 +29,6 @@ const PersonalSetting = () => {
   const [affLink, setAffLink] = useState("");
   const [systemToken, setSystemToken] = useState("");
 
-  // Using useEffect for initial setup based on local storage data
   useEffect(() => {
     let status = localStorage.getItem('status');
     if (status) {
@@ -47,7 +41,6 @@ const PersonalSetting = () => {
     }
   }, []);
 
-  // Using useEffect for countdown and disabling button functionality
   useEffect(() => {
     let countdownInterval = null;
     if (disableButton && countdown > 0) {
@@ -56,25 +49,83 @@ const PersonalSetting = () => {
       }, 1000);
     } else if (countdown === 0) {
       setDisableButton(false);
-```Clean up on unmount
+      setCountdown(30);
+    }
+    return () => clearInterval(countdownInterval); // Clean up on unmount
+  }, [disableButton, countdown]);
 
-Regulate the countdown when the value of `disableButton` or `countdown` changes.
+  const handleInputChange = (e, { name, value }) => {
+    setInputs((inputs) => ({ ...inputs, [name]: value }));
+  };
 
-Update the input value when there is a change.
+  const generateAccessToken = async () => {
+    const res = await API.get('/api/user/token');
+    const { success, message, data } = res.data;
+    if (success) {
+      setSystemToken(data);
+      setAffLink(""); 
+      await copy(data);
+      showSuccess(`令牌已重置并已复制到剪贴板`);
+    } else {
+      showError(message);
+    }
+  };
 
-Get a new access token from the server.
+  const getAffLink = async () => {
+    const res = await API.get('/api/user/aff');
+    const { success, message, data } = res.data;
+    if (success) {
+      let link = `${window.location.origin}/register?aff=${data}`;
+      setAffLink(link);
+      setSystemToken("");
+      await copy(link);
+      showSuccess(`邀请链接已复制到剪切板`);
+    } else {
+      showError(message);
+    }
+  };
 
-Get the affiliate link.
+  const handleAffLinkClick = async (e) => {
+    e.target.select();
+    await copy(e.target.value);
+    showSuccess(`邀请链接已复制到剪切板`);
+  };
 
-Copy the generated link or token to the clipboard.
+  const handleSystemTokenClick = async (e) => {
+    e.target.select();
+    await copy(e.target.value);
+    showSuccess(`系统令牌已复制到剪切板`);
+  };
 
-Handle the click event for the affiliate link.
+  const deleteAccount = async () => {
+    if (inputs.self_account_deletion_confirmation !== userState.user.username) {
+      showError('请输入你的账户名以确认删除！');
+      return;
+    }
 
-Handle the click event for the system token.
+    const res = await API.delete('/api/user/self');
+    const { success, message } = res.data;
 
-Delete the user account after confirmation.
+    if (success) {
+      showSuccess('账户已删除！');
+      await API.get('/api/user/logout');
+      userDispatch({ type: 'logout' });
+      localStorage.removeItem('user');
+      navigate('/login');
+    } else {
+      showError(message);
+    }
+  };
 
-Bind the user's WeChat account with a verification code.setShowWeChatBindModal(false);
+  const bindWeChat = async () => {
+    if (inputs.wechat_verification_code === '') return;
+    const res = await API.get(
+      `/api/oauth/wechat/bind?code=${inputs.wechat_verification_code}`
+    );
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('微信账户绑定成功！');
+      setShowWeChatBindModal(false);
     } else {
       showError(message);
     }
@@ -84,7 +135,7 @@ Bind the user's WeChat account with a verification code.setShowWeChatBindModal(f
     setDisableButton(true);
     if (inputs.email === '') return;
     if (turnstileEnabled && turnstileToken === '') {
-      showInfo('Please retry in a few seconds as Turnstile is checking the user environment!');
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
     setLoading(true);
@@ -93,7 +144,7 @@ Bind the user's WeChat account with a verification code.setShowWeChatBindModal(f
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Verification code sent successfully, please check your email!');
+      showSuccess('验证码发送成功，请检查邮箱！');
     } else {
       showError(message);
     }
@@ -108,7 +159,7 @@ Bind the user's WeChat account with a verification code.setShowWeChatBindModal(f
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Email account bound successfully!');
+      showSuccess('邮箱账户绑定成功！');
       setShowEmailBindModal(false);
     } else {
       showError(message);
@@ -118,18 +169,18 @@ Bind the user's WeChat account with a verification code.setShowWeChatBindModal(f
 
   return (
     <div style={{ lineHeight: '40px' }}>
-      <Header as='h3'>General Settings</Header>
+      <Header as='h3'>通用设置</Header>
       <Message>
-        Note that the token generated here is for system management, not for requesting OpenAI-related services, please be aware.
+        注意，此处生成的令牌用于系统管理，而非用于请求 OpenAI 相关的服务，请知悉。
       </Message>
       <Button as={Link} to={`/user/edit/`}>
-        Update Personal Information
+        更新个人信息
       </Button>
-      <Button onClick={generateAccessToken}>Generate System Access Token</Button>
-      <Button onClick={getAffLink}>Copy Invitation Link</Button>
+      <Button onClick={generateAccessToken}>生成系统访问令牌</Button>
+      <Button onClick={getAffLink}>复制邀请链接</Button>
       <Button onClick={() => {
         setShowAccountDeleteModal(true);
-      }}>Delete Personal Account</Button>
+      }}>删除个人账户</Button>
       
       {systemToken && (
         <Form.Input 
@@ -150,23 +201,90 @@ Bind the user's WeChat account with a verification code.setShowWeChatBindModal(f
         />
       )}
       <Divider />
-      <Header as='h3'>Account Binding</Header>"Bind WeChat Account
-Follow WeChat official account by scanning the QR code, enter 'verification code' to get code (valid for three minutes)
-Bind
-Bind GitHub Account
-Bind Lark Account
-Bind Email Address"onChange={handleInputChange}
+      <Header as='h3'>账号绑定</Header>
+      {
+        status.wechat_login && (
+          <Button
+            onClick={() => {
+              setShowWeChatBindModal(true);
+            }}
+          >
+            绑定微信账号
+          </Button>
+        )
+      }
+      <Modal
+        onClose={() => setShowWeChatBindModal(false)}
+        onOpen={() => setShowWeChatBindModal(true)}
+        open={showWeChatBindModal}
+        size={'mini'}
+      >
+        <Modal.Content>
+          <Modal.Description>
+            <Image src={status.wechat_qrcode} fluid />
+            <div style={{ textAlign: 'center' }}>
+              <p>
+                微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+              </p>
+            </div>
+            <Form size='large'>
+              <Form.Input
+                fluid
+                placeholder='验证码'
+                name='wechat_verification_code'
+                value={inputs.wechat_verification_code}
+                onChange={handleInputChange}
+              />
+              <Button color='' fluid size='large' onClick={bindWeChat}>
+                绑定
+              </Button>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+      {
+        status.github_oauth && (
+          <Button onClick={()=>{onGitHubOAuthClicked(status.github_client_id)}}>绑定 GitHub 账号</Button>
+        )
+      }
+      {
+        status.lark_client_id && (
+          <Button onClick={()=>{onLarkOAuthClicked(status.lark_client_id)}}>绑定飞书账号</Button>
+        )
+      }
+      <Button
+        onClick={() => {
+          setShowEmailBindModal(true);
+        }}
+      >
+        绑定邮箱地址
+      </Button>
+      <Modal
+        onClose={() => setShowEmailBindModal(false)}
+        onOpen={() => setShowEmailBindModal(true)}
+        open={showEmailBindModal}
+        size={'tiny'}
+        style={{ maxWidth: '450px' }}
+      >
+        <Modal.Header>绑定邮箱地址</Modal.Header>
+        <Modal.Content>
+          <Modal.Description>
+            <Form size='large'>
+              <Form.Input
+                fluid
+                placeholder='输入邮箱地址'
+                onChange={handleInputChange}
                 name='email'
                 type='email'
                 action={
                   <Button onClick={sendVerificationCode} disabled={disableButton || loading}>
-                    {disableButton ? `Resend(${countdown})` : 'Get Verification Code'}
+                    {disableButton ? `重新发送(${countdown})` : '获取验证码'}
                   </Button>
                 }
               />
               <Form.Input
                 fluid
-                placeholder='Verification Code'
+                placeholder='验证码'
                 name='email_verification_code'
                 value={inputs.email_verification_code}
                 onChange={handleInputChange}
@@ -189,7 +307,7 @@ Bind Email Address"onChange={handleInputChange}
                 onClick={bindEmail}
                 loading={loading}
               >
-                Confirm Binding
+                确认绑定
               </Button>
               <div style={{ width: '1rem' }}></div> 
               <Button
@@ -197,7 +315,7 @@ Bind Email Address"onChange={handleInputChange}
                 size='large'
                 onClick={() => setShowEmailBindModal(false)}
               >
-                Cancel
+                取消
               </Button>
               </div>
             </Form>
@@ -211,28 +329,53 @@ Bind Email Address"onChange={handleInputChange}
         size={'tiny'}
         style={{ maxWidth: '450px' }}
       >
-        <Modal.Header>Dangerous Operation</Modal.Header>
+        <Modal.Header>危险操作</Modal.Header>
         <Modal.Content>
-        <Message>You are deleting your account, all data will be cleared and cannot be recovered.</Message>
+        <Message>您正在删除自己的帐户，将清空所有数据且不可恢复</Message>
           <Modal.Description>
             <Form size='large'>
               <Form.Input
-                fluid".```jsx
-placeholder={`Enter your account name ${userState?.user?.username} to confirm deletion`}
-<Button
-  color='red'
-  fluid
-  size='large'
-  onClick={deleteAccount}
-  loading={loading}
->
-  Confirm Deletion
-</Button>
-<Button
-  fluid
-  size='large'
-  onClick={() => setShowAccountDeleteModal(false)}
->
-  Cancel
-</Button>
-```
+                fluid
+                placeholder={`输入你的账户名 ${userState?.user?.username} 以确认删除`}
+                name='self_account_deletion_confirmation'
+                value={inputs.self_account_deletion_confirmation}
+                onChange={handleInputChange}
+              />
+              {turnstileEnabled ? (
+                <Turnstile
+                  sitekey={turnstileSiteKey}
+                  onVerify={(token) => {
+                    setTurnstileToken(token);
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                <Button
+                  color='red'
+                  fluid
+                  size='large'
+                  onClick={deleteAccount}
+                  loading={loading}
+                >
+                  确认删除
+                </Button>
+                <div style={{ width: '1rem' }}></div>
+                <Button
+                  fluid
+                  size='large'
+                  onClick={() => setShowAccountDeleteModal(false)}
+                >
+                  取消
+                </Button>
+              </div>
+            </Form>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    </div>
+  );
+};
+
+export default PersonalSetting;

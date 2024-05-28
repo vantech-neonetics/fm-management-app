@@ -68,76 +68,76 @@ const EditUser = (props) => {
     setLoading(true);
     let res = undefined;
     if (userId) {
-      let data = { ...inputs, id: parseInt(userId) };```jsx
-if (typeof data.quota === 'string') {
-  data.quota = parseInt(data.quota);
-}
-res = await API.put(`/api/user/`, data);
-} else {
-  res = await API.put(`/api/user/self`, inputs);
-}
-const { success, message } = res.data;
-if (success) {
-  showSuccess('User information updated successfully!');
-  props.refresh();
-  props.handleClose();
-} else {
-  showError(message);
-}
-setLoading(false);
-};
-
-return (
-  <>
-    <SideSheet
-      placement={'right'}
-      title={<Title level={3}>{'Edit User'}</Title>}
-      headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
-      bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
-      visible={props.visible}
-      footer={
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Space>
-            <Button theme="solid" size={'large'} onClick={submit}>Submit</Button>
-            <Button theme="solid" size={'large'} type={'tertiary'} onClick={handleCancel}>Cancel</Button>
-          </Space>
-        </div>
+      let data = { ...inputs, id: parseInt(userId) };
+      if (typeof data.quota === 'string') {
+        data.quota = parseInt(data.quota);
       }
-      closeIcon={null}
-      onCancel={() => handleCancel()}
-      width={isMobile() ? '100%' : 600}
-    >
-      <Spin spinning={loading}>
-        <div style={{ marginTop: 20 }}>
-          <Typography.Text>Username</Typography.Text>
-        </div>
-        <Input
-          label="Username"
-          name="username"
-          placeholder={'Enter a new username'}
-          onChange={value => handleInputChange('username', value)}
-          value={username}
-          autoComplete="new-password"
-        />
-        <div style={{ marginTop: 20 }}>
-          <Typography.Text>Password</Typography.Text>
-        </div>
-        <Input
-          label="Password"
-          name="password"
-          type={'password'}
-          placeholder={'Enter a new password, at least 8 characters'}
-          onChange={value => handleInputChange('password', value)}
-          value={password}
-          autoComplete="new-password"
-        />
-        <div style={{ marginTop: 20 }}">.
-```<Typography.Text>Display Name</Typography.Text>
+      res = await API.put(`/api/user/`, data);
+    } else {
+      res = await API.put(`/api/user/self`, inputs);
+    }
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('用户信息更新成功！');
+      props.refresh();
+      props.handleClose();
+    } else {
+      showError(message);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <>
+      <SideSheet
+        placement={'right'}
+        title={<Title level={3}>{'编辑用户'}</Title>}
+        headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
+        bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
+        visible={props.visible}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Space>
+              <Button theme="solid" size={'large'} onClick={submit}>提交</Button>
+              <Button theme="solid" size={'large'} type={'tertiary'} onClick={handleCancel}>取消</Button>
+            </Space>
+          </div>
+        }
+        closeIcon={null}
+        onCancel={() => handleCancel()}
+        width={isMobile() ? '100%' : 600}
+      >
+        <Spin spinning={loading}>
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>用户名</Typography.Text>
           </div>
           <Input
-            label="Display Name"
+            label="用户名"
+            name="username"
+            placeholder={'请输入新的用户名'}
+            onChange={value => handleInputChange('username', value)}
+            value={username}
+            autoComplete="new-password"
+          />
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>密码</Typography.Text>
+          </div>
+          <Input
+            label="密码"
+            name="password"
+            type={'password'}
+            placeholder={'请输入新的密码，最短 8 位'}
+            onChange={value => handleInputChange('password', value)}
+            value={password}
+            autoComplete="new-password"
+          />
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>显示名称</Typography.Text>
+          </div>
+          <Input
+            label="显示名称"
             name="display_name"
-            placeholder={'Please enter a new display name'}
+            placeholder={'请输入新的显示名称'}
             onChange={value => handleInputChange('display_name', value)}
             value={display_name}
             autoComplete="new-password"
@@ -145,27 +145,27 @@ return (
           {
             userId && <>
               <div style={{ marginTop: 20 }}>
-                <Typography.Text>Group</Typography.Text>
+                <Typography.Text>分组</Typography.Text>
               </div>
               <Select
-                placeholder={'Please select a group'}
+                placeholder={'请选择分组'}
                 name="group"
                 fluid
                 search
                 selection
                 allowAdditions
-                additionLabel={'Please edit group rates in the system settings page to add a new group:'}
+                additionLabel={'请在系统设置页面编辑分组倍率以添加新的分组：'}
                 onChange={value => handleInputChange('group', value)}
                 value={inputs.group}
                 autoComplete="new-password"
                 optionList={groupOptions}
               />
               <div style={{ marginTop: 20 }}>
-                <Typography.Text>{`Remaining Quota: ${renderQuotaWithPrompt(quota)}`}</Typography.Text>
+                <Typography.Text>{`剩余额度${renderQuotaWithPrompt(quota)}`}</Typography.Text>
               </div>
               <Input
                 name="quota"
-                placeholder={'Please enter a new quota'}
+                placeholder={'请输入新的剩余额度'}
                 onChange={value => handleInputChange('quota', value)}
                 value={quota}
                 type={'number'}
@@ -173,41 +173,42 @@ return (
               />
             </>
           }
-          <Divider style={{ marginTop: 20 }}>The following information cannot be modified</Divider>
+          <Divider style={{ marginTop: 20 }}>以下信息不可修改</Divider>
           <div style={{ marginTop: 20 }}>
-            <Typography.Text>Linked GitHub Account</Typography.Text>
+            <Typography.Text>已绑定的 GitHub 账户</Typography.Text>
           </div>
           <Input
             name="github_id"
             value={github_id}
             autoComplete="new-password"
-            placeholder="This field is read-only, users need to bind it through the related binding button on the personal settings page, cannot be directly modified"
+            placeholder="此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改"
             readonly
           />
           <div style={{ marginTop: 20 }}>
-            <Typography.Text>Linked WeChat Account</Typography.Text>
+            <Typography.Text>已绑定的微信账户</Typography.Text>
           </div>
           <Input
             name="wechat_id"
-            value={wechat_id}."autoComplete="new-password"
-            placeholder="This item is read-only and needs to be bound through the relevant binding button on the personal settings page by the user, and cannot be directly modified"
+            value={wechat_id}
+            autoComplete="new-password"
+            placeholder="此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改"
             readonly
           />
           <Input
             name="telegram_id"
             value={telegram_id}
             autoComplete="new-password"
-            placeholder="This item is read-only and needs to be bound through the relevant binding button on the personal settings page by the user, and cannot be directly modified"
+            placeholder="此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改"
             readonly
           />
           <div style={{ marginTop: 20 }}>
-            <Typography.Text>Bound Email Account</Typography.Text>
+            <Typography.Text>已绑定的邮箱账户</Typography.Text>
           </div>
           <Input
             name="email"
             value={email}
             autoComplete="new-password"
-            placeholder="This item is read-only and needs to be bound through the relevant binding button on the personal settings page by the user, and cannot be directly modified"
+            placeholder="此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改"
             readonly
           />
         </Spin>
@@ -216,4 +217,4 @@ return (
   );
 };
 
-export default EditUser;"
+export default EditUser;

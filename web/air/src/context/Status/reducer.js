@@ -1,4 +1,3 @@
-```javascript
 export const reducer = (state, action) => {
   switch (action.type) {
     case 'set':
@@ -19,4 +18,3 @@ export const reducer = (state, action) => {
 export const initialState = {
   status: undefined,
 };
-```

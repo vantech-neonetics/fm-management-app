@@ -66,8 +66,8 @@ const NavCollapse = ({ menu, level }) => {
     switch (item.type) {
       case 'collapse':
         return <NavCollapse key={item.id} menu={item} level={level + 1} />;
-      case 'item':```jsx
-return <NavItem key={item.id} item={item} level={level + 1} />;
+      case 'item':
+        return <NavItem key={item.id} item={item} level={level + 1} />;
       default:
         return (
           <Typography key={item.id} variant="h6" color="error" align="center">
@@ -129,5 +129,30 @@ return <NavItem key={item.id} item={item} level={level + 1} />;
         <List
           component="div"
           disablePadding
-          sx={{".
-```format: Return only the translated content, not including the original text.
+          sx={{
+            position: 'relative',
+            '&:after': {
+              content: "''",
+              position: 'absolute',
+              left: '32px',
+              top: 0,
+              height: '100%',
+              width: '1px',
+              opacity: 1,
+              background: theme.palette.primary.light
+            }
+          }}
+        >
+          {menus}
+        </List>
+      </Collapse>
+    </>
+  );
+};
+
+NavCollapse.propTypes = {
+  menu: PropTypes.object,
+  level: PropTypes.number
+};
+
+export default NavCollapse;

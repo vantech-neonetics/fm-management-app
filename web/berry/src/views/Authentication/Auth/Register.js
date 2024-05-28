@@ -36,7 +36,7 @@ const Register = () => {
                       <Grid item>
                         <Stack alignItems="center" justifyContent="center" spacing={1}>
                           <Typography color={theme.palette.primary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                            Register
+                            注册
                           </Typography>
                         </Stack>
                       </Grid>
@@ -48,4 +48,24 @@ const Register = () => {
                   <Grid item xs={12}>
                     <Divider />
                   </Grid>
-                  <Grid item xs={12}>"Already have an account? Click to log in
+                  <Grid item xs={12}>
+                    <Grid item container direction="column" alignItems="center" xs={12}>
+                      <Typography component={Link} to="/login" variant="subtitle1" sx={{ textDecoration: 'none' }}>
+                        已经有帐号了？点击登录
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </AuthCardWrapper>
+            </Grid>
+          </Grid>
+        </Grid>
+        {/* <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
+          <AuthFooter />
+        </Grid> */}
+      </Grid>
+    </AuthWrapper>
+  );
+};
+
+export default Register;

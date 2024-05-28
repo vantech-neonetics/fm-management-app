@@ -65,16 +65,83 @@ const EditRedemption = (props) => {
       res = await API.post(`/api/redemption/`, {
         ...localInputs
       });
-    }```jsx
-// Download redemption code text as a file with name based on the code
-```Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "<div style={{ marginTop: 20 }}>
-            <Typography.Text>{`Quota${renderQuotaWithPrompt(quota)}`}</Typography.Text>
+    }
+    const { success, message, data } = res.data;
+    if (success) {
+      if (isEdit) {
+        showSuccess('兑换码更新成功！');
+        props.refresh();
+        props.handleClose();
+      } else {
+        showSuccess('兑换码创建成功！');
+        setInputs(originInputs);
+        props.refresh();
+        props.handleClose();
+      }
+    } else {
+      showError(message);
+    }
+    if (!isEdit && data) {
+      let text = '';
+      for (let i = 0; i < data.length; i++) {
+        text += data[i] + '\n';
+      }
+      // downloadTextAsFile(text, `${inputs.name}.txt`);
+      Modal.confirm({
+        title: '兑换码创建成功',
+        content: (
+          <div>
+            <p>兑换码创建成功，是否下载兑换码？</p>
+            <p>兑换码将以文本文件的形式下载，文件名为兑换码的名称。</p>
+          </div>
+        ),
+        onOk: () => {
+          downloadTextAsFile(text, `${inputs.name}.txt`);
+        }
+      });
+    }
+    setLoading(false);
+  };
+
+  return (
+    <>
+      <SideSheet
+        placement={isEdit ? 'right' : 'left'}
+        title={<Title level={3}>{isEdit ? '更新兑换码信息' : '创建新的兑换码'}</Title>}
+        headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
+        bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
+        visible={props.visiable}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Space>
+              <Button theme="solid" size={'large'} onClick={submit}>提交</Button>
+              <Button theme="solid" size={'large'} type={'tertiary'} onClick={handleCancel}>取消</Button>
+            </Space>
+          </div>
+        }
+        closeIcon={null}
+        onCancel={() => handleCancel()}
+        width={isMobile() ? '100%' : 600}
+      >
+        <Spin spinning={loading}>
+          <Input
+            style={{ marginTop: 20 }}
+            label="名称"
+            name="name"
+            placeholder={'请输入名称'}
+            onChange={value => handleInputChange('name', value)}
+            value={name}
+            autoComplete="new-password"
+            required={!isEdit}
+          />
+          <Divider />
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>{`额度${renderQuotaWithPrompt(quota)}`}</Typography.Text>
           </div>
           <AutoComplete
             style={{ marginTop: 8 }}
             name="quota"
-            placeholder={'Please enter quota'}
+            placeholder={'请输入额度'}
             onChange={(value) => handleInputChange('quota', value)}
             value={quota}
             autoComplete="new-password"
@@ -92,12 +159,12 @@ while maintaining the original formatting: "<div style={{ marginTop: 20 }}>
           {
             !isEdit && <>
               <Divider />
-              <Typography.Text>Number of generatings</Typography.Text>
+              <Typography.Text>生成数量</Typography.Text>
               <Input
                 style={{ marginTop: 8 }}
-                label="Number of generatings"
+                label="生成数量"
                 name="count"
-                placeholder={'Please enter the number of generatings'}
+                placeholder={'请输入生成数量'}
                 onChange={value => handleInputChange('count', value)}
                 value={count}
                 autoComplete="new-password"
@@ -111,4 +178,4 @@ while maintaining the original formatting: "<div style={{ marginTop: 20 }}>
   );
 };
 
-export default EditRedemption;".
+export default EditRedemption;

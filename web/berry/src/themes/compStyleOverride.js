@@ -16,13 +16,13 @@ export default function componentStyleOverrides(theme) {
     MuiAutocomplete: {
       styleOverrides: {
         popper: {
-          // Inherits MuiPopover-root
+          // 继承 MuiPopover-root
           boxShadow: '0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)',
           borderRadius: '12px',
           color: '#364152'
         },
         listbox: {
-          // Inherits MuiPopover-root
+          // 继承 MuiPopover-root
           padding: '0px',
           paddingTop: '8px',
           paddingBottom: '8px'
@@ -83,7 +83,8 @@ export default function componentStyleOverrides(theme) {
     MuiCardActions: {
       styleOverrides: {
         root: {
-          padding: '24px'".```
+          padding: '24px'
+        }
       }
     },
     MuiListItemButton: {
@@ -160,8 +161,8 @@ export default function componentStyleOverrides(theme) {
           borderRadius: `${theme?.customization?.borderRadius}px`,
           '&.MuiInputBase-inputSizeSmall': {
             padding: '10px 14px',
-            '&.MuiInputBase-inputAdornedStart': {".
-```paddingLeft: 0
+            '&.MuiInputBase-inputAdornedStart': {
+              paddingLeft: 0
             }
           }
         },
@@ -254,7 +255,8 @@ export default function componentStyleOverrides(theme) {
       .apexcharts-legend-text {
         color: ${theme.textDark} !important
       }
-      .apexcharts-menu {"."background: ${theme.backgroundDefault} !important
+      .apexcharts-menu {
+        background: ${theme.backgroundDefault} !important
       }
       .apexcharts-gridline, .apexcharts-xaxistooltip-background, .apexcharts-yaxistooltip-background {
         stroke: ${theme.divider} !important;
@@ -262,4 +264,4 @@ export default function componentStyleOverrides(theme) {
       `
     }
   };
-"
+}

@@ -1,16 +1,16 @@
-Import React, {useEffect, useState} from 'react';
-Import {showError, showNotice} from 'utils/common';
-Import {API} from 'utils/api';
-Import {marked} from 'marked';
-Import BaseIndex from './baseIndex';
-Import {Box, Container} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { showError, showNotice } from 'utils/common';
+import { API } from 'utils/api';
+import { marked } from 'marked';
+import BaseIndex from './baseIndex';
+import { Box, Container } from '@mui/material';
 
 const Home = () => {
   const [homePageContentLoaded, setHomePageContentLoaded] = useState(false);
   const [homePageContent, setHomePageContent] = useState('');
-  Const displayNotice = async () => {
+  const displayNotice = async () => {
     const res = await API.get('/api/notice');
-    const {success, message, data} = res.data;
+    const { success, message, data } = res.data;
     if (success) {
       let oldNotice = localStorage.getItem('notice');
       if (data !== oldNotice && data !== '') {
@@ -23,10 +23,10 @@ const Home = () => {
     }
   };
 
-  Const displayHomePageContent = async () => {
+  const displayHomePageContent = async () => {
     setHomePageContent(localStorage.getItem('home_page_content') || '');
     const res = await API.get('/api/home_page_content');
-    const {success, message, data} = res.data;
+    const { success, message, data } = res.data;
     if (success) {
       let content = data;
       if (!data.startsWith('https://')) {
@@ -36,7 +36,7 @@ const Home = () => {
       localStorage.setItem('home_page_content', content);
     } else {
       showError(message);
-      setHomePageContent('Failed to load homepage content...');
+      setHomePageContent('加载首页内容失败...');
     }
     setHomePageContentLoaded(true);
   };
@@ -46,7 +46,7 @@ const Home = () => {
     displayHomePageContent().then();
   }, []);
 
-  Return (
+  return (
     <>
       {homePageContentLoaded && homePageContent === '' ? (
         <BaseIndex />
@@ -58,4 +58,15 @@ const Home = () => {
             ) : (
               <>
                 <Container>
-                  <div style={{ fontSize: 'larger' }} dangerouslySetInnerHTML={{ __html: homePageContent }}></div>".Return only the translated content, not including the original text.
+                  <div style={{ fontSize: 'larger' }} dangerouslySetInnerHTML={{ __html: homePageContent }}></div>
+                </Container>
+              </>
+            )}
+          </Box>
+        </>
+      )}
+    </>
+  );
+};
+
+export default Home;

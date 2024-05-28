@@ -21,7 +21,7 @@ const GitHubOAuth = () => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
   const [searchParams] = useSearchParams();
-  const [prompt, setPrompt] = useState('Handling...'); // Original: 处理中...
+  const [prompt, setPrompt] = useState('处理中...');
   const { githubLogin } = useLogin();
 
   let navigate = useNavigate();
@@ -33,13 +33,13 @@ const GitHubOAuth = () => {
         showError(message);
       }
       if (count === 0) {
-        setPrompt(`Operation failed, redirecting to the login page...`); // Original: 操作失败，重定向至登录界面中...
+        setPrompt(`操作失败，重定向至登录界面中...`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         navigate('/login');
         return;
       }
       count++;
-      setPrompt(`Error occurred, retrying for the ${count} time...`); // Original: 出现错误，第 ${count} 次重试中...
+      setPrompt(`出现错误，第 ${count} 次重试中...`);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       await sendCode(code, state, count);
     }
@@ -58,27 +58,37 @@ const GitHubOAuth = () => {
           <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 136px)' }}>
             <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
               <AuthCardWrapper>
-                <Grid container spacing={2} alignItems="center" justifyContent="center">```
-<Grid item sx={{ mb: 3 }}>
-    <Link to="#">
-      <Logo />
-    </Link>
-</Grid>
-<Grid item xs={12}>
-    <Grid container direction={matchDownSM ? 'column-reverse' : 'row'} alignItems="center" justifyContent="center">
-        <Grid item>
-            <Stack alignItems="center" justifyContent="center" spacing={1}>
-                <Typography color={theme.palette.primary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                    GitHub Login
-                </Typography>
-            </Stack>
+                <Grid container spacing={2} alignItems="center" justifyContent="center">
+                  <Grid item sx={{ mb: 3 }}>
+                    <Link to="#">
+                      <Logo />
+                    </Link>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container direction={matchDownSM ? 'column-reverse' : 'row'} alignItems="center" justifyContent="center">
+                      <Grid item>
+                        <Stack alignItems="center" justifyContent="center" spacing={1}>
+                          <Typography color={theme.palette.primary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
+                            GitHub 登录
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} container direction="column" justifyContent="center" alignItems="center" style={{ height: '200px' }}>
+                    <CircularProgress />
+                    <Typography variant="h3" paddingTop={'20px'}>
+                      {prompt}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </AuthCardWrapper>
+            </Grid>
+          </Grid>
         </Grid>
-    </Grid>
-</Grid>
-<Grid item xs={12} container direction="column" justifyContent="center" alignItems="center" style={{ height: '200px' }}>
-    <CircularProgress />
-    <Typography variant="h3" paddingTop={'20px'}>
-        {prompt}
-    </Typography>
-</Grid>
-```
+      </Grid>
+    </AuthWrapper>
+  );
+};
+
+export default GitHubOAuth;

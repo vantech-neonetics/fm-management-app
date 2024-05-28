@@ -40,7 +40,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
           <MenuCard />
           <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
             <Chip
-              label={process.env.REACT_APP_VERSION || 'Unknown version'}
+              label={process.env.REACT_APP_VERSION || '未知版本号'}
               disabled
               chipcolor="secondary"
               size="small"
@@ -55,7 +55,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
           <MenuCard />
           <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
             <Chip
-              label={process.env.REACT_APP_VERSION || 'Unknown version'}
+              label={process.env.REACT_APP_VERSION || '未知版本号'}
               disabled
               chipcolor="secondary"
               size="small"
@@ -65,10 +65,9 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         </Box>
       </MobileView>
     </>
-  );Return only the translated content, not including the original text.
+  );
 
-```jsx
-const container = window !== undefined ? () => window.document.body : undefined;
+  const container = window !== undefined ? () => window.document.body : undefined;
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 }, width: matchUpMd ? drawerWidth : 'auto' }} aria-label="mailbox folders">
@@ -105,4 +104,3 @@ Sidebar.propTypes = {
 };
 
 export default Sidebar;
-```

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 
 export const LoadStatusContext = createContext();
 
+// eslint-disable-next-line
 const StatusProvider = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -28,7 +29,7 @@ const StatusProvider = ({ children }) => {
         process.env.REACT_APP_VERSION !== ""
       ) {
         showNotice(
-          `New version available: ${data.version}, please use shortcut Shift + F5 to refresh the page`
+          `新版本可用：${data.version}，请使用快捷键 Shift + F5 刷新页面`
         );
       }
       if (data.system_name) {
@@ -46,7 +47,7 @@ const StatusProvider = ({ children }) => {
           payload: data,
         });
       }
-      showError("Failed to connect to the server!");
+      showError("无法正常连接至服务器！");
     }
 
     if (system_name) {

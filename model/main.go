@@ -10,7 +10,6 @@ import (
 	"github.com/vantech-neonetics/fm-management-app/common/random"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"os"
 	"strings"
@@ -60,7 +59,6 @@ func CreateRootAccountIfNeed() error {
 }
 
 func chooseDB(envName string) (*gorm.DB, error) {
-	if os.Getenv(envName) != "" {
 		dsn := os.Getenv(envName)
 		if strings.HasPrefix(dsn, "postgres://") {
 			// Use PostgreSQL
@@ -76,17 +74,17 @@ func chooseDB(envName string) (*gorm.DB, error) {
 		// Use MySQL
 		logger.SysLog("using MySQL as database")
 		common.UsingMySQL = true
+  fmt.Println("mysql", dsn)
 		return gorm.Open(mysql.Open(dsn), &gorm.Config{
 			PrepareStmt: true, // precompile SQL
 		})
-	}
 	// Use SQLite
-	logger.SysLog("SQL_DSN not set, using SQLite as database")
-	common.UsingSQLite = true
-	config := fmt.Sprintf("?_busy_timeout=%d", common.SQLiteBusyTimeout)
-	return gorm.Open(sqlite.Open(common.SQLitePath+config), &gorm.Config{
-		PrepareStmt: true, // precompile SQL
-	})
+	// logger.SysLog("SQL_DSN not set, using SQLite as database")
+	// common.UsingSQLite = true
+	// config := fmt.Sprintf("?_busy_timeout=%d", common.SQLiteBusyTimeout)
+	// return gorm.Open(sqlite.Open(common.SQLitePath+config), &gorm.Config{
+	// 	PrepareStmt: true, // precompile SQL
+	// })
 }
 
 func InitDB(envName string) (db *gorm.DB, err error) {

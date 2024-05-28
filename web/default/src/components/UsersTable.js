@@ -9,13 +9,13 @@ import { renderGroup, renderNumber, renderQuota, renderText } from '../helpers/r
 function renderRole(role) {
   switch (role) {
     case 1:
-      return <Label>Regular User</Label>;
+      return <Label>普通用户</Label>;
     case 10:
-      return <Label color='yellow'>Administrator</Label>;
+      return <Label color='yellow'>管理员</Label>;
     case 100:
-      return <Label color='orange'>Super Administrator</Label>;
+      return <Label color='orange'>超级管理员</Label>;
     default:
-      return <Label color='red'>Unknown Identity</Label>;
+      return <Label color='red'>未知身份</Label>;
   }
 }
 
@@ -66,10 +66,11 @@ const UsersTable = () => {
     (async () => {
       const res = await API.post('/api/user/manage', {
         username,
-        action".});
+        action
+      });
       const { success, message } = res.data;
       if (success) {
-        showSuccess('Operation completed successfully!');
+        showSuccess('操作成功完成！');
         let user = res.data.data;
         let newUsers = [...users];
         let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
@@ -89,17 +90,17 @@ const UsersTable = () => {
   const renderStatus = (status) => {
     switch (status) {
       case 1:
-        return <Label basic>Activated</Label>;
+        return <Label basic>已激活</Label>;
       case 2:
         return (
           <Label basic color='red'>
-            Banned
+            已封禁
           </Label>
         );
       default:
         return (
           <Label basic color='grey'>
-            Unknown Status
+            未知状态
           </Label>
         );
     }
@@ -147,7 +148,9 @@ const UsersTable = () => {
     }
     setUsers(sortedUsers);
     setLoading(false);
-  };const handleOrderByChange = (e, { value }) => {
+  };
+
+  const handleOrderByChange = (e, { value }) => {
     setOrderBy(value);
     setActivePage(1);
   };
@@ -159,7 +162,7 @@ const UsersTable = () => {
           icon='search'
           fluid
           iconPosition='left'
-          placeholder='Search user ID, username, display name, and email address ...'
+          placeholder='搜索用户的 ID，用户名，显示名称，以及邮箱地址 ...'
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}
@@ -183,7 +186,7 @@ const UsersTable = () => {
                 sortUser('username');
               }}
             >
-              Username
+              用户名
             </Table.HeaderCell>
             <Table.HeaderCell
               style={{ cursor: 'pointer' }}
@@ -191,7 +194,7 @@ const UsersTable = () => {
                 sortUser('group');
               }}
             >
-              Group
+              分组
             </Table.HeaderCell>
             <Table.HeaderCell
               style={{ cursor: 'pointer' }}
@@ -199,7 +202,7 @@ const UsersTable = () => {
                 sortUser('quota');
               }}
             >
-              Statistics
+              统计信息
             </Table.HeaderCell>
             <Table.HeaderCell
               style={{ cursor: 'pointer' }}
@@ -207,7 +210,7 @@ const UsersTable = () => {
                 sortUser('role');
               }}
             >
-              User Role
+              用户角色
             </Table.HeaderCell>
             <Table.HeaderCell
               style={{ cursor: 'pointer' }}
@@ -215,17 +218,17 @@ const UsersTable = () => {
                 sortUser('status');
               }}
             >
-              Status
+              状态
             </Table.HeaderCell>
-            <Table.HeaderCell>Operation</Table.HeaderCell>
+            <Table.HeaderCell>操作</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {users
             .slice(
-              (activePage - 1) * ITEMS_PER_PAGE,".```javascript
-activePage * ITEMS_PER_PAGE
+              (activePage - 1) * ITEMS_PER_PAGE,
+              activePage * ITEMS_PER_PAGE
             )
             .map((user, idx) => {
               if (user.deleted) return <></>;
@@ -234,7 +237,7 @@ activePage * ITEMS_PER_PAGE
                   <Table.Cell>{user.id}</Table.Cell>
                   <Table.Cell>
                     <Popup
-                      content={user.email ? user.email : 'Email not bound'}
+                      content={user.email ? user.email : '未绑定邮箱地址'}
                       key={user.username}
                       header={user.display_name ? user.display_name : user.username}
                       trigger={<span>{renderText(user.username, 15)}</span>}
@@ -243,12 +246,12 @@ activePage * ITEMS_PER_PAGE
                   </Table.Cell>
                   <Table.Cell>{renderGroup(user.group)}</Table.Cell>
                   {/*<Table.Cell>*/}
-                  {/*  {user.email ? <Popup hoverable content={user.email} trigger={<span>{renderText(user.email, 24)}</span>} /> : 'None'}*/}
+                  {/*  {user.email ? <Popup hoverable content={user.email} trigger={<span>{renderText(user.email, 24)}</span>} /> : '无'}*/}
                   {/*</Table.Cell>*/}
                   <Table.Cell>
-                    <Popup content='Remaining Quota' trigger={<Label basic>{renderQuota(user.quota)}</Label>} />
-                    <Popup content='Used Quota' trigger={<Label basic>{renderQuota(user.used_quota)}</Label>} />
-                    <Popup content='Request Count' trigger={<Label basic>{renderNumber(user.request_count)}</Label>} />
+                    <Popup content='剩余额度' trigger={<Label basic>{renderQuota(user.quota)}</Label>} />
+                    <Popup content='已用额度' trigger={<Label basic>{renderQuota(user.used_quota)}</Label>} />
+                    <Popup content='请求次数' trigger={<Label basic>{renderNumber(user.request_count)}</Label>} />
                   </Table.Cell>
                   <Table.Cell>{renderRole(user.role)}</Table.Cell>
                   <Table.Cell>{renderStatus(user.status)}</Table.Cell>
@@ -262,26 +265,78 @@ activePage * ITEMS_PER_PAGE
                         }}
                         disabled={user.role === 100}
                       >
-                        Promote
+                        提升
                       </Button>
                       <Button
                         size={'small'}
                         color={'yellow'}
-```"Demote
-Delete
-Disable
-Enable
-Edit"<Button size='small' as={Link} to='/user/add' loading={loading}>
-                Add a new user
+                        onClick={() => {
+                          manageUser(user.username, 'demote', idx);
+                        }}
+                        disabled={user.role === 100}
+                      >
+                        降级
+                      </Button>
+                      <Popup
+                        trigger={
+                          <Button size='small' negative disabled={user.role === 100}>
+                            删除
+                          </Button>
+                        }
+                        on='click'
+                        flowing
+                        hoverable
+                      >
+                        <Button
+                          negative
+                          onClick={() => {
+                            manageUser(user.username, 'delete', idx);
+                          }}
+                        >
+                          删除用户 {user.username}
+                        </Button>
+                      </Popup>
+                      <Button
+                        size={'small'}
+                        onClick={() => {
+                          manageUser(
+                            user.username,
+                            user.status === 1 ? 'disable' : 'enable',
+                            idx
+                          );
+                        }}
+                        disabled={user.role === 100}
+                      >
+                        {user.status === 1 ? '禁用' : '启用'}
+                      </Button>
+                      <Button
+                        size={'small'}
+                        as={Link}
+                        to={'/user/edit/' + user.id}
+                      >
+                        编辑
+                      </Button>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
+        </Table.Body>
+
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan='7'>
+              <Button size='small' as={Link} to='/user/add' loading={loading}>
+                添加新的用户
               </Button>
               <Dropdown
-                placeholder='Sorting method'
+                placeholder='排序方式'
                 selection
                 options={[
-                  { key: '', text: 'Default sorting', value: '' },
-                  { key: 'quota', text: 'Sort by remaining quota', value: 'quota' },
-                  { key: 'used_quota', text: 'Sort by used quota', value: 'used_quota' },
-                  { key: 'request_count', text: 'Sort by request count', value: 'request_count' },
+                  { key: '', text: '默认排序', value: '' },
+                  { key: 'quota', text: '按剩余额度排序', value: 'quota' },
+                  { key: 'used_quota', text: '按已用额度排序', value: 'used_quota' },
+                  { key: 'request_count', text: '按请求次数排序', value: 'request_count' },
                 ]}
                 value={orderBy}
                 onChange={handleOrderByChange}

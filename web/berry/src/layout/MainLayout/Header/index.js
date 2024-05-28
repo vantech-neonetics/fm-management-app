@@ -1,27 +1,68 @@
+import PropTypes from 'prop-types';
+
 // material-ui
-// 导入useTheme函数，Avatar、Box和ButtonBase组件
-// Import statements for useTheme, Avatar, Box, and ButtonBase components
+import { useTheme } from '@mui/material/styles';
+import { Avatar, Box, ButtonBase } from '@mui/material';
 
 // project imports
-// 导入LogoSection、ProfileSection和ThemeButton组件
-// Import statements for LogoSection, ProfileSection, and ThemeButton components
+import LogoSection from '../LogoSection';
+import ProfileSection from './ProfileSection';
+import ThemeButton from 'ui-component/ThemeButton';
 
 // assets
-// 导入IconMenu2图标
-// Import statement for IconMenu2 icon
+import { IconMenu2 } from '@tabler/icons-react';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
-// 主导航栏/页眉
-// Main Navbar / Header
 
-// 定义Header组件，并传入handleLeftDrawerToggle函数作为参数
-// Define the Header component and pass handleLeftDrawerToggle function as a parameter
+const Header = ({ handleLeftDrawerToggle }) => {
+  const theme = useTheme();
 
-// 当调用时，获取主题变量
-// When called, get the theme variable
+  return (
+    <>
+      {/* logo & toggler button */}
+      <Box
+        sx={{
+          width: 228,
+          display: 'flex',
+          [theme.breakpoints.down('md')]: {
+            width: 'auto'
+          }
+        }}
+      >
+        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
+          <LogoSection />
+        </Box>
+        <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+          <Avatar
+            variant="rounded"
+            sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              ...theme.typography.menuButton,
+              transition: 'all .2s ease-in-out',
+              '&:hover': {
+                background: theme.palette.secondary.dark,
+                color: theme.palette.secondary.light
+              }
+            }}
+            onClick={handleLeftDrawerToggle}
+            color="inherit"
+          >
+            <IconMenu2 stroke={1.5} size="1.3rem" />
+          </Avatar>
+        </ButtonBase>
+      </Box>
 
-// 返回包含Logo、toggler button、ThemeButton和ProfileSection组件的组件
-// Return a component containing Logo, toggler button, ThemeButton, and ProfileSection components
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ flexGrow: 1 }} />
+      <ThemeButton />
+      <ProfileSection />
+    </>
+  );
+};
 
-// Header组件的参数类型检查
-// PropTypes for Header component
+Header.propTypes = {
+  handleLeftDrawerToggle: PropTypes.func
+};
+
+export default Header;

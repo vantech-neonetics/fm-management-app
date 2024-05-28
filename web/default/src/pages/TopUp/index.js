@@ -1,5 +1,4 @@
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Grid, Header, Segment, Statistic } from 'semantic-ui-react';
 import { API, showError, showInfo, showSuccess } from '../../helpers';
 import { renderQuota } from '../../helpers/render';
@@ -13,7 +12,7 @@ const TopUp = () => {
 
   const topUp = async () => {
     if (redemptionCode === '') {
-      showInfo('Please enter the redemption code!')
+      showInfo('请输入充值码！')
       return;
     }
     setIsSubmitting(true);
@@ -23,7 +22,7 @@ const TopUp = () => {
       });
       const { success, message, data } = res.data;
       if (success) {
-        showSuccess('Top-up successful!');
+        showSuccess('充值成功！');
         setUserQuota((quota) => {
           return quota + data;
         });
@@ -32,7 +31,7 @@ const TopUp = () => {
         showError(message);
       }
     } catch (err) {
-      showError('Request failed');
+      showError('请求失败');
     } finally {
       setIsSubmitting(false); 
     }
@@ -40,7 +39,7 @@ const TopUp = () => {
 
   const openTopUpLink = () => {
     if (!topUpLink) {
-      showError('Admin has not set up the top-up link!');
+      showError('超级管理员未设置充值链接！');
       return;
     }
     let url = new URL(topUpLink);
@@ -68,8 +67,46 @@ const TopUp = () => {
     let status = localStorage.getItem('status');
     if (status) {
       status = JSON.parse(status);
-      if (status.top_up_link) ".Instructions: Translate the following Chinese text to English while maintaining the original formatting: "Quota Recharge
-Exchangeable Code
-Charging
-Exchanging
-Remaining Quota"
+      if (status.top_up_link) {
+        setTopUpLink(status.top_up_link);
+      }
+    }
+    getUserQuota().then();
+  }, []);
+
+  return (
+    <Segment>
+      <Header as='h3'>充值额度</Header>
+      <Grid columns={2} stackable>
+        <Grid.Column>
+          <Form>
+            <Form.Input
+              placeholder='兑换码'
+              name='redemptionCode'
+              value={redemptionCode}
+              onChange={(e) => {
+                setRedemptionCode(e.target.value);
+              }}
+            />
+            <Button color='green' onClick={openTopUpLink}>
+              充值
+            </Button>
+            <Button color='yellow' onClick={topUp} disabled={isSubmitting}>
+                {isSubmitting ? '兑换中...' : '兑换'}
+            </Button>
+          </Form>
+        </Grid.Column>
+        <Grid.Column>
+          <Statistic.Group widths='one'>
+            <Statistic>
+              <Statistic.Value>{renderQuota(userQuota)}</Statistic.Value>
+              <Statistic.Label>剩余额度</Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+        </Grid.Column>
+      </Grid>
+    </Segment>
+  );
+};
+
+export default TopUp;

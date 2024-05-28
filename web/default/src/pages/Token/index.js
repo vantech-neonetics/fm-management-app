@@ -5,7 +5,7 @@ import TokensTable from '../../components/TokensTable';
 const Token = () => (
   <>
     <Segment>
-      <Header as='h3'>My Tokens</Header>
+      <Header as='h3'>我的令牌</Header>
       <TokensTable/>
     </Segment>
   </>

@@ -1,10 +1,29 @@
-// Import statements unchanged
-// Import statements unchanged
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/User';
+import { StatusContext } from '../context/Status';
+
+import { API, getLogo, getSystemName, isAdmin, isMobile, showError } from '../helpers';
+import '../index.css';
+
+import {
+  IconCalendarClock,
+  IconComment,
+  IconCreditCard,
+  IconGift,
+  IconHistogram,
+  IconHome,
+  IconImage,
+  IconKey,
+  IconLayers,
+  IconSetting,
+  IconUser
+} from '@douyinfe/semi-icons';
+import { Layout, Nav } from '@douyinfe/semi-ui';
 
 // HeaderBar Buttons
 
 const SiderBar = () => {
-  // Translation of variable names
   const [userState, userDispatch] = useContext(UserContext);
   const [statusState, statusDispatch] = useContext(StatusContext);
   const defaultIsCollapsed = isMobile() || localStorage.getItem('default_collapse_sidebar') === 'true';
@@ -17,78 +36,79 @@ const SiderBar = () => {
 
   const headerButtons = useMemo(() => [
     {
-      text: 'Home',
+      text: '首页',
       itemKey: 'home',
       to: '/',
       icon: <IconHome />
     },
     {
-      text: 'Channel',
+      text: '渠道',
       itemKey: 'channel',
       to: '/channel',
       icon: <IconLayers />,
       className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Chat',
+      text: '聊天',
       itemKey: 'chat',
       to: '/chat',
       icon: <IconComment />,
       className: localStorage.getItem('chat_link') ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Token',
+      text: '令牌',
       itemKey: 'token',
       to: '/token',
       icon: <IconKey />
     },
     {
-      text: 'Redemption',
+      text: '兑换',
       itemKey: 'redemption',
       to: '/redemption',
       icon: <IconGift />,
       className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Top-up',
+      text: '充值',
       itemKey: 'topup',
       to: '/topup',
       icon: <IconCreditCard />
     },
     {
-      text: 'User',itemKey: 'user',
+      text: '用户',
+      itemKey: 'user',
       to: '/user',
       icon: <IconUser />,
       className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Log',
+      text: '日志',
       itemKey: 'log',
       to: '/log',
       icon: <IconHistogram />
     },
     {
-      text: 'Dashboard',
+      text: '数据看板',
       itemKey: 'detail',
       to: '/detail',
       icon: <IconCalendarClock />,
       className: localStorage.getItem('enable_data_export') === 'true' ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Draw',
+      text: '绘图',
       itemKey: 'midjourney',
       to: '/midjourney',
       icon: <IconImage />,
       className: localStorage.getItem('enable_drawing') === 'true' ? 'semi-navigation-item-normal' : 'tableHiddle'
     },
     {
-      text: 'Settings',
+      text: '设置',
       itemKey: 'setting',
       to: '/setting',
       icon: <IconSetting />
     }
     // {
-    //     text: 'About',
+    //     text: '关于',
     //     itemKey: 'about',
     //     to: '/about',
     //     icon: <IconAt/>
@@ -110,7 +130,8 @@ const SiderBar = () => {
       localStorage.setItem('enable_data_export', data.enable_data_export);
       localStorage.setItem('data_export_default_time', data.data_export_default_time);
       localStorage.setItem('default_collapse_sidebar', data.default_collapse_sidebar);
-      localStorage.setItem('mj_notify_enabled', data.mj_notify_enabled);if (data.chat_link) {
+      localStorage.setItem('mj_notify_enabled', data.mj_notify_enabled);
+      if (data.chat_link) {
         localStorage.setItem('chat_link', data.chat_link);
       } else {
         localStorage.removeItem('chat_link');
@@ -121,7 +142,7 @@ const SiderBar = () => {
         localStorage.removeItem('chat_link2');
       }
     } else {
-      showError('Failed to connect to the server!');
+      showError('无法正常连接至服务器！');
     }
   };
 
@@ -173,7 +194,8 @@ const SiderBar = () => {
               setSelectedKeys([key.itemKey]);
             }}
             header={{
-              logo: <img src={logo} alt="logo" style={{ marginRight: '0.75em' }} />,".// text: systemName
+              logo: <img src={logo} alt="logo" style={{ marginRight: '0.75em' }} />,
+              text: systemName
             }}
             // footer={{
             //   text: '© 2021 NekoAPI',

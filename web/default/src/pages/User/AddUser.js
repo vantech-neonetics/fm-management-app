@@ -20,7 +20,7 @@ const AddUser = () => {
     const res = await API.post(`/api/user/`, inputs);
     const { success, message } = res.data;
     if (success) {
-      showSuccess('User account created successfully!');
+      showSuccess('用户账户创建成功！');
       setInputs(originInputs);
     } else {
       showError(message);
@@ -30,13 +30,13 @@ const AddUser = () => {
   return (
     <>
       <Segment>
-        <Header as="h3">Create new user account</Header>
+        <Header as="h3">创建新用户账户</Header>
         <Form autoComplete="off">
           <Form.Field>
             <Form.Input
-              label="Username"
+              label="用户名"
               name="username"
-              placeholder={'Enter username'}
+              placeholder={'请输入用户名'}
               onChange={handleInputChange}
               value={username}
               autoComplete="off"
@@ -45,9 +45,9 @@ const AddUser = () => {
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="Display Name"
+              label="显示名称"
               name="display_name"
-              placeholder={'Enter display name'}
+              placeholder={'请输入显示名称'}
               onChange={handleInputChange}
               value={display_name}
               autoComplete="off"
@@ -55,10 +55,10 @@ const AddUser = () => {
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label="Password"
+              label="密码"
               name="password"
               type={'password'}
-              placeholder={'Enter password'}
+              placeholder={'请输入密码'}
               onChange={handleInputChange}
               value={password}
               autoComplete="off"
@@ -66,10 +66,12 @@ const AddUser = () => {
             />
           </Form.Field>
           <Button positive type={'submit'} onClick={submit}>
-            Submit
+            提交
           </Button>
         </Form>
       </Segment>
     </>
   );
-};export default AddUser;
+};
+
+export default AddUser;

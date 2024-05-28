@@ -48,7 +48,8 @@ const Label = forwardRef(({ children, color = 'default', variant = 'soft', start
 
   return (
     <StyledLabel
-      ref={ref}component="span"
+      ref={ref}
+      component="span"
       ownerState={{ color, variant }}
       sx={{
         ...(startIcon && { pl: 0.75 }),
@@ -120,9 +121,7 @@ const StyledLabel = styled(Box)(({ theme, ownerState }) => {
       ...(outlinedVariant && {
         backgroundColor: 'transparent',
         color: theme.palette[ownerState.color]?.main,
-      })
-    })
-  };Instructions: Translate the following Chinese text to English while maintaining the original formatting: "border: `2px solid ${theme.palette[ownerState.color]?.main}`
+        border: `2px solid ${theme.palette[ownerState.color]?.main}`
       }),
       // SOFT
       ...(softVariant && {
@@ -156,4 +155,4 @@ const StyledLabel = styled(Box)(({ theme, ownerState }) => {
     ...defaultStyle,
     ...colorStyle
   };
-});".
+});

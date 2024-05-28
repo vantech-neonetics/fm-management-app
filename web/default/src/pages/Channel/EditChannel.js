@@ -1,81 +1,139 @@
-```javascript
-// Export EditChannel component
-``````javascript
-const handleInputChange = (e, { name, value }) => {
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Header, Input, Message, Segment } from 'semantic-ui-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { API, copy, getChannelModels, showError, showInfo, showSuccess, verifyJSON } from '../../helpers';
+import { CHANNEL_OPTIONS } from '../../constants';
+
+const MODEL_MAPPING_EXAMPLE = {
+  'gpt-3.5-turbo-0301': 'gpt-3.5-turbo',
+  'gpt-4-0314': 'gpt-4',
+  'gpt-4-32k-0314': 'gpt-4-32k'
+};
+
+function type2secretPrompt(type) {
+  // inputs.type === 15 ? '按照如下格式输入：APIKey|SecretKey' : (inputs.type === 18 ? '按照如下格式输入：APPID|APISecret|APIKey' : '请输入渠道对应的鉴权密钥')
+  switch (type) {
+    case 15:
+      return '按照如下格式输入：APIKey|SecretKey';
+    case 18:
+      return '按照如下格式输入：APPID|APISecret|APIKey';
+    case 22:
+      return '按照如下格式输入：APIKey-AppId，例如：fastgpt-0sp2gtvfdgyi4k30jwlgwf1i-64f335d84283f05518e9e041';
+    case 23:
+      return '按照如下格式输入：AppId|SecretId|SecretKey';
+    default:
+      return '请输入渠道对应的鉴权密钥';
+  }
+}
+
+const EditChannel = () => {
+  const params = useParams();
+  const navigate = useNavigate();
+  const channelId = params.id;
+  const isEdit = channelId !== undefined;
+  const [loading, setLoading] = useState(isEdit);
+  const handleCancel = () => {
+    navigate('/channel');
+  };
+
+  const originInputs = {
+    name: '',
+    type: 1,
+    key: '',
+    base_url: '',
+    other: '',
+    model_mapping: '',
+    models: [],
+    groups: ['default']
+  };
+  const [batch, setBatch] = useState(false);
+  const [inputs, setInputs] = useState(originInputs);
+  const [originModelOptions, setOriginModelOptions] = useState([]);
+  const [modelOptions, setModelOptions] = useState([]);
+  const [groupOptions, setGroupOptions] = useState([]);
+  const [basicModels, setBasicModels] = useState([]);
+  const [fullModels, setFullModels] = useState([]);
+  const [customModel, setCustomModel] = useState('');
+  const [config, setConfig] = useState({
+    region: '',
+    sk: '',
+    ak: '',
+    user_id: ''
+  });
+  const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
     if (name === 'type') {
-        let localModels = getChannelModels(value);
-        if (inputs.models.length === 0) {
-            setInputs((inputs) => ({ ...inputs, models: localModels }));
-        }
-        setBasicModels(localModels);
+      let localModels = getChannelModels(value);
+      if (inputs.models.length === 0) {
+        setInputs((inputs) => ({ ...inputs, models: localModels }));
+      }
+      setBasicModels(localModels);
     }
-};
+  };
 
-const handleConfigChange = (e, { name, value }) => {
+  const handleConfigChange = (e, { name, value }) => {
     setConfig((inputs) => ({ ...inputs, [name]: value }));
-};
+  };
 
-const loadChannel = async () => {
+  const loadChannel = async () => {
     let res = await API.get(`/api/channel/${channelId}`);
     const { success, message, data } = res.data;
     if (success) {
-        if (data.models === '') {
-            data.models = [];
-        } else {
-            data.models = data.models.split(',');
-        }
-        if (data.group === '') {
-            data.groups = [];
-        } else {
-            data.groups = data.group.split(',');
-        }
-        if (data.model_mapping !== '') {
-            data.model_mapping = JSON.stringify(JSON.parse(data.model_mapping), null, 2);
-        }
-        setInputs(data);
-        if (data.config !== '') {
-            setConfig(JSON.parse(data.config));
-        }
-        setBasicModels(getChannelModels(data.type));
+      if (data.models === '') {
+        data.models = [];
+      } else {
+        data.models = data.models.split(',');
+      }
+      if (data.group === '') {
+        data.groups = [];
+      } else {
+        data.groups = data.group.split(',');
+      }
+      if (data.model_mapping !== '') {
+        data.model_mapping = JSON.stringify(JSON.parse(data.model_mapping), null, 2);
+      }
+      setInputs(data);
+      if (data.config !== '') {
+        setConfig(JSON.parse(data.config));
+      }
+      setBasicModels(getChannelModels(data.type));
     } else {
-        showError(message);
+      showError(message);
     }
     setLoading(false);
-};
+  };
 
-const fetchModels = async () => {
+  const fetchModels = async () => {
     try {
-        let res = await API.get(`/api/channel/models`);
-        let localModelOptions = res.data.data.map((model) => ({
-            key: model.id,
-            text: model.id,
-            value: model.id
-        }));
-        setOriginModelOptions(localModelOptions);
-        setFullModels(res.data.data.map((model) => model.id));
+      let res = await API.get(`/api/channel/models`);
+      let localModelOptions = res.data.data.map((model) => ({
+        key: model.id,
+        text: model.id,
+        value: model.id
+      }));
+      setOriginModelOptions(localModelOptions);
+      setFullModels(res.data.data.map((model) => model.id));
     } catch (error) {
-        showError(error.message);
+      showError(error.message);
     }
-};
+  };
 
-const fetchGroups = async () => {
+  const fetchGroups = async () => {
     try {
-        let res = await API.get(`/api/group/`);
-        setGroupOptions(res.data.data.map((group) => ({
-            key: group,
-            text: group,
-            value: group
-        })));
+      let res = await API.get(`/api/group/`);
+      setGroupOptions(res.data.data.map((group) => ({
+        key: group,
+        text: group,
+        value: group
+      })));
     } catch (error) {
-        showError(error.message);
+      showError(error.message);
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     let localModelOptions = [...originModelOptions];
-```Instructions: Translate the following content to English
-while maintaining the original formatting: "inputs.models.forEach((model) => {
+    inputs.models.forEach((model) => {
       if (!localModelOptions.find((option) => option.key === model)) {
         localModelOptions.push({
           key: model,
@@ -105,15 +163,15 @@ while maintaining the original formatting: "inputs.models.forEach((model) => {
       }
     }
     if (!isEdit && (inputs.name === '' || inputs.key === '')) {
-      showInfo('Please enter the channel name and channel key!');
+      showInfo('请填写渠道名称和渠道密钥！');
       return;
     }
     if (inputs.models.length === 0) {
-      showInfo('Please select at least one model!');
+      showInfo('请至少选择一个模型！');
       return;
     }
     if (inputs.model_mapping !== '' && !verifyJSON(inputs.model_mapping)) {
-      showInfo('Model mapping must be in valid JSON format!');
+      showInfo('模型映射必须是合法的 JSON 格式！');
       return;
     }
     let localInputs = {...inputs};
@@ -138,70 +196,73 @@ while maintaining the original formatting: "inputs.models.forEach((model) => {
     const { success, message } = res.data;
     if (success) {
       if (isEdit) {
-        showSuccess('Channel updated successfully!');
-      } else ".showSuccess('Channel created successfully!');
-setInputs(originInputs);
-}
-} else {
-  showError(message);
-}
-};
+        showSuccess('渠道更新成功！');
+      } else {
+        showSuccess('渠道创建成功！');
+        setInputs(originInputs);
+      }
+    } else {
+      showError(message);
+    }
+  };
 
-const addCustomModel = () => {
-if (customModel.trim() === '') return;
-if (inputs.models.includes(customModel)) return;
-let localModels = [...inputs.models];
-localModels.push(customModel);
-let localModelOptions = [];
-localModelOptions.push({
-key: customModel,
-text: customModel,
-value: customModel
-});
-setModelOptions(modelOptions => {
-return [...modelOptions, ...localModelOptions];
-});
-setCustomModel('');
-handleInputChange(null, { name: 'models', value: localModels });
-};
+  const addCustomModel = () => {
+    if (customModel.trim() === '') return;
+    if (inputs.models.includes(customModel)) return;
+    let localModels = [...inputs.models];
+    localModels.push(customModel);
+    let localModelOptions = [];
+    localModelOptions.push({
+      key: customModel,
+      text: customModel,
+      value: customModel
+    });
+    setModelOptions(modelOptions => {
+      return [...modelOptions, ...localModelOptions];
+    });
+    setCustomModel('');
+    handleInputChange(null, { name: 'models', value: localModels });
+  };
 
-return (
-<>
-<Segment loading={loading}>
-<Header as='h3'>{isEdit ? 'Update channel information' : 'Create a new channel'}</Header>
-<Form autoComplete='new-password'>
-<Form.Field>
-<Form.Select
-label='Type'
-name='type'
-required
-search
-options={CHANNEL_OPTIONS}
-value={inputs.type}
-onChange={handleInputChange}
-/>
-</Form.Field>
-{
-inputs.type === 3 && (
-<>
-<Message>
-Please note that <strong>the model deployment name must be consistent with the model name</strong>, because One API will replace the model parameter in the request body with your deployment name (dots in the model name will be removed), <a target='_blank'
-href='https://github.com/songquanpeng/one-api/issues/133?notification_referrer_id=NT_kwDOAmJSYrM2NjIwMzI3NDgyOjM5OTk4MDUw#issuecomment-1571602271'>Image demo</a>.
-</Message>
-<Form.Field>
-<Form.Input
-label='AZURE_OPENAI_ENDPOINT'
-name='base_url'
-placeholder={'Please enter AZURE_OPENAI_ENDPOINT, for example: https://docs-test-001.openai.azure.com'}
-onChange={handleInputChange}
-value={inputs.base_url}
-autoComplete='new-password'
-/>".</Form.Field>
+  return (
+    <>
+      <Segment loading={loading}>
+        <Header as='h3'>{isEdit ? '更新渠道信息' : '创建新的渠道'}</Header>
+        <Form autoComplete='new-password'>
+          <Form.Field>
+            <Form.Select
+              label='类型'
+              name='type'
+              required
+              search
+              options={CHANNEL_OPTIONS}
+              value={inputs.type}
+              onChange={handleInputChange}
+            />
+          </Form.Field>
+          {
+            inputs.type === 3 && (
+              <>
+                <Message>
+                  注意，<strong>模型部署名称必须和模型名称保持一致</strong>，因为 One API 会把请求体中的 model
+                  参数替换为你的部署名称（模型名称中的点会被剔除），<a target='_blank'
+                                                                    href='https://github.com/songquanpeng/one-api/issues/133?notification_referrer_id=NT_kwDOAmJSYrM2NjIwMzI3NDgyOjM5OTk4MDUw#issuecomment-1571602271'>图片演示</a>。
+                </Message>
                 <Form.Field>
                   <Form.Input
-                    label='Default API Version'
+                    label='AZURE_OPENAI_ENDPOINT'
+                    name='base_url'
+                    placeholder={'请输入 AZURE_OPENAI_ENDPOINT，例如：https://docs-test-001.openai.azure.com'}
+                    onChange={handleInputChange}
+                    value={inputs.base_url}
+                    autoComplete='new-password'
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Form.Input
+                    label='默认 API 版本'
                     name='other'
-                    placeholder={'Please enter the default API version, for example: 2024-03-01-preview. This configuration can be overridden by actual request query parameters'}
+                    placeholder={'请输入默认 API 版本，例如：2024-03-01-preview，该配置可以被实际的请求查询参数所覆盖'}
                     onChange={handleInputChange}
                     value={inputs.other}
                     autoComplete='new-password'
@@ -216,7 +277,7 @@ autoComplete='new-password'
                 <Form.Input
                   label='Base URL'
                   name='base_url'
-                  placeholder={'Please enter the Base URL for custom channels, for example: https://openai.justsong.cn'}
+                  placeholder={'请输入自定义渠道的 Base URL，例如：https://openai.justsong.cn'}
                   onChange={handleInputChange}
                   value={inputs.base_url}
                   autoComplete='new-password'
@@ -226,10 +287,10 @@ autoComplete='new-password'
           }
           <Form.Field>
             <Form.Input
-              label='Name'
+              label='名称'
               required
               name='name'
-              placeholder={'Please name the channel'}
+              placeholder={'请为渠道命名'}
               onChange={handleInputChange}
               value={inputs.name}
               autoComplete='new-password'
@@ -237,15 +298,15 @@ autoComplete='new-password'
           </Form.Field>
           <Form.Field>
             <Form.Dropdown
-              label='Group'
-              placeholder={'Please select the group(s) that can use this channel'}
+              label='分组'
+              placeholder={'请选择可以使用该渠道的分组'}
               name='groups'
               required
               fluid
               multiple
               selection
               allowAdditions
-              additionLabel={'Please edit group rates in the system settings page to add new groups:'}
+              additionLabel={'请在系统设置页面编辑分组倍率以添加新的分组：'}
               onChange={handleInputChange}
               value={inputs.groups}
               autoComplete='new-password'
@@ -256,32 +317,85 @@ autoComplete='new-password'
             inputs.type === 18 && (
               <Form.Field>
                 <Form.Input
-                  label='Model Version'
+                  label='模型版本'
                   name='other'
-                  placeholder={'Please enter the Starfire model version, which is the version number in the API endpoint, for example: v2.1'}".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "Knowledge Base ID"
-"name='other'"
-"Please enter the Knowledge Base ID, for example: 123456"
-"Plugin Parameters"
-"name='other'"
-"Please enter the plugin parameters, which are the values of the X-DashScope-Plugin request header"
-"For Coze, the model name is the Bot ID, you can add a prefix `bot-`, for example: `bot-123456`"
-"Model"
-"Please select the models supported by this channel"
-"button"
-"models"
-"basicModels"}}>Fill in the relevant model</Button>
+                  placeholder={'请输入星火大模型版本，注意是接口地址中的版本号，例如：v2.1'}
+                  onChange={handleInputChange}
+                  value={inputs.other}
+                  autoComplete='new-password'
+                />
+              </Form.Field>
+            )
+          }
+          {
+            inputs.type === 21 && (
+              <Form.Field>
+                <Form.Input
+                  label='知识库 ID'
+                  name='other'
+                  placeholder={'请输入知识库 ID，例如：123456'}
+                  onChange={handleInputChange}
+                  value={inputs.other}
+                  autoComplete='new-password'
+                />
+              </Form.Field>
+            )
+          }
+          {
+            inputs.type === 17 && (
+              <Form.Field>
+                <Form.Input
+                  label='插件参数'
+                  name='other'
+                  placeholder={'请输入插件参数，即 X-DashScope-Plugin 请求头的取值'}
+                  onChange={handleInputChange}
+                  value={inputs.other}
+                  autoComplete='new-password'
+                />
+              </Form.Field>
+            )
+          }
+          {
+            inputs.type === 34 && (
+              <Message>
+                对于 Coze 而言，模型名称即 Bot ID，你可以添加一个前缀 `bot-`，例如：`bot-123456`。
+              </Message>
+            )
+          }
+          <Form.Field>
+            <Form.Dropdown
+              label='模型'
+              placeholder={'请选择该渠道所支持的模型'}
+              name='models'
+              required
+              fluid
+              multiple
+              search
+              onLabelClick={(e, { value }) => {
+                copy(value).then();
+              }}
+              selection
+              onChange={handleInputChange}
+              value={inputs.models}
+              autoComplete='new-password'
+              options={modelOptions}
+            />
+          </Form.Field>
+          <div style={{ lineHeight: '40px', marginBottom: '12px' }}>
+            <Button type={'button'} onClick={() => {
+              handleInputChange(null, { name: 'models', value: basicModels });
+            }}>填入相关模型</Button>
             <Button type={'button'} onClick={() => {
               handleInputChange(null, { name: 'models', value: fullModels });
-            }}>Fill in all models</Button>
+            }}>填入所有模型</Button>
             <Button type={'button'} onClick={() => {
               handleInputChange(null, { name: 'models', value: [] });
-            }}>Clear all models</Button>
+            }}>清除所有模型</Button>
             <Input
               action={
-                <Button type={'button'} onClick={addCustomModel}>Fill in</Button>
+                <Button type={'button'} onClick={addCustomModel}>填入</Button>
               }
-              placeholder='Enter custom model name'
+              placeholder='输入自定义模型名称'
               value={customModel}
               onChange={(e, { value }) => {
                 setCustomModel(value);
@@ -296,8 +410,8 @@ while maintaining the original formatting: "Knowledge Base ID"
           </div>
           <Form.Field>
             <Form.TextArea
-              label='Model Redirect'
-              placeholder={`Optional, used to modify the model name in the request body, a JSON string, where the key is the model name in the request and the value is the model name to be replaced, for example:\n${JSON.stringify(MODEL_MAPPING_EXAMPLE, null, 2)}`}
+              label='模型重定向'
+              placeholder={`此项可选，用于修改请求体中的模型名称，为一个 JSON 字符串，键为请求中模型名称，值为要替换的模型名称，例如：\n${JSON.stringify(MODEL_MAPPING_EXAMPLE, null, 2)}`}
               name='model_mapping'
               onChange={handleInputChange}
               value={inputs.model_mapping}
@@ -312,7 +426,7 @@ while maintaining the original formatting: "Knowledge Base ID"
                   label='Region'
                   name='region'
                   required
-                  placeholder={'region, e.g. us-west-2'}
+                  placeholder={'region，e.g. us-west-2'}
                   onChange={handleConfigChange}
                   value={config.region}
                   autoComplete=''
@@ -324,7 +438,8 @@ while maintaining the original formatting: "Knowledge Base ID"
                   placeholder={'AWS IAM Access Key'}
                   onChange={handleConfigChange}
                   value={config.ak}
-                  autoComplete=''"./>
+                  autoComplete=''
+                />
                 <Form.Input
                   label='SK'
                   name='sk'
@@ -343,7 +458,7 @@ while maintaining the original formatting: "Knowledge Base ID"
                 label='User ID'
                 name='user_id'
                 required
-                placeholder={'User ID that generated this key'}
+                placeholder={'生成该密钥的用户 ID'}
                 onChange={handleConfigChange}
                 value={config.user_id}
                 autoComplete=''
@@ -352,10 +467,10 @@ while maintaining the original formatting: "Knowledge Base ID"
           {
             inputs.type !== 33 && (batch ? <Form.Field>
               <Form.TextArea
-                label='Key'
+                label='密钥'
                 name='key'
                 required
-                placeholder={'Please enter keys, one per line'}
+                placeholder={'请输入密钥，一行一个'}
                 onChange={handleInputChange}
                 value={inputs.key}
                 style={{ minHeight: 150, fontFamily: 'JetBrains Mono, Consolas' }}
@@ -363,7 +478,7 @@ while maintaining the original formatting: "Knowledge Base ID"
               />
             </Form.Field> : <Form.Field>
               <Form.Input
-                label='Key'
+                label='密钥'
                 name='key'
                 required
                 placeholder={type2secretPrompt(inputs.type)}
@@ -380,18 +495,19 @@ while maintaining the original formatting: "Knowledge Base ID"
                   label='Account ID'
                   name='user_id'
                   required
-                  placeholder={'Enter Account ID, e.g. d8d7c61dbc334c32d3ced580e4bf42b4'}
+                  placeholder={'请输入 Account ID，例如：d8d7c61dbc334c32d3ced580e4bf42b4'}
                   onChange={handleConfigChange}
                   value={config.user_id}
                   autoComplete=''
                 />
               </Form.Field>
             )
-          }{
+          }
+          {
             inputs.type !== 33 && !isEdit && (
               <Form.Checkbox
                 checked={batch}
-                label='Batch Creation'
+                label='批量创建'
                 name='batch'
                 onChange={() => setBatch(!batch)}
               />
@@ -401,9 +517,9 @@ while maintaining the original formatting: "Knowledge Base ID"
             inputs.type !== 3 && inputs.type !== 33 && inputs.type !== 8 && inputs.type !== 22 && (
               <Form.Field>
                 <Form.Input
-                  label='Proxy'
+                  label='代理'
                   name='base_url'
-                  placeholder={'Optional, used for API calls through a proxy site, please enter the proxy site address, format: https://domain.com'}
+                  placeholder={'此项可选，用于通过代理站来进行 API 调用，请输入代理站地址，格式为：https://domain.com'}
                   onChange={handleInputChange}
                   value={inputs.base_url}
                   autoComplete='new-password'
@@ -415,9 +531,9 @@ while maintaining the original formatting: "Knowledge Base ID"
             inputs.type === 22 && (
               <Form.Field>
                 <Form.Input
-                  label='Private Deployment Address'
+                  label='私有部署地址'
                   name='base_url'
-                  placeholder={'Please enter the private deployment address, format: https://fastgpt.run/api/openapi'}
+                  placeholder={'请输入私有部署地址，格式为：https://fastgpt.run/api/openapi'}
                   onChange={handleInputChange}
                   value={inputs.base_url}
                   autoComplete='new-password'
@@ -425,8 +541,8 @@ while maintaining the original formatting: "Knowledge Base ID"
               </Form.Field>
             )
           }
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button type={isEdit ? 'button' : 'submit'} positive onClick={submit}>Submit</Button>
+          <Button onClick={handleCancel}>取消</Button>
+          <Button type={isEdit ? 'button' : 'submit'} positive onClick={submit}>提交</Button>
         </Form>
       </Segment>
     </>
