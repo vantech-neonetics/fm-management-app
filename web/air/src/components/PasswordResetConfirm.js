@@ -53,7 +53,7 @@ const PasswordResetConfirm = () => {
       let password = res.data.data;
       setNewPassword(password);
       await copy(password);
-      showNotice(`The new password has been copied to the clipboard: ${password}`);
+      showNotice(`新密码已复制到剪贴板：${password}`);
     } else {
       showError(message);
     }
@@ -64,50 +64,50 @@ const PasswordResetConfirm = () => {
     <Grid textAlign="center" style={{ marginTop: '48px' }}>
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="" textAlign="center">
-          <Image src="/logo.png" /> Password Reset Confirmation
+          <Image src="/logo.png" /> 密码重置确认
         </Header>
         <Form size="large">
           <Segment>
             <Form.Input
               fluid
-              icon="mail"Instructions: Translate the following Chinese text to English
-"iconPosition="left"
-placeholder="Email Address"
-name="email"
-value={email}
-readOnly
-/>
-{newPassword && (
-<Form.Input
-fluid
-icon="lock"
-iconPosition="left"
-placeholder="New Password"
-name="newPassword"
-value={newPassword}
-readOnly
-onClick={(e) => {
-e.target.select();
-navigator.clipboard.writeText(newPassword);
-showNotice(`Password copied to clipboard: ${newPassword}`);
-}}
-/>
-)}
-<Button
-color="green"
-fluid
-size="large"
-onClick={handleSubmit}
-loading={loading}
-disabled={disableButton}
->
-{disableButton ? `Password reset completed` : 'Submit'}
-</Button>
-</Segment>
-</Form>
-</Grid.Column>
-</Grid>
-);
+              icon="mail"
+              iconPosition="left"
+              placeholder="邮箱地址"
+              name="email"
+              value={email}
+              readOnly
+            />
+            {newPassword && (
+              <Form.Input
+                fluid
+                icon="lock"
+                iconPosition="left"
+                placeholder="新密码"
+                name="newPassword"
+                value={newPassword}
+                readOnly
+                onClick={(e) => {
+                  e.target.select();
+                  navigator.clipboard.writeText(newPassword);
+                  showNotice(`密码已复制到剪贴板：${newPassword}`);
+                }}
+              />
+            )}
+            <Button
+              color="green"
+              fluid
+              size="large"
+              onClick={handleSubmit}
+              loading={loading}
+              disabled={disableButton}
+            >
+              {disableButton ? `密码重置完成` : '提交'}
+            </Button>
+          </Segment>
+        </Form>
+      </Grid.Column>
+    </Grid>
+  );
 };
 
-export default PasswordResetConfirm;".
+export default PasswordResetConfirm;

@@ -1,15 +1,15 @@
-Import React from 'react';
-Import SystemSetting from '../../components/SystemSetting';
-Import {isRoot} from '../../helpers';
-Import OtherSetting from '../../components/OtherSetting';
-Import PersonalSetting from '../../components/PersonalSetting';
-Import OperationSetting from '../../components/OperationSetting';
-Import {Layout, TabPane, Tabs} from "@douyinfe/semi-ui";
+import React from 'react';
+import SystemSetting from '../../components/SystemSetting';
+import {isRoot} from '../../helpers';
+import OtherSetting from '../../components/OtherSetting';
+import PersonalSetting from '../../components/PersonalSetting';
+import OperationSetting from '../../components/OperationSetting';
+import {Layout, TabPane, Tabs} from "@douyinfe/semi-ui";
 
 const Setting = () => {
     let panes = [
         {
-            tab: 'Personal Setting',
+            tab: '个人设置',
             content: <PersonalSetting/>,
             itemKey: '1'
         }
@@ -17,17 +17,17 @@ const Setting = () => {
 
     if (isRoot()) {
         panes.push({
-            tab: 'Operation Setting',
+            tab: '运营设置',
             content: <OperationSetting/>,
             itemKey: '2'
         });
         panes.push({
-            tab: 'System Setting',
+            tab: '系统设置',
             content: <SystemSetting/>,
             itemKey: '3'
         });
         panes.push({
-            tab: 'Other Setting',
+            tab: '其他设置',
             content: <OtherSetting/>,
             itemKey: '4'
         });

@@ -70,23 +70,24 @@ const Header = () => {
             </IconButton>
           </>
         ) : (
-          <><Button component={Link} variant="text" to="/" color={pathname === '/' ? 'primary' : 'inherit'}>
-              Home
+          <>
+            <Button component={Link} variant="text" to="/" color={pathname === '/' ? 'primary' : 'inherit'}>
+              首页
             </Button>
             <Button component={Link} variant="text" to="/about" color={pathname === '/about' ? 'primary' : 'inherit'}>
-              About
+              关于
             </Button>
             <ThemeButton />
             {account.user ? (
               <>
                 <Button component={Link} variant="contained" to="/panel" color="primary">
-                  Dashboard
+                  控制台
                 </Button>
                 <ProfileSection />
               </>
             ) : (
               <Button component={Link} variant="contained" to="/login" color="primary">
-                Login
+                登录
               </Button>
             )}
           </>
@@ -129,21 +130,21 @@ const Header = () => {
                     }}
                     onClick={handleCloseMenu}
                   >
-                    <ListItemButton component={Link} variant="text" to="/">```
-<ListItemText primary={<Typography variant="body2">Home</Typography>} />
+                    <ListItemButton component={Link} variant="text" to="/">
+                      <ListItemText primary={<Typography variant="body2">首页</Typography>} />
                     </ListItemButton>
 
                     <ListItemButton component={Link} variant="text" to="/about">
-                      <ListItemText primary={<Typography variant="body2">About</Typography>} />
+                      <ListItemText primary={<Typography variant="body2">关于</Typography>} />
                     </ListItemButton>
                     <Divider />
                     {account.user ? (
                       <ListItemButton component={Link} variant="contained" to="/panel" color="primary">
-                        Dashboard
+                        控制台
                       </ListItemButton>
                     ) : (
                       <ListItemButton component={Link} variant="contained" to="/login" color="primary">
-                        Login
+                        登录
                       </ListItemButton>
                     )}
                   </List>
@@ -158,4 +159,3 @@ const Header = () => {
 };
 
 export default Header;
-```

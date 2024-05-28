@@ -31,7 +31,7 @@ function renderType(type) {
     for (let i = 0; i < CHANNEL_OPTIONS.length; i++) {
       type2label[CHANNEL_OPTIONS[i].value] = CHANNEL_OPTIONS[i];
     }
-    type2label[0] = { value: 0, text: 'Unknown Type', color: 'grey' };
+    type2label[0] = { value: 0, text: '未知类型', color: 'grey' };
   }
   return <Label basic color={type2label[type]?.color}>{type2label[type] ? type2label[type].text : type}</Label>;
 }
@@ -42,7 +42,7 @@ function renderBalance(type, balance) {
       return <span>${balance.toFixed(2)}</span>;
     case 4: // CloseAI
       return <span>¥{balance.toFixed(2)}</span>;
-    case 8: // Custom
+    case 8: // 自定义
       return <span>${balance.toFixed(2)}</span>;
     case 5: // OpenAI-SB
       return <span>¥{(balance / 10000).toFixed(2)}</span>;
@@ -53,7 +53,7 @@ function renderBalance(type, balance) {
     case 13: // AIGC2D
       return <span>{renderNumber(balance)}</span>;
     default:
-      return <span>Not supported</span>;
+      return <span>不支持</span>;
   }
 }
 
@@ -63,20 +63,86 @@ const ChannelsTable = () => {
   const [activePage, setActivePage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searching, setSearching] = useState(false);
-  const [updatingBalance, setUpdatingBalance] = useState(false);// Define a state variable showPrompt and a function setShowPrompt using the useState hook to show a prompt if shouldShowPrompt("channel-test") returns true.
+  const [updatingBalance, setUpdatingBalance] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(shouldShowPrompt("channel-test"));
 
-  // Define an asynchronous function loadChannels that fetches channels data from the API based on the provided start index. Update the state variable channels with the fetched data and handle errors accordingly.
-
-  // Define a function onPaginationChange that triggers a data load when the active page is the last page. Update the active page state variable accordingly.
-
-  // Define an asynchronous function refresh that sets loading to true and reloads data for the active page.
-
-  // Implement side effects using the useEffect hook to load initial channel data and channel models data when the component mounts.
-
-  // Define an asynchronous function manageChannel that performs different actions (delete, enable, disable, priority, weight) on a specified channel based on the action and value provided. Update the channel data accordingly.```javascript
-const { success, message } = res.data;
+  const loadChannels = async (startIdx) => {
+    const res = await API.get(`/api/channel/?p=${startIdx}`);
+    const { success, message, data } = res.data;
     if (success) {
-      showSuccess('Operation completed successfully!');
+      if (startIdx === 0) {
+        setChannels(data);
+      } else {
+        let newChannels = [...channels];
+        newChannels.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);
+        setChannels(newChannels);
+      }
+    } else {
+      showError(message);
+    }
+    setLoading(false);
+  };
+
+  const onPaginationChange = (e, { activePage }) => {
+    (async () => {
+      if (activePage === Math.ceil(channels.length / ITEMS_PER_PAGE) + 1) {
+        // In this case we have to load more data and then append them.
+        await loadChannels(activePage - 1);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const refresh = async () => {
+    setLoading(true);
+    await loadChannels(activePage - 1);
+  };
+
+  useEffect(() => {
+    loadChannels(0)
+      .then()
+      .catch((reason) => {
+        showError(reason);
+      });
+    loadChannelModels().then();
+  }, []);
+
+  const manageChannel = async (id, action, idx, value) => {
+    let data = { id };
+    let res;
+    switch (action) {
+      case 'delete':
+        res = await API.delete(`/api/channel/${id}/`);
+        break;
+      case 'enable':
+        data.status = 1;
+        res = await API.put('/api/channel/', data);
+        break;
+      case 'disable':
+        data.status = 2;
+        res = await API.put('/api/channel/', data);
+        break;
+      case 'priority':
+        if (value === '') {
+          return;
+        }
+        data.priority = parseInt(value);
+        res = await API.put('/api/channel/', data);
+        break;
+      case 'weight':
+        if (value === '') {
+          return;
+        }
+        data.weight = parseInt(value);
+        if (data.weight < 0) {
+          data.weight = 0;
+        }
+        res = await API.put('/api/channel/', data);
+        break;
+    }
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('操作成功完成！');
       let channel = res.data.data;
       let newChannels = [...channels];
       let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
@@ -94,14 +160,14 @@ const { success, message } = res.data;
   const renderStatus = (status) => {
     switch (status) {
       case 1:
-        return <Label basic color='green'>Enabled</Label>;
+        return <Label basic color='green'>已启用</Label>;
       case 2:
         return (
           <Popup
             trigger={<Label basic color='red'>
-              Disabled
+              已禁用
             </Label>}
-            content='This channel is manually disabled'
+            content='本渠道被手动禁用'
             basic
           />
         );
@@ -109,26 +175,26 @@ const { success, message } = res.data;
         return (
           <Popup
             trigger={<Label basic color='yellow'>
-              Disabled
+              已禁用
             </Label>}
-            content='This channel is automatically disabled by the program'
+            content='本渠道被程序自动禁用'
             basic
           />
         );
       default:
         return (
           <Label basic color='grey'>
-            Unknown status
+            未知状态
           </Label>
         );
     }
   };
 
-  const renderResponseTime = (ResponseTime) => {
+  const renderResponseTime = (responseTime) => {
     let time = responseTime / 1000;
-    time = time.toFixed(2) + ' seconds';
+    time = time.toFixed(2) + ' 秒';
     if (responseTime === 0) {
-      return <Label basic color='grey'>Not tested</Label>;
+      return <Label basic color='grey'>未测试</Label>;
     } else if (responseTime <= 1000) {
       return <Label basic color='green'>{time}</Label>;
     } else if (responseTime <= 3000) {
@@ -142,14 +208,14 @@ const { success, message } = res.data;
 
   const searchChannels = async () => {
     if (searchKeyword === '') {
-      // If the keyword is blank, load files instead.
+      // if keyword is blank, load files instead.
       await loadChannels(0);
       setActivePage(1);
       return;
     }
     setSearching(true);
     const res = await API.get(`/api/channel/search?keyword=${searchKeyword}`);
-```const { success, message, data } = res.data;
+    const { success, message, data } = res.data;
     if (success) {
       setChannels(data);
       setActivePage(1);
@@ -168,7 +234,7 @@ const { success, message } = res.data;
       newChannels[realIdx].response_time = time * 1000;
       newChannels[realIdx].test_time = Date.now() / 1000;
       setChannels(newChannels);
-      showInfo(`Channel ${name} test successful, took ${time.toFixed(2)} seconds.`);
+      showInfo(`渠道 ${name} 测试成功，耗时 ${time.toFixed(2)} 秒。`);
     } else {
       showError(message);
     }
@@ -178,7 +244,7 @@ const { success, message } = res.data;
     const res = await API.get(`/api/channel/test?scope=${scope}`);
     const { success, message } = res.data;
     if (success) {
-      showInfo('Successfully started testing channels, please refresh the page to view results.');
+      showInfo('已成功开始测试渠道，请刷新页面查看结果。');
     } else {
       showError(message);
     }
@@ -188,7 +254,7 @@ const { success, message } = res.data;
     const res = await API.delete(`/api/channel/disabled`);
     const { success, message, data } = res.data;
     if (success) {
-      showSuccess(`All disabled channels have been deleted, total of ${data} were removed`);
+      showSuccess(`已删除所有禁用渠道，共计 ${data} 个`);
       await refresh();
     } else {
       showError(message);
@@ -204,7 +270,7 @@ const { success, message } = res.data;
       newChannels[realIdx].balance = balance;
       newChannels[realIdx].balance_updated_time = Date.now() / 1000;
       setChannels(newChannels);
-      showInfo(`Channel ${name} balance updated successfully!`);
+      showInfo(`渠道 ${name} 余额更新成功！`);
     } else {
       showError(message);
     }
@@ -214,8 +280,8 @@ const { success, message } = res.data;
     setUpdatingBalance(true);
     const res = await API.get(`/api/channel/update_balance`);
     const { success, message } = res.data;
-    if (success) `".```javascript
-showInfo('All enabled channel balances have been updated!');
+    if (success) {
+      showInfo('已更新完毕所有已启用渠道余额！');
     } else {
       showError(message);
     }
@@ -254,7 +320,7 @@ showInfo('All enabled channel balances have been updated!');
           icon='search'
           fluid
           iconPosition='left'
-          placeholder='Search channel ID, name, and key ...'
+          placeholder='搜索渠道的 ID，名称和密钥 ...'
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}
@@ -266,9 +332,9 @@ showInfo('All enabled channel balances have been updated!');
             setShowPrompt(false);
             setPromptShown("channel-test");
           }}>
-            OpenAI channels no longer support getting balance via key, so balance shows as 0. For supported channel types, click on balance to refresh.
+            OpenAI 渠道已经不再支持通过 key 获取余额，因此余额显示为 0。对于支持的渠道类型，请点击余额进行刷新。
             <br/>
-            Channel testing only supports the chat model, prioritizing gpt-3.5-turbo; if that model is unavailable, the first model in your configured model list will be used.
+            渠道测试仅支持 chat 模型，优先使用 gpt-3.5-turbo，如果该模型不可用则使用你所配置的模型列表中的第一个模型。
           </Message>
         )
       }
@@ -289,75 +355,135 @@ showInfo('All enabled channel balances have been updated!');
                 sortChannel('name');
               }}
             >
-              Name
+              名称
             </Table.HeaderCell>
-```- The text inside the Table header cells is translated as follows:
-  - "Group" 
-  - "Type" 
-  - "Status" 
-  - "Response Time" 
-  - "Balance" 
-  - "Priority"
-- The text inside the Table Rows and Cells remains in English.<Table.Cell>{renderStatus(channel.status)}</Table.Cell>
-<Table.Cell>
-  <Popup
-    content={channel.test_time ? renderTimestamp(channel.test_time) : 'Not tested'}
-    key={channel.id}
-    trigger={renderResponseTime(channel.response_time)}
-    basic
-  />
-</Table.Cell>
-<Table.Cell>
-  <Popup
-    trigger={<span onClick={() => {
-      updateChannelBalance(channel.id, channel.name, idx);
-    }} style={{ cursor: 'pointer' }}>
-    {renderBalance(channel.type, channel.balance)}
-  </span>}
-    content='Click to update'
-    basic
-  />
-</Table.Cell>
-<Table.Cell>
-  <Popup
-    trigger={<Input type='number' defaultValue={channel.priority} onBlur={(event) => {
-      manageChannel(
-        channel.id,
-        'priority',
-        idx,
-        event.target.value
-      );
-    }}>
-      <input style={{ maxWidth: '60px' }} />
-    </Input>}
-    content='Channel selection priority, the higher the better'
-    basic
-  />
-</Table.Cell>
-<Table.Cell>
-  <div>
-    <Button
-      size={'small'}
-      positive
-      onClick={() => {
-        testChannel(channel.id, channel.name, idx);
-      }}
-    >
-      Test
-    </Button>
-    {/*<Button*/}
-    {/*  size={'small'}*/}
-    {/*  positive*/}{/*  loading={updatingBalance}*/}
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('group');
+              }}
+            >
+              分组
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('type');
+              }}
+            >
+              类型
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('status');
+              }}
+            >
+              状态
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('response_time');
+              }}
+            >
+              响应时间
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('balance');
+              }}
+            >
+              余额
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortChannel('priority');
+              }}
+            >
+              优先级
+            </Table.HeaderCell>
+            <Table.HeaderCell>操作</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+
+        <Table.Body>
+          {channels
+            .slice(
+              (activePage - 1) * ITEMS_PER_PAGE,
+              activePage * ITEMS_PER_PAGE
+            )
+            .map((channel, idx) => {
+              if (channel.deleted) return <></>;
+              return (
+                <Table.Row key={channel.id}>
+                  <Table.Cell>{channel.id}</Table.Cell>
+                  <Table.Cell>{channel.name ? channel.name : '无'}</Table.Cell>
+                  <Table.Cell>{renderGroup(channel.group)}</Table.Cell>
+                  <Table.Cell>{renderType(channel.type)}</Table.Cell>
+                  <Table.Cell>{renderStatus(channel.status)}</Table.Cell>
+                  <Table.Cell>
+                    <Popup
+                      content={channel.test_time ? renderTimestamp(channel.test_time) : '未测试'}
+                      key={channel.id}
+                      trigger={renderResponseTime(channel.response_time)}
+                      basic
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Popup
+                      trigger={<span onClick={() => {
+                        updateChannelBalance(channel.id, channel.name, idx);
+                      }} style={{ cursor: 'pointer' }}>
+                      {renderBalance(channel.type, channel.balance)}
+                    </span>}
+                      content='点击更新'
+                      basic
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Popup
+                      trigger={<Input type='number' defaultValue={channel.priority} onBlur={(event) => {
+                        manageChannel(
+                          channel.id,
+                          'priority',
+                          idx,
+                          event.target.value
+                        );
+                      }}>
+                        <input style={{ maxWidth: '60px' }} />
+                      </Input>}
+                      content='渠道选择优先级，越高越优先'
+                      basic
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div>
+                      <Button
+                        size={'small'}
+                        positive
+                        onClick={() => {
+                          testChannel(channel.id, channel.name, idx);
+                        }}
+                      >
+                        测试
+                      </Button>
+                      {/*<Button*/}
+                      {/*  size={'small'}*/}
+                      {/*  positive*/}
+                      {/*  loading={updatingBalance}*/}
                       {/*  onClick={() => {*/}
                       {/*    updateChannelBalance(channel.id, channel.name, idx);*/}
                       {/*  }}*/}
                       {/*>*/}
-                      {/*  Update Balance*/}
+                      {/*  更新余额*/}
                       {/*</Button>*/}
                       <Popup
                         trigger={
                           <Button size='small' negative>
-                            Delete
+                            删除
                           </Button>
                         }
                         on='click'
@@ -370,7 +496,7 @@ showInfo('All enabled channel balances have been updated!');
                             manageChannel(channel.id, 'delete', idx);
                           }}
                         >
-                          Delete Channel {channel.name}
+                          删除渠道 {channel.name}
                         </Button>
                       </Popup>
                       <Button
@@ -383,14 +509,14 @@ showInfo('All enabled channel balances have been updated!');
                           );
                         }}
                       >
-                        {channel.status === 1 ? 'Disable' : 'Enable'}
+                        {channel.status === 1 ? '禁用' : '启用'}
                       </Button>
                       <Button
                         size={'small'}
                         as={Link}
                         to={'/channel/edit/' + channel.id}
                       >
-                        Edit
+                        编辑
                       </Button>
                     </div>
                   </Table.Cell>
@@ -402,11 +528,49 @@ showInfo('All enabled channel balances have been updated!');
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan='9'>
-              <Button size='small' as={Link} to='/channel/add' loading={loading}:".Add new channel
-Test all channels
-Test disabled channels
-{/*<Button size='small' onClick={updateAllChannelsBalance*/}
-{/*loading={loading || updatingBalance}>Update balance for enabled channels</Button>*/}
-Delete disabled channels
-Confirm deletion
-Refresh
+              <Button size='small' as={Link} to='/channel/add' loading={loading}>
+                添加新的渠道
+              </Button>
+              <Button size='small' loading={loading} onClick={()=>{testChannels("all")}}>
+                测试所有渠道
+              </Button>
+              <Button size='small' loading={loading} onClick={()=>{testChannels("disabled")}}>
+                测试禁用渠道
+              </Button>
+              {/*<Button size='small' onClick={updateAllChannelsBalance}*/}
+              {/*        loading={loading || updatingBalance}>更新已启用渠道余额</Button>*/}
+              <Popup
+                trigger={
+                  <Button size='small' loading={loading}>
+                    删除禁用渠道
+                  </Button>
+                }
+                on='click'
+                flowing
+                hoverable
+              >
+                <Button size='small' loading={loading} negative onClick={deleteAllDisabledChannels}>
+                  确认删除
+                </Button>
+              </Popup>
+              <Pagination
+                floated='right'
+                activePage={activePage}
+                onPageChange={onPaginationChange}
+                size='small'
+                siblingRange={1}
+                totalPages={
+                  Math.ceil(channels.length / ITEMS_PER_PAGE) +
+                  (channels.length % ITEMS_PER_PAGE === 0 ? 1 : 0)
+                }
+              />
+              <Button size='small' onClick={refresh} loading={loading}>刷新</Button>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+    </>
+  );
+};
+
+export default ChannelsTable;

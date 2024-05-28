@@ -1,21 +1,20 @@
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 
 const LogTableHead = ({ userIsAdmin }) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Time</TableCell>
-        {userIsAdmin && <TableCell>Channel</TableCell>}
-        {userIsAdmin && <TableCell>User</TableCell>}
-        <TableCell>Token</TableCell>
-        <TableCell>Type</TableCell>
-        <TableCell>Model</TableCell>
-        <TableCell>Hint</TableCell>
-        <TableCell>Completion</TableCell>
-        <TableCell>Quota</TableCell>
-        <TableCell>Details</TableCell>
+        <TableCell>时间</TableCell>
+        {userIsAdmin && <TableCell>渠道</TableCell>}
+        {userIsAdmin && <TableCell>用户</TableCell>}
+        <TableCell>令牌</TableCell>
+        <TableCell>类型</TableCell>
+        <TableCell>模型</TableCell>
+        <TableCell>提示</TableCell>
+        <TableCell>补全</TableCell>
+        <TableCell>额度</TableCell>
+        <TableCell>详情</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -25,4 +24,4 @@ export default LogTableHead;
 
 LogTableHead.propTypes = {
   userIsAdmin: PropTypes.bool
-};".
+};

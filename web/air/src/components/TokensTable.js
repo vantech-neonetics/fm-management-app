@@ -31,18 +31,18 @@ function renderStatus(status, model_limits_enabled = false) {
   switch (status) {
     case 1:
       if (model_limits_enabled) {
-        return <Tag color="green" size="large">Enabled: Limited model</Tag>;
+        return <Tag color="green" size="large">已启用：限制模型</Tag>;
       } else {
-        return <Tag color="green" size="large">Enabled</Tag>;
+        return <Tag color="green" size="large">已启用</Tag>;
       }
     case 2:
-      return <Tag color="red" size="large"> Disabled </Tag>;
+      return <Tag color="red" size="large"> 已禁用 </Tag>;
     case 3:
-      return <Tag color="yellow" size="large"> Expired </Tag>;
+      return <Tag color="yellow" size="large"> 已过期 </Tag>;
     case 4:
-      return <Tag color="grey" size="large"> Exhausted </Tag>;
+      return <Tag color="grey" size="large"> 已耗尽 </Tag>;
     default:
-      return <Tag color="black" size="large"> Unknown status </Tag>;
+      return <Tag color="black" size="large"> 未知状态 </Tag>;
   }
 }
 
@@ -54,7 +54,7 @@ const TokensTable = () => {
         onOpenLink('next');
       }
     },
-    { node: 'item', key: 'ama', name: 'AMA Q&A', value: 'ama' },
+    { node: 'item', key: 'ama', name: 'AMA 问天', value: 'ama' },
     {
       node: 'item', key: 'next-mj', name: 'ChatGPT Web & Midjourney', value: 'next-mj', onClick: () => {
         onOpenLink('next-mj');
@@ -65,10 +65,11 @@ const TokensTable = () => {
 
   const columns = [
     {
-      title: 'Name',
+      title: '名称',
       dataIndex: 'name'
-    }."{
-      title: 'Status',
+    },
+    {
+      title: '状态',
       dataIndex: 'status',
       key: 'status',
       render: (text, record, index) => {
@@ -80,7 +81,7 @@ const TokensTable = () => {
       }
     },
     {
-      title: 'Used Quota',
+      title: '已用额度',
       dataIndex: 'used_quota',
       render: (text, record, index) => {
         return (
@@ -91,19 +92,19 @@ const TokensTable = () => {
       }
     },
     {
-      title: 'Remaining Quota',
+      title: '剩余额度',
       dataIndex: 'remain_quota',
       render: (text, record, index) => {
         return (
           <div>
-            {record.unlimited_quota ? <Tag size={'large'} color={'white'}>Unlimited</Tag> :
+            {record.unlimited_quota ? <Tag size={'large'} color={'white'}>无限制</Tag> :
               <Tag size={'large'} color={'light-blue'}>{renderQuota(parseInt(text))}</Tag>}
           </div>
         );
       }
     },
     {
-      title: 'Creation Time',
+      title: '创建时间',
       dataIndex: 'created_time',
       render: (text, record, index) => {
         return (
@@ -114,12 +115,12 @@ const TokensTable = () => {
       }
     },
     {
-      title: 'Expiration Time',
+      title: '过期时间',
       dataIndex: 'expired_time',
       render: (text, record, index) => {
         return (
           <div>
-            {record.expired_time === -1 ? 'Never Expire' : renderTimestamp(text)}
+            {record.expired_time === -1 ? '永不过期' : renderTimestamp(text)}
           </div>
         );
       }
@@ -136,68 +137,71 @@ const TokensTable = () => {
             style={{ padding: 20 }}
             position="top"
           >
-            <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>View</Button>
+            <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>查看</Button>
           </Popover>
           <Button theme="light" type="secondary" style={{ marginRight: 1 }}
                   onClick={async (text) => {
                     await copyText('sk-' + record.key);
                   }}
-          >Copy</Button>
-          <SplitButtonGroup style={{ marginRight: 1 }} aria-label="Project Operation Button Group"><Button theme="light" style={{ color: 'rgba(var(--semi-teal-7), 1)' }} onClick={() => {
-  onOpenLink('next', record.key);
-}}>Chat</Button>
-<Dropdown trigger="click" position="bottomRight" menu={
-  [
-    {
-      node: 'item',
-      key: 'next',
-      disabled: !localStorage.getItem('chat_link'),
-      name: 'ChatGPT Next Web',
-      onClick: () => {
-        onOpenLink('next', record.key);
-      }
-    },
-    {
-      node: 'item',
-      key: 'next-mj',
-      disabled: !localStorage.getItem('chat_link2'),
-      name: 'ChatGPT Web & Midjourney',
-      onClick: () => {
-        onOpenLink('next-mj', record.key);
-      }
-    },
-    {
-      node: 'item', key: 'ama', name: 'AMA Q&A (BotGem)', onClick: () => {
-        onOpenLink('ama', record.key);
-      }
-    },
-    {
-      node: 'item', key: 'opencat', name: 'OpenCat', onClick: () => {
-        onOpenLink('opencat', record.key);
-      }
-    }
-  ]
-}
->
-  <Button style={{ padding: '8px 4px', color: 'rgba(var(--semi-teal-7), 1)' }} type="primary"
-          icon={<IconTreeTriangleDown />}></Button>
-</Dropdown>
-</SplitButtonGroup>
-<Popconfirm
-  title="Are you sure you want to delete this token?"
-  content="This action cannot be undone"
-  okType={'danger'}
-  position={'left'}
-  onConfirm={() => {
-    manageToken(record.id, 'delete', record).then(
-      () => {
-        removeRecord(record.key);
-      }
-    );
-  }}
->
-  <Button theme="light" type="danger" style={{ marginRight: 1 }}>Delete</Button>
-</Popconfirm>"record.status === 1 ?
+          >复制</Button>
+          <SplitButtonGroup style={{ marginRight: 1 }} aria-label="项目操作按钮组">
+            <Button theme="light" style={{ color: 'rgba(var(--semi-teal-7), 1)' }} onClick={() => {
+              onOpenLink('next', record.key);
+            }}>聊天</Button>
+            <Dropdown trigger="click" position="bottomRight" menu={
+              [
+                {
+                  node: 'item',
+                  key: 'next',
+                  disabled: !localStorage.getItem('chat_link'),
+                  name: 'ChatGPT Next Web',
+                  onClick: () => {
+                    onOpenLink('next', record.key);
+                  }
+                },
+                {
+                  node: 'item',
+                  key: 'next-mj',
+                  disabled: !localStorage.getItem('chat_link2'),
+                  name: 'ChatGPT Web & Midjourney',
+                  onClick: () => {
+                    onOpenLink('next-mj', record.key);
+                  }
+                },
+                {
+                  node: 'item', key: 'ama', name: 'AMA 问天（BotGem）', onClick: () => {
+                    onOpenLink('ama', record.key);
+                  }
+                },
+                {
+                  node: 'item', key: 'opencat', name: 'OpenCat', onClick: () => {
+                    onOpenLink('opencat', record.key);
+                  }
+                }
+              ]
+            }
+            >
+              <Button style={{ padding: '8px 4px', color: 'rgba(var(--semi-teal-7), 1)' }} type="primary"
+                      icon={<IconTreeTriangleDown />}></Button>
+            </Dropdown>
+          </SplitButtonGroup>
+          <Popconfirm
+            title="确定是否要删除此令牌？"
+            content="此修改将不可逆"
+            okType={'danger'}
+            position={'left'}
+            onConfirm={() => {
+              manageToken(record.id, 'delete', record).then(
+                () => {
+                  removeRecord(record.key);
+                }
+              );
+            }}
+          >
+            <Button theme="light" type="danger" style={{ marginRight: 1 }}>删除</Button>
+          </Popconfirm>
+          {
+            record.status === 1 ?
               <Button theme="light" type="warning" style={{ marginRight: 1 }} onClick={
                 async () => {
                   manageToken(
@@ -206,7 +210,7 @@ const TokensTable = () => {
                     record
                   );
                 }
-              }>Disable</Button> :
+              }>禁用</Button> :
               <Button theme="light" type="secondary" style={{ marginRight: 1 }} onClick={
                 async () => {
                   manageToken(
@@ -215,14 +219,14 @@ const TokensTable = () => {
                     record
                   );
                 }
-              }>Enable</Button>
+              }>启用</Button>
           }
           <Button theme="light" type="tertiary" style={{ marginRight: 1 }} onClick={
             () => {
               setEditingToken(record);
               setShowEdit(true);
             }
-          }>Edit</Button>
+          }>编辑</Button>
         </div>
       )
     }
@@ -257,7 +261,74 @@ const TokensTable = () => {
 
   const setTokensFormat = (tokens) => {
     setTokens(tokens);
-    if (tokens.length >= pageSize) {"In this case we have to load more data and then append them.url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
+    if (tokens.length >= pageSize) {
+      setTokenCount(tokens.length + pageSize);
+    } else {
+      setTokenCount(tokens.length);
+    }
+  };
+
+  let pageData = tokens.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const loadTokens = async (startIdx) => {
+    setLoading(true);
+    const res = await API.get(`/api/token/?p=${startIdx}&size=${pageSize}&order=${orderBy}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      if (startIdx === 0) {
+        setTokensFormat(data);
+      } else {
+        let newTokens = [...tokens];
+        newTokens.splice(startIdx * pageSize, data.length, ...data);
+        setTokensFormat(newTokens);
+      }
+    } else {
+      showError(message);
+    }
+    setLoading(false);
+  };
+
+  const onPaginationChange = (e, { activePage }) => {
+    (async () => {
+      if (activePage === Math.ceil(tokens.length / pageSize) + 1) {
+        // In this case we have to load more data and then append them.
+        await loadTokens(activePage - 1, orderBy);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const refresh = async () => {
+    await loadTokens(activePage - 1);
+  };
+
+  const onCopy = async (type, key) => {
+    let status = localStorage.getItem('status');
+    let serverAddress = '';
+    if (status) {
+      status = JSON.parse(status);
+      serverAddress = status.server_address;
+    }
+    if (serverAddress === '') {
+      serverAddress = window.location.origin;
+    }
+    let encodedServerAddress = encodeURIComponent(serverAddress);
+    const nextLink = localStorage.getItem('chat_link');
+    const mjLink = localStorage.getItem('chat_link2');
+    let nextUrl;
+
+    if (nextLink) {
+      nextUrl = nextLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    } else {
+      nextUrl = `https://app.nextchat.dev/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    }
+
+    let url;
+    switch (type) {
+      case 'ama':
+        url = mjLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+        break;
+      case 'opencat':
+        url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
         break;
       case 'next':
         url = nextUrl;
@@ -266,19 +337,19 @@ const TokensTable = () => {
         url = `sk-${key}`;
     }
     // if (await copy(url)) {
-    //     showSuccess('Copied to clipboard!');
+    //     showSuccess('已复制到剪贴板！');
     // } else {
-    //     showWarning('Failed to copy to clipboard, please copy manually, the token has been filled into the search box.');
+    //     showWarning('无法复制到剪贴板，请手动复制，已将令牌填入搜索框。');
     //     setSearchKeyword(url);
     // }
   };
 
   const copyText = async (text) => {
     if (await copy(text)) {
-      showSuccess('Copied to clipboard!');
+      showSuccess('已复制到剪贴板！');
     } else {
       // setSearchKeyword(text);
-      Modal.error({ title: 'Failed to copy to clipboard, please copy manually', content: text });
+      Modal.error({ title: '无法复制到剪贴板，请手动复制', content: text });
     }
   };
 
@@ -313,7 +384,7 @@ const TokensTable = () => {
         break;
       default:
         if (!chatLink) {
-          showError('Admin has not set up the chat link');
+          showError('管理员未设置聊天链接');
           return;
         }
         url = defaultUrl;
@@ -332,8 +403,8 @@ const TokensTable = () => {
 
   const removeRecord = key => {
     let newDataSource = [...tokens];
-    if (key != null) {```
-let idx = newDataSource.findIndex(data => data.key === key);
+    if (key != null) {
+      let idx = newDataSource.findIndex(data => data.key === key);
 
       if (idx > -1) {
         newDataSource.splice(idx, 1);
@@ -410,10 +481,7 @@ let idx = newDataSource.findIndex(data => data.key === key);
     if (tokens.length === 0) return;
     setLoading(true);
     let sortedTokens = [...tokens];
-```Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: 
-
-`sortedTokens.sort((a, b) => {
+    sortedTokens.sort((a, b) => {
       return ('' + a[key]).localeCompare(b[key]);
     });
     if (sortedTokens[0].id === tokens[0].id) {
@@ -422,6 +490,7 @@ while maintaining the original formatting:
     setTokens(sortedTokens);
     setLoading(false);
   };
+
 
   const handlePageChange = page => {
     setActivePage(page);
@@ -463,11 +532,11 @@ while maintaining the original formatting:
   const renderSelectedOption = (orderBy) => {
     switch (orderBy) {
       case 'remain_quota':
-        return 'Sort by remaining quota';
+        return '按剩余额度排序';
       case 'used_quota':
-        return 'Sort by used quota';
+        return '按已用额度排序';
       default:
-        return 'Default sort';
+        return '默认排序';
     }
   };
 
@@ -477,8 +546,8 @@ while maintaining the original formatting:
       <Form layout="horizontal" style={{ marginTop: 10 }} labelPosition={'left'}>
         <Form.Input
           field="keyword"
-          label="Search Keyword"
-          placeholder="Token Name"
+          label="搜索关键字"
+          placeholder="令牌名称"
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}
@@ -486,12 +555,13 @@ while maintaining the original formatting:
         {/* <Form.Input
           field="token"
           label="Key"
-          placeholder="Key"
+          placeholder="密钥"
           value={searchToken}
           loading={searching}
           onChange={handleSearchTokenChange}
         /> */}
-        <Button label="Search" type="primary" htmlType="submit" className="btn-margin-right"".`onClick={searchTokens} style={{ marginRight: 8 }}>Search</Button>
+        <Button label="查询" type="primary" htmlType="submit" className="btn-margin-right"
+                onClick={searchTokens} style={{ marginRight: 8 }}>查询</Button>
       </Form>
 
       <Table style={{ marginTop: 20 }} columns={columns} dataSource={pageData} pagination={{
@@ -500,7 +570,7 @@ while maintaining the original formatting:
         total: tokenCount,
         showSizeChanger: true,
         pageSizeOptions: [10, 20, 50, 100],
-        formatPageText: (page) => `Items ${page.currentStart} - ${page.currentEnd}, Total ${tokens.length} items`,
+        formatPageText: (page) => `第 ${page.currentStart} - ${page.currentEnd} 条，共 ${tokens.length} 条`,
         onPageSizeChange: (size) => {
           setPageSize(size);
           setActivePage(1);
@@ -515,11 +585,11 @@ while maintaining the original formatting:
           });
           setShowEdit(true);
         }
-      }>Add Token</Button>
-      <Button label="Copy Selected Tokens" type="warning" onClick={
+      }>添加令牌</Button>
+      <Button label="复制所选令牌" type="warning" onClick={
         async () => {
           if (selectedKeys.length === 0) {
-            showError('Please select at least one token!');
+            showError('请至少选择一个令牌！');
             return;
           }
           let keys = '';
@@ -528,7 +598,7 @@ while maintaining the original formatting:
           }
           await copyText(keys);
         }
-      }>Copy Selected Tokens to Clipboard</Button>
+      }>复制所选令牌到剪贴板</Button>
       <Dropdown
         trigger="click"
         position="bottomLeft"
@@ -536,11 +606,16 @@ while maintaining the original formatting:
         onVisibleChange={(visible) => setDropdownVisible(visible)}
         render={
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleOrderByChange('', { value: '' })}>Default Order</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleOrderByChange('', { value: 'remain_quota' })}>Sort by Remaining Quota</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleOrderByChange('', { value: 'used_quota' })}>Sort by Used Quota</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleOrderByChange('', { value: '' })}>默认排序</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleOrderByChange('', { value: 'remain_quota' })}>按剩余额度排序</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleOrderByChange('', { value: 'used_quota' })}>按已用额度排序</Dropdown.Item>
           </Dropdown.Menu>
         }
       >
       <Button style={{ marginLeft: '10px' }}>{renderSelectedOption(orderBy)}</Button>
-      </Dropdown>Return only the translated content, not including the original text.
+      </Dropdown>
+    </>
+  );
+};
+
+export default TokensTable;

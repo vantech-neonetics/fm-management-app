@@ -22,7 +22,7 @@ const panel = {
   children: [
     {
       id: 'dashboard',
-      title: 'Dashboard',
+      title: '总览',
       type: 'item',
       url: '/panel/dashboard',
       icon: icons.IconDashboard,
@@ -31,7 +31,7 @@ const panel = {
     },
     {
       id: 'channel',
-      title: 'Channel',
+      title: '渠道',
       type: 'item',
       url: '/panel/channel',
       icon: icons.IconSitemap,
@@ -40,7 +40,7 @@ const panel = {
     },
     {
       id: 'token',
-      title: 'Token',
+      title: '令牌',
       type: 'item',
       url: '/panel/token',
       icon: icons.IconKey,
@@ -48,7 +48,7 @@ const panel = {
     },
     {
       id: 'log',
-      title: 'Log',
+      title: '日志',
       type: 'item',
       url: '/panel/log',
       icon: icons.IconArticle,
@@ -56,7 +56,7 @@ const panel = {
     },
     {
       id: 'redemption',
-      title: 'Redemption',
+      title: '兑换',
       type: 'item',
       url: '/panel/redemption',
       icon: icons.IconCoin,
@@ -65,7 +65,7 @@ const panel = {
     },
     {
       id: 'topup',
-      title: 'Top-up',
+      title: '充值',
       type: 'item',
       url: '/panel/topup',
       icon: icons.IconGardenCart,
@@ -73,7 +73,7 @@ const panel = {
     },
     {
       id: 'user',
-      title: 'User',
+      title: '用户',
       type: 'item',
       url: '/panel/user',
       icon: icons.IconUser,
@@ -82,7 +82,7 @@ const panel = {
     },
     {
       id: 'profile',
-      title: 'Profile',
+      title: '我的',
       type: 'item',
       url: '/panel/profile',
       icon: icons.IconUserScan,
@@ -91,7 +91,7 @@ const panel = {
     },
     {
       id: 'setting',
-      title: 'Setting',
+      title: '设置',
       type: 'item',
       url: '/panel/setting',
       icon: icons.IconAdjustments,
@@ -99,4 +99,6 @@ const panel = {
       isAdmin: true
     }
   ]
-};export default panel;
+};
+
+export default panel;

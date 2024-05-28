@@ -22,7 +22,7 @@ const TopUp = () => {
 
     const topUp = async () => {
         if (redemptionCode === '') {
-            showInfo('Please enter the redemption code!')
+            showInfo('请输入兑换码！')
             return;
         }
         setIsSubmitting(true);
@@ -32,8 +32,8 @@ const TopUp = () => {
             });
             const {success, message, data} = res.data;
             if (success) {
-                showSuccess('Redeemed successfully!');
-                Modal.success({title: 'Redeemed successfully!', content: 'Successfully redeemed quota: ' + renderQuota(data), centered: true});
+                showSuccess('兑换成功！');
+                Modal.success({title: '兑换成功！', content: '成功兑换额度：' + renderQuota(data), centered: true});
                 setUserQuota((quota) => {
                     return quota + data;
                 });
@@ -42,14 +42,15 @@ const TopUp = () => {
                 showError(message);
             }
         } catch (err) {
-            showError('Request failed');
+            showError('请求失败');
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const openTopUpLink = () => {format: "if (!topUpLink) {
-            showError('Super administrators have not set up the recharge link!');
+    const openTopUpLink = () => {
+        if (!topUpLink) {
+            showError('超级管理员未设置充值链接！');
             return;
         }
         window.open(topUpLink, '_blank');
@@ -57,18 +58,16 @@ const TopUp = () => {
 
     const preTopUp = async (payment) => {
         if (!enableOnlineTopUp) {
-            showError('Administrator has not enabled online top-up!');
+            showError('管理员未开启在线充值！');
             return;
         }
         if (amount === 0) {
             await getAmount();
         }
-        
         if (topUpCount < minTopUp) {
-            showInfo('Top-up count cannot be less than' + minTopUp);
+            showInfo('充值数量不能小于' + minTopUp);
             return;
         }
-        
         setPayWay(payment)
         setOpen(true);
     }
@@ -77,38 +76,32 @@ const TopUp = () => {
         if (amount === 0) {
             await getAmount();
         }
-        
         if (topUpCount < minTopUp) {
-            showInfo('Top-up count cannot be less than' + minTopUp);
+            showInfo('充值数量不能小于' + minTopUp);
             return;
         }
-        
         setOpen(false);
-        
         try {
             const res = await API.post('/api/user/pay', {
                 amount: parseInt(topUpCount),
                 top_up_code: topUpCode,
                 payment_method: payWay
             });
-            
             if (res !== undefined) {
                 const {message, data} = res.data;
                 // showInfo(message);
-                
                 if (message === 'success') {
+
                     let params = data
                     let url = res.data.url
                     let form = document.createElement('form')
                     form.action = url
                     form.method = 'POST'
-                    
-                    // Determine if it is Safari browser
+                    // 判断是否为safari浏览器
                     let isSafari = navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") < 1;
                     if (!isSafari) {
                         form.target = '_blank'
                     }
-                    
                     for (let key in params) {
                         let input = document.createElement('input')
                         input.type = 'hidden'
@@ -116,9 +109,11 @@ const TopUp = () => {
                         input.value = params[key]
                         form.appendChild(input)
                     }
-                    document.body.appendChild(form)".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: 
-```javascript
+                    document.body.appendChild(form)
+                    form.submit()
+                    document.body.removeChild(form)
+                } else {
+                    showError(data);
                     // setTopUpCount(parseInt(res.data.count));
                     // setAmount(parseInt(data));
                 }
@@ -130,6 +125,7 @@ while maintaining the original formatting:
         } finally {
         }
     }
+
     const getUserQuota = async () => {
         let res = await API.get(`/api/user/self`);
         const {success, message, data} = res.data;
@@ -139,6 +135,7 @@ while maintaining the original formatting:
             showError(message);
         }
     }
+
     useEffect(() => {
         let status = localStorage.getItem('status');
         if (status) {
@@ -155,10 +152,12 @@ while maintaining the original formatting:
         }
         getUserQuota().then();
     }, []);
+
     const renderAmount = () => {
         // console.log(amount);
         return amount + '元';
     }
+
     const getAmount = async (value) => {
         if (value === undefined) {
             value = topUpCount;
@@ -178,70 +177,7 @@ while maintaining the original formatting:
                     // setTopUpCount(parseInt(res.data.count));
                     // setAmount(parseInt(data));
                 }
-```
-Translate: 
-```javascript
-                    // Set the top-up count using the integer value from res.data.count.
-                    // Set the amount using the integer value from data.
-                }
             } else {
-                showError(res);
-            }
-        } catch (err) {
-            console.log(err);
-        } finally {
-        }
-    }
-    const getUserQuota = async () => {
-        let res = await API.get(`/api/user/self`);
-        const {success, message, data} = res.data;
-        if (success) {
-            setUserQuota(data.quota);
-        } else {
-            showError(message);
-        }
-    }
-    useEffect(() => {
-        let status = localStorage.getItem('status');
-        if (status) {
-            status = JSON.parse(status);
-            if (status.top_up_link) {
-                setTopUpLink(status.top_up_link);
-            }
-            if (status.min_topup) {
-                setMinTopUp(status.min_topup);
-            }
-            if (status.enable_online_topup) {
-                setEnableOnlineTopUp(status.enable_online_topup);
-            }
-        }
-        getUserQuota().then();
-    }, []);
-    const renderAmount = () => {
-        // console.log(amount);
-        return amount + '元';
-    }
-    const getAmount = async (value) => {
-        if (value === undefined) {
-            value = topUpCount;
-        }
-        try {
-            const res = await API.post('/api/user/amount', {
-                amount: parseFloat(value),
-                top_up_code: topUpCode
-            });
-            if (res !== undefined) {
-                const {message, data} = res.data;
-                // showInfo(message);
-                if (message === 'success') {
-                    setAmount(parseFloat(data));
-                } else {
-                    showError(data);
-                    // setTopUpCount(parseInt(res.data.count));
-                    // setAmount(parseInt(data));
-                }
-```Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "} else {
                 showError(res);
             }
         } catch (err) {
@@ -258,11 +194,11 @@ while maintaining the original formatting: "} else {
         <div>
             <Layout>
                 <Layout.Header>
-                    <h3>Top-up Amount</h3>
+                    <h3>充值额度</h3>
                 </Layout.Header>
                 <Layout.Content>
                     <Modal
-                        title="Confirm Top-up"
+                        title="确定要充值吗"
                         visible={open}
                         onOk={onlineTopUp}
                         onCancel={handleCancel}
@@ -270,57 +206,66 @@ while maintaining the original formatting: "} else {
                         size={'small'}
                         centered={true}
                     >
-                        <p>Top-up amount: {topUpCount}$</p>
-                        <p>Actual amount paid: {renderAmount()}</p>
-                        <p>Do you confirm the top-up?</p>
+                        <p>充值数量：{topUpCount}$</p>
+                        <p>实付金额：{renderAmount()}</p>
+                        <p>是否确认充值？</p>
                     </Modal>
                     <div style={{marginTop: 20, display: 'flex', justifyContent: 'center'}}>
                         <Card
                             style={{width: '500px', padding: '20px'}}
                         >
-                            <Title level={3} style={{textAlign: 'center'}}>Balance {renderQuota(userQuota)}</Title>
+                            <Title level={3} style={{textAlign: 'center'}}>余额 {renderQuota(userQuota)}</Title>
                             <div style={{marginTop: 20}}>
                                 <Divider>
-                                    Redeem Balance
+                                    兑换余额
                                 </Divider>
                                 <Form>
                                     <Form.Input
                                         field={'redemptionCode'}
-                                        label={'Redemption Code'}
-                                        placeholder='Redemption Code'
+                                        label={'兑换码'}
+                                        placeholder='兑换码'
                                         name='redemptionCode'
                                         value={redemptionCode}
                                         onChange={(value) => {
                                             setRedemptionCode(value);
                                         }}
-                                    />".<Button type={'primary'} theme={'solid'} onClick={openTopUpLink}>
-    Get Redemption Code
-</Button> : null
-<Button type={"warning"} theme={'solid'} onClick={topUp}
-        disabled={isSubmitting}>
-    {isSubmitting ? 'Redeeming...' : 'Redeem'}
-</Button>
-
-<Divider>
-    Online Top-up
-</Divider>
-<Form.Input
-    disabled={!enableOnlineTopUp}
-    field={'redemptionCount'}
-    label={'Amount Paid: ' + renderAmount()}
-    placeholder={'Top-up amount, minimum ' + minTopUp + '$'}
-    name='redemptionCount'
-    type={'number'}
-    value={topUpCount}
-    suffix={'$'}
-    min={minTopUp}
-    defaultValue={minTopUp}
-    max={100000}
-    onChange={async (value) => {
-        if (value < 1) {
-            value = 1;
-        }Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "if (value > 100000) {
+                                    />
+                                    <Space>
+                                        {
+                                            topUpLink ?
+                                                <Button type={'primary'} theme={'solid'} onClick={openTopUpLink}>
+                                                    获取兑换码
+                                                </Button> : null
+                                        }
+                                        <Button type={"warning"} theme={'solid'} onClick={topUp}
+                                                disabled={isSubmitting}>
+                                            {isSubmitting ? '兑换中...' : '兑换'}
+                                        </Button>
+                                    </Space>
+                                </Form>
+                            </div>
+                            {/* <div style={{marginTop: 20}}>
+                                <Divider>
+                                    在线充值
+                                </Divider>
+                                <Form>
+                                    <Form.Input
+                                        disabled={!enableOnlineTopUp}
+                                        field={'redemptionCount'}
+                                        label={'实付金额：' + renderAmount()}
+                                        placeholder={'充值数量，最低' + minTopUp + '$'}
+                                        name='redemptionCount'
+                                        type={'number'}
+                                        value={topUpCount}
+                                        suffix={'$'}
+                                        min={minTopUp}
+                                        defaultValue={minTopUp}
+                                        max={100000}
+                                        onChange={async (value) => {
+                                            if (value < 1) {
+                                                value = 1;
+                                            }
+                                            if (value > 100000) {
                                                 value = 100000;
                                             }
                                             setTopUpCount(value);
@@ -333,7 +278,7 @@ while maintaining the original formatting: "if (value > 100000) {
                                                 preTopUp('zfb')
                                             }
                                         }>
-                                            Alipay
+                                            支付宝
                                         </Button>
                                         <Button style={{backgroundColor: 'rgba(var(--semi-green-5), 1)'}}
                                                 type={'primary'}
@@ -342,7 +287,7 @@ while maintaining the original formatting: "if (value > 100000) {
                                                 preTopUp('wx')
                                             }
                                         }>
-                                            WeChat
+                                            微信
                                         </Button>
                                     </Space>
                                 </Form>
@@ -353,9 +298,9 @@ while maintaining the original formatting: "if (value > 100000) {
                             {/*            async () => {*/}
                             {/*                window.location.href = '/topup/history'*/}
                             {/*            }*/}
-                            {/*        }>Top-up History</Link>*/}
-                            {/*    </Text>*/}".```javascript
-{/*</div>*/}
+                            {/*        }>充值记录</Link>*/}
+                            {/*    </Text>*/}
+                            {/*</div>*/}
                         </Card>
                     </div>
 
@@ -367,4 +312,3 @@ while maintaining the original formatting: "if (value > 100000) {
 };
 
 export default TopUp;
-```

@@ -1,10 +1,10 @@
-"import { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
-{Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-{
+import {
   Box,
   Button,
   Divider,
@@ -22,7 +22,7 @@ import { useTheme } from '@mui/material/styles';
 
 // third party
 import * as Yup from 'yup';
-{Formik} from 'formik';
+import { Formik } from 'formik';
 
 // project imports
 import useLogin from 'hooks/useLogin';
@@ -30,15 +30,50 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import WechatModal from 'views/Authentication/AuthForms/WechatModal';
 
 // assets
-{Visibility} from '@mui/icons-material/Visibility';
-{VisibilityOff} from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-{Github} from 'assets/images/icons/github.svg';
-{Wechat} from 'assets/images/icons/wechat.svg';
-{Lark} from 'assets/images/icons/lark.svg';
-{onGitHubOAuthClicked}, {onLarkOAuthClicked} from 'utils/common';
+import Github from 'assets/images/icons/github.svg';
+import Wechat from 'assets/images/icons/wechat.svg';
+import Lark from 'assets/images/icons/lark.svg';
+import { onGitHubOAuthClicked, onLarkOAuthClicked } from 'utils/common';
 
-// ============================|| FIREBASE - LOGIN ||============================ //{tripartiteLogin && (
+// ============================|| FIREBASE - LOGIN ||============================ //
+
+const LoginForm = ({ ...others }) => {
+  const theme = useTheme();
+  const { login, wechatLogin } = useLogin();
+  const [openWechat, setOpenWechat] = useState(false);
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+  const customization = useSelector((state) => state.customization);
+  const siteInfo = useSelector((state) => state.siteInfo);
+  // const [checked, setChecked] = useState(true);
+
+  let tripartiteLogin = false;
+  if (siteInfo.github_oauth || siteInfo.wechat_login || siteInfo.lark_client_id) {
+    tripartiteLogin = true;
+  }
+
+  const handleWechatOpen = () => {
+    setOpenWechat(true);
+  };
+
+  const handleWechatClose = () => {
+    setOpenWechat(false);
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  return (
+    <>
+      {tripartiteLogin && (
         <Grid container direction="column" justifyContent="center" spacing={2}>
           {siteInfo.github_oauth && (
             <Grid item xs={12}>
@@ -58,7 +93,7 @@ import WechatModal from 'views/Authentication/AuthForms/WechatModal';
                   <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
                     <img src={Github} alt="github" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
                   </Box>
-                  Login with GitHub
+                  使用 GitHub 登录
                 </Button>
               </AnimateButton>
             </Grid>
@@ -81,16 +116,75 @@ import WechatModal from 'views/Authentication/AuthForms/WechatModal';
                   <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
                     <img src={Wechat} alt="Wechat" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
                   </Box>
-                  Login with WeChat
+                  使用微信登录
                 </Button>
               </AnimateButton>
-              <WechatModal open={openWechat} handleClose={handleWechatClose} wechatLogin={wechatLogin} qrCode={siteInfo.wechat_qrcode} />".```
-// Displays the login button for Lark authentication if the Lark client ID is available
-// When clicked, it triggers the onLarkOAuthClicked function with the Lark client ID
-// Shows an option for users to login using Lark
-// Renders a divider with the text "OR" in between two horizontal lines
-// Initializes the Formik form with username, password, and submit fields
-```validationSchema={Yup.object().shape({
+              <WechatModal open={openWechat} handleClose={handleWechatClose} wechatLogin={wechatLogin} qrCode={siteInfo.wechat_qrcode} />
+            </Grid>
+          )}
+          {siteInfo.lark_client_id && (
+            <Grid item xs={12}>
+              <AnimateButton>
+                <Button
+                  disableElevation
+                  fullWidth
+                  onClick={() => onLarkOAuthClicked(siteInfo.lark_client_id)}
+                  size="large"
+                  variant="outlined"
+                  sx={{
+                    color: 'grey.700',
+                    backgroundColor: theme.palette.grey[50],
+                    borderColor: theme.palette.grey[100]
+                  }}
+                >
+                  <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
+                    <img src={Lark} alt="Lark" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
+                  </Box>
+                  使用飞书登录
+                </Button>
+              </AnimateButton>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex'
+              }}
+            >
+              <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
+
+              <Button
+                variant="outlined"
+                sx={{
+                  cursor: 'unset',
+                  m: 2,
+                  py: 0.5,
+                  px: 7,
+                  borderColor: `${theme.palette.grey[100]} !important`,
+                  color: `${theme.palette.grey[900]}!important`,
+                  fontWeight: 500,
+                  borderRadius: `${customization.borderRadius}px`
+                }}
+                disableRipple
+                disabled
+              >
+                OR
+              </Button>
+
+              <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
+            </Box>
+          </Grid>
+        </Grid>
+      )}
+
+      <Formik
+        initialValues={{
+          username: '',
+          password: '',
+          submit: null
+        }}
+        validationSchema={Yup.object().shape({
           username: Yup.string().max(255).required('Username is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
@@ -110,7 +204,7 @@ import WechatModal from 'views/Authentication/AuthForms/WechatModal';
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.username && errors.username)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-username-login">Username / Email</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-username-login">用户名 / 邮箱</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-username-login"
                 type="text"
@@ -118,7 +212,7 @@ import WechatModal from 'views/Authentication/AuthForms/WechatModal';
                 name="username"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Username"
+                label="用户名"
                 inputProps={{ autoComplete: 'username' }}
               />
               {touched.username && errors.username && (
@@ -129,11 +223,11 @@ import WechatModal from 'views/Authentication/AuthForms/WechatModal';
             </FormControl>
 
             <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password-login">密码</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password-login"
-                type={showPassword ? 'text' : 'password'}".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "value={values.password}
+                type={showPassword ? 'text' : 'password'}
+                value={values.password}
                 name="password"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -163,7 +257,7 @@ while maintaining the original formatting: "value={values.password}
                 control={
                   <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
                 }
-                label="Remember me"
+                label="记住我"
               /> */}
               <Typography
                 component={Link}
@@ -172,18 +266,19 @@ while maintaining the original formatting: "value={values.password}
                 color="primary"
                 sx={{ textDecoration: 'none', cursor: 'pointer' }}
               >
-                Forgot password?
+                忘记密码?
               </Typography>
             </Stack>
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
-            }
+            )}
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">"."Login
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  登录
                 </Button>
               </AnimateButton>
             </Box>

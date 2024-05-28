@@ -70,7 +70,8 @@ const SystemSetting = () => {
       setInputs({
         ...newInputs,
         EmailDomainWhitelist: newInputs.EmailDomainWhitelist.split(',')
-      });setOriginInputs(newInputs);
+      });
+      setOriginInputs(newInputs);
 
       setEmailDomainWhitelist(newInputs.EmailDomainWhitelist.split(','));
     } else {
@@ -111,7 +112,7 @@ const SystemSetting = () => {
         ...inputs,
         [key]: value
       }));
-      showSuccess('Setting successful!');
+      showSuccess('设置成功！');
     } else {
       showError(message);
     }
@@ -144,57 +145,59 @@ const SystemSetting = () => {
       name === 'LarkClientSecret'
     ) {
       setInputs((inputs) => ({ ...inputs, [name]: value }));
-    } else {```js
-await updateOption(name, value);
-};
+    } else {
+      await updateOption(name, value);
+    }
+  };
 
-const submitServerAddress = async () => {
-  let ServerAddress = removeTrailingSlash(inputs.ServerAddress);
-  await updateOption('ServerAddress', ServerAddress);
-};
+  const submitServerAddress = async () => {
+    let ServerAddress = removeTrailingSlash(inputs.ServerAddress);
+    await updateOption('ServerAddress', ServerAddress);
+  };
 
-const submitSMTP = async () => {
-  if (originInputs['SMTPServer'] !== inputs.SMTPServer) {
-    await updateOption('SMTPServer', inputs.SMTPServer);
-  }
-  if (originInputs['SMTPAccount'] !== inputs.SMTPAccount) {
-    await updateOption('SMTPAccount', inputs.SMTPAccount);
-  }
-  if (originInputs['SMTPFrom'] !== inputs.SMTPFrom) {
-    await updateOption('SMTPFrom', inputs.SMTPFrom);
-  }
-  if (originInputs['SMTPPort'] !== inputs.SMTPPort && inputs.SMTPPort !== '') {
-    await updateOption('SMTPPort', inputs.SMTPPort);
-  }
-  if (originInputs['SMTPToken'] !== inputs.SMTPToken && inputs.SMTPToken !== '') {
-    await updateOption('SMTPToken', inputs.SMTPToken);
-  }
-};
+  const submitSMTP = async () => {
+    if (originInputs['SMTPServer'] !== inputs.SMTPServer) {
+      await updateOption('SMTPServer', inputs.SMTPServer);
+    }
+    if (originInputs['SMTPAccount'] !== inputs.SMTPAccount) {
+      await updateOption('SMTPAccount', inputs.SMTPAccount);
+    }
+    if (originInputs['SMTPFrom'] !== inputs.SMTPFrom) {
+      await updateOption('SMTPFrom', inputs.SMTPFrom);
+    }
+    if (originInputs['SMTPPort'] !== inputs.SMTPPort && inputs.SMTPPort !== '') {
+      await updateOption('SMTPPort', inputs.SMTPPort);
+    }
+    if (originInputs['SMTPToken'] !== inputs.SMTPToken && inputs.SMTPToken !== '') {
+      await updateOption('SMTPToken', inputs.SMTPToken);
+    }
+  };
 
-const submitEmailDomainWhitelist = async () => {
-  await updateOption('EmailDomainWhitelist', inputs.EmailDomainWhitelist.join(','));
-};
+  const submitEmailDomainWhitelist = async () => {
+    await updateOption('EmailDomainWhitelist', inputs.EmailDomainWhitelist.join(','));
+  };
 
-const submitWeChat = async () => {
-  if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
-    await updateOption('WeChatServerAddress', removeTrailingSlash(inputs.WeChatServerAddress));
-  }
-  if (originInputs['WeChatAccountQRCodeImageURL'] !== inputs.WeChatAccountQRCodeImageURL) {
-    await updateOption('WeChatAccountQRCodeImageURL', inputs.WeChatAccountQRCodeImageURL);
-  }
-  if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
-    await updateOption('WeChatServerToken', inputs.WeChatServerToken);
-  }
-};
+  const submitWeChat = async () => {
+    if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
+      await updateOption('WeChatServerAddress', removeTrailingSlash(inputs.WeChatServerAddress));
+    }
+    if (originInputs['WeChatAccountQRCodeImageURL'] !== inputs.WeChatAccountQRCodeImageURL) {
+      await updateOption('WeChatAccountQRCodeImageURL', inputs.WeChatAccountQRCodeImageURL);
+    }
+    if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
+      await updateOption('WeChatServerToken', inputs.WeChatServerToken);
+    }
+  };
 
-const submitGitHubOAuth = async () => {
-  if (originInputs['GitHubClientId'] !== inputs.GitHubClientId) {
-    await updateOption('GitHubClientId', inputs.GitHubClientId);
-  }
-  if (originInputs['GitHubClientSecret'] !== inputs.GitHubClientSecret && inputs.GitHubClientSecret !== '') {
-    await updateOption('GitHubClientSecret', inputs.GitHubClientSecret);
-```};
-  
+  const submitGitHubOAuth = async () => {
+    if (originInputs['GitHubClientId'] !== inputs.GitHubClientId) {
+      await updateOption('GitHubClientId', inputs.GitHubClientId);
+    }
+    if (originInputs['GitHubClientSecret'] !== inputs.GitHubClientSecret && inputs.GitHubClientSecret !== '') {
+      await updateOption('GitHubClientSecret', inputs.GitHubClientSecret);
+    }
+  };
+
   const submitTurnstile = async () => {
     if (originInputs['TurnstileSiteKey'] !== inputs.TurnstileSiteKey) {
       await updateOption('TurnstileSiteKey', inputs.TurnstileSiteKey);
@@ -225,34 +228,34 @@ const submitGitHubOAuth = async () => {
   return (
     <>
       <Stack spacing={2}>
-        <SubCard title="General Settings">
+        <SubCard title="通用设置">
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="ServerAddress">Server Address</InputLabel>
+                <InputLabel htmlFor="ServerAddress">服务器地址</InputLabel>
                 <OutlinedInput
                   id="ServerAddress"
                   name="ServerAddress"
                   value={inputs.ServerAddress || ''}
                   onChange={handleInputChange}
-                  label="Server Address"
-                  placeholder="For example: https://yourdomain.com"
+                  label="服务器地址"
+                  placeholder="例如：https://yourdomain.com"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitServerAddress}>
-                Update Server Address
+                更新服务器地址
               </Button>
-            </Grid>Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "</Grid>
+            </Grid>
+          </Grid>
         </SubCard>
-        <SubCard title="Configure Login/Register">
+        <SubCard title="配置登录注册">
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Allow login with password"
+                label="允许通过密码进行登录"
                 control={
                   <Checkbox checked={inputs.PasswordLoginEnabled === 'true'} onChange={handleInputChange} name="PasswordLoginEnabled" />
                 }
@@ -260,7 +263,7 @@ while maintaining the original formatting: "</Grid>
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Allow registration with password"
+                label="允许通过密码进行注册"
                 control={
                   <Checkbox
                     checked={inputs.PasswordRegisterEnabled === 'true'}
@@ -272,7 +275,7 @@ while maintaining the original formatting: "</Grid>
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Require email verification for password registration"
+                label="通过密码注册时需要进行邮箱验证"
                 control={
                   <Checkbox
                     checked={inputs.EmailVerificationEnabled === 'true'}
@@ -284,24 +287,25 @@ while maintaining the original formatting: "</Grid>
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Allow login & registration with GitHub account"
+                label="允许通过 GitHub 账户登录 & 注册"
                 control={<Checkbox checked={inputs.GitHubOAuthEnabled === 'true'} onChange={handleInputChange} name="GitHubOAuthEnabled" />}
               />
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Allow login & registration with WeChat account"
+                label="允许通过微信登录 & 注册"
                 control={<Checkbox checked={inputs.WeChatAuthEnabled === 'true'} onChange={handleInputChange} name="WeChatAuthEnabled" />}
               />
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Allow new user registration (When set to 'No', new users cannot register in any way)".control={<Checkbox checked={inputs.RegisterEnabled === 'true'} onChange={handleInputChange} name="RegisterEnabled" />}
+                label="允许新用户注册（此项为否时，新用户将无法以任何方式进行注册）"
+                control={<Checkbox checked={inputs.RegisterEnabled === 'true'} onChange={handleInputChange} name="RegisterEnabled" />}
               />
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label="Enable Turnstile User Verification"
+                label="启用 Turnstile 用户校验"
                 control={
                   <Checkbox checked={inputs.TurnstileCheckEnabled === 'true'} onChange={handleInputChange} name="TurnstileCheckEnabled" />
                 }
@@ -309,11 +313,11 @@ while maintaining the original formatting: "</Grid>
             </Grid>
           </Grid>
         </SubCard>
-        <SubCard title="Configure Email Domain Whitelist" subTitle="To prevent malicious users from registering in bulk using temporary email addresses">
+        <SubCard title="配置邮箱域名白名单" subTitle="用以防止恶意用户利用临时邮箱批量注册">
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12}>
               <FormControlLabel
-                label="Enable Email Domain Whitelist"
+                label="启用邮箱域名白名单"
                 control={
                   <Checkbox
                     checked={inputs.EmailDomainRestrictionEnabled === 'true'}
@@ -341,10 +345,11 @@ while maintaining the original formatting: "</Grid>
                     handleInputChange(event);
                   }}
                   filterSelectedOptions
-                  renderInput={(params) => <TextField {...params} name="EmailDomainWhitelist" label="Allowed Email Domains" />}
+                  renderInput={(params) => <TextField {...params} name="EmailDomainWhitelist" label="允许的邮箱域名" />}
                   filterOptions={(options, params) => {
                     const filtered = filter(options, params);
-                    const { inputValue } = params;".const isExisting = options.some((option) => inputValue === option);
+                    const { inputValue } = params;
+                    const isExisting = options.some((option) => inputValue === option);
                     if (inputValue !== '' && !isExisting) {
                       filtered.push(inputValue);
                     }
@@ -355,161 +360,163 @@ while maintaining the original formatting: "</Grid>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitEmailDomainWhitelist}>
-                Save Email Domain Whitelist Settings
+                保存邮箱域名白名单设置
               </Button>
             </Grid>
           </Grid>
         </SubCard>
-        <SubCard title="Configure SMTP" subTitle="Used to support system email sending">
+        <SubCard title="配置 SMTP" subTitle="用以支持系统的邮件发送">
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SMTPServer">SMTP Server Address</InputLabel>
+                <InputLabel htmlFor="SMTPServer">SMTP 服务器地址</InputLabel>
                 <OutlinedInput
                   id="SMTPServer"
                   name="SMTPServer"
                   value={inputs.SMTPServer || ''}
                   onChange={handleInputChange}
-                  label="SMTP Server Address"
-                  placeholder="For example: smtp.qq.com"
+                  label="SMTP 服务器地址"
+                  placeholder="例如：smtp.qq.com"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SMTPPort">SMTP Port</InputLabel>
+                <InputLabel htmlFor="SMTPPort">SMTP 端口</InputLabel>
                 <OutlinedInput
                   id="SMTPPort"
                   name="SMTPPort"
                   value={inputs.SMTPPort || ''}
                   onChange={handleInputChange}
-                  label="SMTP Port"
-                  placeholder="Default: 587"
+                  label="SMTP 端口"
+                  placeholder="默认: 587"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SMTPAccount">SMTP Account</InputLabel>
+                <InputLabel htmlFor="SMTPAccount">SMTP 账户</InputLabel>
                 <OutlinedInput
                   id="SMTPAccount"
                   name="SMTPAccount"
-                  value={inputs.SMTPAccount || ''}".onChange={handleInputChange}
-                  label="SMTP Account"
-                  placeholder="Usually an email address"
+                  value={inputs.SMTPAccount || ''}
+                  onChange={handleInputChange}
+                  label="SMTP 账户"
+                  placeholder="通常是邮箱地址"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SMTPFrom">SMTP Sender Email</InputLabel>
+                <InputLabel htmlFor="SMTPFrom">SMTP 发送者邮箱</InputLabel>
                 <OutlinedInput
                   id="SMTPFrom"
                   name="SMTPFrom"
                   value={inputs.SMTPFrom || ''}
                   onChange={handleInputChange}
-                  label="SMTP Sender Email"
-                  placeholder="Usually the same as the email address"
+                  label="SMTP 发送者邮箱"
+                  placeholder="通常和邮箱地址保持一致"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SMTPToken">SMTP Access Token</InputLabel>
+                <InputLabel htmlFor="SMTPToken">SMTP 访问凭证</InputLabel>
                 <OutlinedInput
                   id="SMTPToken"
                   name="SMTPToken"
                   value={inputs.SMTPToken || ''}
                   onChange={handleInputChange}
-                  label="SMTP Access Token"
-                  placeholder="Sensitive information will not be displayed on the front end"
+                  label="SMTP 访问凭证"
+                  placeholder="敏感信息不会发送到前端显示"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitSMTP}>
-                Save SMTP Settings
+                保存 SMTP 设置
               </Button>
             </Grid>
           </Grid>
         </SubCard>
         <SubCard
-          title="Configure GitHub OAuth App"
+          title="配置 GitHub OAuth App"
           subTitle={
             <span>
               {' '}
-              Used to support login and registration through GitHub,
+              用以支持通过 GitHub 进行登录注册，
               <a href="https://github.com/settings/developers" target="_blank" rel="noopener noreferrer">
-                Click here
+                点击此处
               </a>
-              to manage your GitHub OAuth App
+              管理你的 GitHub OAuth App
             </span>
           }
         >
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12}>
-              <Alert severity="info" sx={{ wordWrap: 'break-word' }}>Homepage URL fill <b>{inputs.ServerAddress}</b>,
-                Authorization callback URL fill <b>{`${inputs.ServerAddress}/oauth/github`}</b>
-            </Alert>
+              <Alert severity="info" sx={{ wordWrap: 'break-word' }}>
+                Homepage URL 填 <b>{inputs.ServerAddress}</b>
+                ，Authorization callback URL 填 <b>{`${inputs.ServerAddress}/oauth/github`}</b>
+              </Alert>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="GitHubClientId">GitHub Client ID</InputLabel>
+                <OutlinedInput
+                  id="GitHubClientId"
+                  name="GitHubClientId"
+                  value={inputs.GitHubClientId || ''}
+                  onChange={handleInputChange}
+                  label="GitHub Client ID"
+                  placeholder="输入你注册的 GitHub OAuth APP 的 ID"
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="GitHubClientSecret">GitHub Client Secret</InputLabel>
+                <OutlinedInput
+                  id="GitHubClientSecret"
+                  name="GitHubClientSecret"
+                  value={inputs.GitHubClientSecret || ''}
+                  onChange={handleInputChange}
+                  label="GitHub Client Secret"
+                  placeholder="敏感信息不会发送到前端显示"
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={submitGitHubOAuth}>
+                保存 GitHub OAuth 设置
+              </Button>
+            </Grid>
           </Grid>
-          <Grid xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="GitHubClientId">GitHub Client ID</InputLabel>
-              <OutlinedInput
-                id="GitHubClientId"
-                name="GitHubClientId"
-                value={inputs.GitHubClientId || ''}
-                onChange={handleInputChange}
-                label="GitHub Client ID"
-                placeholder="Enter the ID of your registered GitHub OAuth APP"
-                disabled={loading}
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="GitHubClientSecret">GitHub Client Secret</InputLabel>
-              <OutlinedInput
-                id="GitHubClientSecret"
-                name="GitHubClientSecret"
-                value={inputs.GitHubClientSecret || ''}
-                onChange={handleInputChange}
-                label="GitHub Client Secret"
-                placeholder="Sensitive information will not be sent to the frontend for display"
-                disabled={loading}
-              />
-            </FormControl>
-          </Grid>
-          <Grid xs={12}>
-            <Button variant="contained" onClick={submitGitHubOAuth}>
-              Save GitHub OAuth settings
-            </Button>
-          </Grid>
-        </Grid>
-      </SubCard>
-      <SubCard
-        title="Set up Feishu authorization login"
-        subTitle={
-          <span>
-            {' '}
-            To support login and registration through Feishu,
-            <a href="https://open.feishu.cn/app" target="_blank" rel="noreferrer">
-              click here
-            </a>
-            to manage your Feishu app
-          </span>
-        }
-      >
-        <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
-          <Grid xs={12}>Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "<Alert severity="info" sx={{ wordWrap: 'break-word' }}>
-                Fill in the homepage link with <code>{inputs.ServerAddress}</code>
-                , and fill in the redirect URL with <code>{`${inputs.ServerAddress}/oauth/lark`}</code>
+        </SubCard>
+        <SubCard
+          title="配置飞书授权登录"
+          subTitle={
+            <span>
+              {' '}
+              用以支持通过飞书进行登录注册，
+              <a href="https://open.feishu.cn/app" target="_blank" rel="noreferrer">
+                点击此处
+              </a>
+              管理你的飞书应用
+            </span>
+          }
+        >
+          <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
+            <Grid xs={12}>
+              <Alert severity="info" sx={{ wordWrap: 'break-word' }}>
+                主页链接填 <code>{inputs.ServerAddress}</code>
+                ，重定向 URL 填 <code>{`${inputs.ServerAddress}/oauth/lark`}</code>
               </Alert>
             </Grid>
             <Grid xs={12} md={6}>
@@ -521,7 +528,7 @@ while maintaining the original formatting: "<Alert severity="info" sx={{ wordWra
                   value={inputs.LarkClientId || ''}
                   onChange={handleInputChange}
                   label="App ID"
-                  placeholder="Enter App ID"
+                  placeholder="输入 App ID"
                   disabled={loading}
                 />
               </FormControl>
@@ -535,96 +542,141 @@ while maintaining the original formatting: "<Alert severity="info" sx={{ wordWra
                   value={inputs.LarkClientSecret || ''}
                   onChange={handleInputChange}
                   label="App Secret"
-                  placeholder="Sensitive information will not be sent to the frontend for display"
+                  placeholder="敏感信息不会发送到前端显示"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitLarkOAuth}>
-                Save Lark OAuth Settings
+                保存飞书 OAuth 设置
               </Button>
             </Grid>
           </Grid>
         </SubCard>
         <SubCard
-          title="Configure WeChat Server"
+          title="配置 WeChat Server"
           subTitle={
             <span>
-              To support login and registration via WeChat,
+              用以支持通过微信进行登录注册，
               <a href="https://github.com/songquanpeng/wechat-server" target="_blank" rel="noopener noreferrer">
-                Click here
+                点击此处
               </a>
-              to learn about WeChat Server
+              了解 WeChat Server
             </span>
           }
         >
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12} md={4}>
-              <FormControl fullWidth>"```
-<InputLabel htmlFor="WeChatServerAddress">WeChat Server Address</InputLabel>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="WeChatServerAddress">WeChat Server 服务器地址</InputLabel>
                 <OutlinedInput
                   id="WeChatServerAddress"
                   name="WeChatServerAddress"
                   value={inputs.WeChatServerAddress || ''}
                   onChange={handleInputChange}
-                  label="WeChat Server Address"
-                  placeholder="For example: https://yourdomain.com"
+                  label="WeChat Server 服务器地址"
+                  placeholder="例如：https://yourdomain.com"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatServerToken">WeChat Server Access Token</InputLabel>
+                <InputLabel htmlFor="WeChatServerToken">WeChat Server 访问凭证</InputLabel>
                 <OutlinedInput
                   id="WeChatServerToken"
                   name="WeChatServerToken"
                   value={inputs.WeChatServerToken || ''}
                   onChange={handleInputChange}
-                  label="WeChat Server Access Token"
-                  placeholder="Sensitive information will not be displayed to the frontend"
+                  label="WeChat Server 访问凭证"
+                  placeholder="敏感信息不会发送到前端显示"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatAccountQRCodeImageURL">WeChat Official Account QR Code Image URL</InputLabel>
+                <InputLabel htmlFor="WeChatAccountQRCodeImageURL">微信公众号二维码图片链接</InputLabel>
                 <OutlinedInput
                   id="WeChatAccountQRCodeImageURL"
                   name="WeChatAccountQRCodeImageURL"
                   value={inputs.WeChatAccountQRCodeImageURL || ''}
                   onChange={handleInputChange}
-                  label="WeChat Official Account QR Code Image URL"
-                  placeholder="Enter an image URL"
+                  label="微信公众号二维码图片链接"
+                  placeholder="输入一个图片链接"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitWeChat}>
-                Save WeChat Server Settings
+                保存 WeChat Server 设置
               </Button>
             </Grid>
           </Grid>
         </SubCard>
         <SubCard
-          title="Configure Message Pusher"
+          title="配置 Message Pusher"
           subTitle={
             <span>
-              Used for pushing alarm messages.
-```Click here to learn about Message Pusher.
-
-Message Pusher push address
-
-Message Pusher access credential
-
-Save Message Pusher settings
-
-Configure Turnstile
-
-Used to support user verification, click here to manage your Turnstile Sites, recommended to choose Invisible Widget Type.```
+              用以推送报警信息，
+              <a href="https://github.com/songquanpeng/message-pusher" target="_blank" rel="noreferrer">
+                点击此处
+              </a>
+              了解 Message Pusher
+            </span>
+          }
+        >
+          <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
+            <Grid xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="MessagePusherAddress">Message Pusher 推送地址</InputLabel>
+                <OutlinedInput
+                  id="MessagePusherAddress"
+                  name="MessagePusherAddress"
+                  value={inputs.MessagePusherAddress || ''}
+                  onChange={handleInputChange}
+                  label="Message Pusher 推送地址"
+                  placeholder="例如：https://msgpusher.com/push/your_username"
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="MessagePusherToken">Message Pusher 访问凭证</InputLabel>
+                <OutlinedInput
+                  id="MessagePusherToken"
+                  name="MessagePusherToken"
+                  type="password"
+                  value={inputs.MessagePusherToken || ''}
+                  onChange={handleInputChange}
+                  label="Message Pusher 访问凭证"
+                  placeholder="敏感信息不会发送到前端显示"
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={submitMessagePusher}>
+                保存 Message Pusher 设置
+              </Button>
+            </Grid>
+          </Grid>
+        </SubCard>
+        <SubCard
+          title="配置 Turnstile"
+          subTitle={
+            <span>
+              用以支持用户校验，
+              <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">
+                点击此处
+              </a>
+              管理你的 Turnstile Sites，推荐选择 Invisible Widget Type
+            </span>
+          }
+        >
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12} md={6}>
               <FormControl fullWidth>
@@ -635,7 +687,7 @@ Used to support user verification, click here to manage your Turnstile Sites, re
                   value={inputs.TurnstileSiteKey || ''}
                   onChange={handleInputChange}
                   label="Turnstile Site Key"
-                  placeholder="Enter your registered Turnstile Site Key"
+                  placeholder="输入你注册的 Turnstile Site Key"
                   disabled={loading}
                 />
               </FormControl>
@@ -650,15 +702,40 @@ Used to support user verification, click here to manage your Turnstile Sites, re
                   value={inputs.TurnstileSecretKey || ''}
                   onChange={handleInputChange}
                   label="Turnstile Secret Key"
-                  placeholder="Sensitive information will not be sent to the frontend for display"
+                  placeholder="敏感信息不会发送到前端显示"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitTurnstile}>
-                Save Turnstile Settings
+                保存 Turnstile 设置
               </Button>
             </Grid>
           </Grid>
-```"Confirm"
+        </SubCard>
+      </Stack>
+      <Dialog open={showPasswordWarningModal} onClose={() => setShowPasswordWarningModal(false)} maxWidth={'md'}>
+        <DialogTitle sx={{ margin: '0px', fontWeight: 700, lineHeight: '1.55556', padding: '24px', fontSize: '1.125rem' }}>
+          警告
+        </DialogTitle>
+        <Divider />
+        <DialogContent>取消密码登录将导致所有未绑定其他登录方式的用户（包括管理员）无法通过密码登录，确认取消？</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowPasswordWarningModal(false)}>取消</Button>
+          <Button
+            sx={{ color: 'error.main' }}
+            onClick={async () => {
+              setShowPasswordWarningModal(false);
+              await updateOption('PasswordLoginEnabled', 'false');
+            }}
+          >
+            确定
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+export default SystemSetting;

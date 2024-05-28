@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 // material-ui
 import { Grid, Typography } from '@mui/material';
 
@@ -13,26 +15,26 @@ import { Box } from '@mui/material';
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const StatisticalBarChart = ({ isLoading, chartDatas }) => {
-  chartData.options.xaxis.categories = chartDatas.xaxis; // Set category data for the chart's x-axis
-  chartData.series = chartDatas.data; // Set series data for the chart
+  chartData.options.xaxis.categories = chartDatas.xaxis;
+  chartData.series = chartDatas.data;
 
   return (
     <>
       {isLoading ? (
-        <SkeletonTotalGrowthBarChart /> // Display skeleton loading bar chart
+        <SkeletonTotalGrowthBarChart />
       ) : (
         <MainCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h3">Statistics</Typography> // Display 'Statistics' text
+                  <Typography variant="h3">统计</Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {chartData.series ? ( // Check if series data is available
-                <Chart {...chartData} /> // Display the chart with the provided data
+              {chartData.series ? (
+                <Chart {...chartData} />
               ) : (
                 <Box
                   sx={{
@@ -43,7 +45,7 @@ const StatisticalBarChart = ({ isLoading, chartDatas }) => {
                   }}
                 >
                   <Typography variant="h3" color={'#697586'}>
-                    No data available // Display 'No data available' message
+                    暂无数据
                   </Typography>
                 </Box>
               )}
@@ -73,7 +75,8 @@ const chartData = {
       '#775DD0',
       '#55efc4',
       '#81ecec',
-      '#74b9ff',".'#a29bfe',
+      '#74b9ff',
+      '#a29bfe',
       '#00b894',
       '#00cec9',
       '#0984e3',

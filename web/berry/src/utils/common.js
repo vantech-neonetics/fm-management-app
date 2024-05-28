@@ -1,4 +1,3 @@
-```
 import { enqueueSnackbar } from 'notistack';
 import { snackbarConstants } from 'constants/SnackbarConstants';
 import { API } from './api';
@@ -21,7 +20,7 @@ export function SnackbarHTMLContent({ htmlContent }) {
 export function getSnackbarOptions(variant) {
   let options = snackbarConstants.Common[variant];
   if (isMobile()) {
-    // Merge options with snackbarConstants.Mobile
+    // 合并 options 和 snackbarConstants.Mobile
     options = { ...options, ...snackbarConstants.Mobile };
   }
   return options;
@@ -32,21 +31,21 @@ export function showError(error) {
     if (error.name === 'AxiosError') {
       switch (error.response.status) {
         case 429:
-          enqueueSnackbar('Error: Too many requests, please try again later!', getSnackbarOptions('ERROR'));
+          enqueueSnackbar('错误：请求次数过多，请稍后再试！', getSnackbarOptions('ERROR'));
           break;
         case 500:
-          enqueueSnackbar('Error: Internal server error, please contact the administrator!', getSnackbarOptions('ERROR'));
+          enqueueSnackbar('错误：服务器内部错误，请联系管理员！', getSnackbarOptions('ERROR'));
           break;
         case 405:
-          enqueueSnackbar('This site is for demonstration only, no server-side!', getSnackbarOptions('INFO'));
+          enqueueSnackbar('本站仅作演示之用，无服务端！', getSnackbarOptions('INFO'));
           break;
         default:
-          enqueueSnackbar('Error: ' + error.message, getSnackbarOptions('ERROR'));
+          enqueueSnackbar('错误：' + error.message, getSnackbarOptions('ERROR'));
       }
       return;
     }
   } else {
-    enqueueSnackbar('Error: ' + error, getSnackbarOptions('ERROR'));
+    enqueueSnackbar('错误：' + error, getSnackbarOptions('ERROR'));
   }
 }
 
@@ -71,14 +70,14 @@ export function showInfo(message) {
 }
 
 export async function getOAuthState() {
-``````js
-const res = await API.get('/api/oauth/state');
-const { success, message, data } = res.data;
-if (success) {
-  return data;
-} else {
-  showError(message);
-  return '';
+  const res = await API.get('/api/oauth/state');
+  const { success, message, data } = res.data;
+  if (success) {
+    return data;
+  } else {
+    showError(message);
+    return '';
+  }
 }
 
 export async function onGitHubOAuthClicked(github_client_id, openInNewTab = false) {
@@ -140,13 +139,12 @@ export function calculateQuota(quota, digits = 2) {
 }
 
 export function renderQuota(quota, digits = 2) {
-``````javascript
-let displayInCurrency = localStorage.getItem('display_in_currency');
-displayInCurrency = displayInCurrency === 'true';
-if (displayInCurrency) {
-  return '$' + calculateQuota(quota, digits);
-}
-return renderNumber(quota);
+  let displayInCurrency = localStorage.getItem('display_in_currency');
+  displayInCurrency = displayInCurrency === 'true';
+  if (displayInCurrency) {
+    return '$' + calculateQuota(quota, digits);
+  }
+  return renderNumber(quota);
 }
 
 export const verifyJSON = (str) => {
@@ -174,7 +172,7 @@ export function renderQuotaWithPrompt(quota, digits) {
   let displayInCurrency = localStorage.getItem('display_in_currency');
   displayInCurrency = displayInCurrency === 'true';
   if (displayInCurrency) {
-    return `(Equivalent Amount: ${renderQuota(quota, digits)})`;
+    return `（等价金额：${renderQuota(quota, digits)}）`;
   }
   return '';
 }
@@ -195,4 +193,40 @@ export function removeTrailingSlash(url) {
     return url;
   }
 }
-```
+
+let channelModels = undefined;
+export async function loadChannelModels() {
+  const res = await API.get('/api/models');
+  const { success, data } = res.data;
+  if (!success) {
+    return;
+  }
+  channelModels = data;
+  localStorage.setItem('channel_models', JSON.stringify(data));
+}
+
+export function getChannelModels(type) {
+  if (channelModels !== undefined && type in channelModels) {
+    return channelModels[type];
+  }
+  let models = localStorage.getItem('channel_models');
+  if (!models) {
+    return [];
+  }
+  channelModels = JSON.parse(models);
+  if (type in channelModels) {
+    return channelModels[type];
+  }
+  return [];
+}
+
+export function copy(text, name = '') {
+  try {
+    navigator.clipboard.writeText(text);
+  } catch (error) {
+    text = `复制${name}失败，请手动复制：<br /><br />${text}`;
+    enqueueSnackbar(<SnackbarHTMLContent htmlContent={text} />, getSnackbarOptions('COPY'));
+    return;
+  }
+  showSuccess(`复制${name}成功！`);
+}

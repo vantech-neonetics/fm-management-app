@@ -31,7 +31,7 @@ services:
     restart: always
 
   db:
-    image: "${REGISTRY:-docker.io}/mysql:8.2.0"
+    image: "mysql:8.2.0"
     restart: always
     container_name: mysql
     volumes:

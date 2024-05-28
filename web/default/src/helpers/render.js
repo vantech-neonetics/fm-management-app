@@ -1,4 +1,3 @@
-```javascript
 import { Label } from 'semantic-ui-react';
 
 export function renderText(text, limit) {
@@ -53,8 +52,7 @@ export function renderQuotaWithPrompt(quota, digits) {
   let displayInCurrency = localStorage.getItem('display_in_currency');
   displayInCurrency = displayInCurrency === 'true';
   if (displayInCurrency) {
-    return `（Equivalent amount: ${renderQuota(quota, digits)}）`;
+    return `（等价金额：${renderQuota(quota, digits)}）`;
   }
   return '';
 }
-```

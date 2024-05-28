@@ -1,7 +1,7 @@
-Import { useSelector } from 'react-redux';
-Import { useEffect, useContext } from 'react';
-Import { UserContext } from 'contexts/UserContext';
-Import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect, useContext } from 'react';
+import { UserContext } from 'contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const AuthGuard = ({ children }) => {
   const account = useSelector((state) => state.account);
@@ -14,7 +14,7 @@ const AuthGuard = ({ children }) => {
     }
   }, [account, navigate, isUserLoaded]);
 
-  Return children;
+  return children;
 };
 
-Export default AuthGuard;
+export default AuthGuard;

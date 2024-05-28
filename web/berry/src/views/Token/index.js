@@ -53,9 +53,97 @@ export default function Token() {
       .then()
       .catch((reason) => {
         showError(reason);
-      });Handle Refresh
+      });
+  }, []);
 
-Return only the translated content, not including the original text.<Button
+  const onPaginationChange = (event, activePage) => {
+    (async () => {
+      if (activePage === Math.ceil(tokens.length / ITEMS_PER_PAGE)) {
+        // In this case we have to load more data and then append them.
+        await loadTokens(activePage);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const searchTokens = async (event) => {
+    event.preventDefault();
+    if (searchKeyword === '') {
+      await loadTokens(0);
+      setActivePage(0);
+      return;
+    }
+    setSearching(true);
+    const res = await API.get(`/api/token/search?keyword=${searchKeyword}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      setTokens(data);
+      setActivePage(0);
+    } else {
+      showError(message);
+    }
+    setSearching(false);
+  };
+
+  const handleSearchKeyword = (event) => {
+    setSearchKeyword(event.target.value);
+  };
+
+  const manageToken = async (id, action, value) => {
+    const url = '/api/token/';
+    let data = { id };
+    let res;
+    switch (action) {
+      case 'delete':
+        res = await API.delete(url + id);
+        break;
+      case 'status':
+        res = await API.put(url + `?status_only=true`, {
+          ...data,
+          status: value
+        });
+        break;
+    }
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('操作成功完成！');
+      if (action === 'delete') {
+        await handleRefresh();
+      }
+    } else {
+      showError(message);
+    }
+
+    return res.data;
+  };
+
+  // 处理刷新
+  const handleRefresh = async () => {
+    await loadTokens(activePage);
+  };
+
+  const handleOpenModal = (tokenId) => {
+    setEditTokenId(tokenId);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setEditTokenId(0);
+  };
+
+  const handleOkModal = (status) => {
+    if (status === true) {
+      handleCloseModal();
+      handleRefresh();
+    }
+  };
+
+  return (
+    <>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2.5}>
+        <Typography variant="h4">令牌</Typography>
+        <Button
           variant="contained"
           color="primary"
           onClick={() => {
@@ -63,17 +151,17 @@ Return only the translated content, not including the original text.<Button
           }}
           startIcon={<IconPlus />}
         >
-          Create Token
+          新建令牌
         </Button>
       </Stack>
       <Stack mb={2}>
         <Alert severity="info">
-          Replace the OpenAI API base address https://api.openai.com with <b>{siteInfo.server_address}</b>, copy the key below to use
+          将 OpenAI API 基础地址 https://api.openai.com 替换为 <b>{siteInfo.server_address}</b>，复制下面的密钥即可使用
         </Alert>
       </Stack>
       <Card>
         <Box component="form" onSubmit={searchTokens} noValidate sx={{marginTop: 2}}>
-          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'Search for token name...'} />
+          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'搜索令牌的名称...'} />
         </Box>
         <Toolbar
           sx={{
@@ -87,7 +175,7 @@ Return only the translated content, not including the original text.<Button
           <Container>
             <ButtonGroup variant="outlined" aria-label="outlined small primary button group" sx={{marginBottom: 2}}>
               <Button onClick={handleRefresh} startIcon={<IconRefresh width={'18px'} />}>
-                Refresh
+                刷新
               </Button>
             </ButtonGroup>
           </Container>
@@ -112,7 +200,8 @@ Return only the translated content, not including the original text.<Button
           </TableContainer>
         </PerfectScrollbar>
         <TablePagination
-          page={activePage}"component="div"
+          page={activePage}
+          component="div"
           count={tokens.length + (tokens.length % ITEMS_PER_PAGE === 0 ? 1 : 0)}
           rowsPerPage={ITEMS_PER_PAGE}
           onPageChange={onPaginationChange}
@@ -122,3 +211,4 @@ Return only the translated content, not including the original text.<Button
       <EditeModal open={openModal} onCancel={handleCloseModal} onOk={handleOkModal} tokenId={editTokenId} />
     </>
   );
+}

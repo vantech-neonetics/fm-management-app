@@ -57,31 +57,89 @@ const EditToken = () => {
         data.models = [];
       } else {
         data.models = data.models.split(',');
-      }```
-// Load available models
-```
-```
-// Set token information if it is an edit operation, otherwise show error
-// Stop loading
-// Execute functions when component mounts
-```
-```
-// Load the available models
-// Request data from server to get available models
-```
-```
-// Submit token information
-// Check if it is a new token and the name is not empty
-// Process the input data before submission
-// Handle different cases for editing or creating a token
-// Display success message for token update or creation
-// Display error message if submission fails
-```
-```
-// Render the form for editing or creating a token
-```<Form.Dropdown
-              label='Model Scope'
-              placeholder={'Please select the models allowed to use. Leave it blank for no restrictions.'}
+      }
+      setInputs(data);
+    } else {
+      showError(message);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    if (isEdit) {
+      loadToken().then();
+    }
+    loadAvailableModels().then();
+  }, []);
+
+  const loadAvailableModels = async () => {
+    let res = await API.get(`/api/user/available_models`);
+    const { success, message, data } = res.data;
+    if (success) {
+      let options = data.map((model) => {
+        return {
+          key: model,
+          text: model,
+          value: model
+        };
+      });
+      setModelOptions(options);
+    } else {
+      showError(message);
+    }
+  };
+
+  const submit = async () => {
+    if (!isEdit && inputs.name === '') return;
+    let localInputs = inputs;
+    localInputs.remain_quota = parseInt(localInputs.remain_quota);
+    if (localInputs.expired_time !== -1) {
+      let time = Date.parse(localInputs.expired_time);
+      if (isNaN(time)) {
+        showError('过期时间格式错误！');
+        return;
+      }
+      localInputs.expired_time = Math.ceil(time / 1000);
+    }
+    localInputs.models = localInputs.models.join(',');
+    let res;
+    if (isEdit) {
+      res = await API.put(`/api/token/`, { ...localInputs, id: parseInt(tokenId) });
+    } else {
+      res = await API.post(`/api/token/`, localInputs);
+    }
+    const { success, message } = res.data;
+    if (success) {
+      if (isEdit) {
+        showSuccess('令牌更新成功！');
+      } else {
+        showSuccess('令牌创建成功，请在列表页面点击复制获取令牌！');
+        setInputs(originInputs);
+      }
+    } else {
+      showError(message);
+    }
+  };
+
+  return (
+    <>
+      <Segment loading={loading}>
+        <Header as='h3'>{isEdit ? '更新令牌信息' : '创建新的令牌'}</Header>
+        <Form autoComplete='new-password'>
+          <Form.Field>
+            <Form.Input
+              label='名称'
+              name='name'
+              placeholder={'请输入名称'}
+              onChange={handleInputChange}
+              value={name}
+              autoComplete='new-password'
+              required={!isEdit}
+            />
+          </Form.Field>
+          <Form.Field>
+            <Form.Dropdown
+              label='模型范围'
+              placeholder={'请选择允许使用的模型，留空则不进行限制'}
               name='models'
               fluid
               multiple
@@ -98,9 +156,9 @@ const EditToken = () => {
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label='IP Restriction'
+              label='IP 限制'
               name='subnet'
-              placeholder={'Enter the allowed IP subnets, for example: 192.168.0.0/24. Please separate multiple subnets with commas.'}
+              placeholder={'请输入允许访问的网段，例如：192.168.0.0/24，请使用英文逗号分隔多个网段'}
               onChange={handleInputChange}
               value={inputs.subnet}
               autoComplete='new-password'
@@ -108,9 +166,9 @@ const EditToken = () => {
           </Form.Field>
           <Form.Field>
             <Form.Input
-              label='Expiration Time'
+              label='过期时间'
               name='expired_time'
-              placeholder={'Enter the expiration time in the format yyyy-MM-dd HH:mm:ss. -1 indicates no expiration limit.'}
+              placeholder={'请输入过期时间，格式为 yyyy-MM-dd HH:mm:ss，-1 表示无限制'}
               onChange={handleInputChange}
               value={expired_time}
               autoComplete='new-password'
@@ -120,25 +178,26 @@ const EditToken = () => {
           <div style={{ lineHeight: '40px' }}>
             <Button type={'button'} onClick={() => {
               setExpiredTime(0, 0, 0, 0);
-            }}>Never Expire</Button>
+            }}>永不过期</Button>
             <Button type={'button'} onClick={() => {
               setExpiredTime(1, 0, 0, 0);
-            }}>Expire in One Month</Button>
+            }}>一个月后过期</Button>
             <Button type={'button'} onClick={() => {
               setExpiredTime(0, 1, 0, 0);
-            }}>Expire in One Day</Button>
+            }}>一天后过期</Button>
             <Button type={'button'} onClick={() => {
               setExpiredTime(0, 0, 1, 0);
-            }}>Expire in One Hour</Button>
+            }}>一小时后过期</Button>
             <Button type={'button'} onClick={() => {
               setExpiredTime(0, 0, 0, 1);
-            }}>Expire in One Minute</Button>
+            }}>一分钟后过期</Button>
           </div>
-          <Message>Please note that the token limit is only for restricting the maximum usage of the token itself, actual usage is subject to the remaining quota of the account.</Message>
+          <Message>注意，令牌的额度仅用于限制令牌本身的最大额度使用量，实际的使用受到账户的剩余额度限制。</Message>
           <Form.Field>
-            <Form.Input".label={`Quota ${renderQuotaWithPrompt(remain_quota)}`}
+            <Form.Input
+              label={`额度${renderQuotaWithPrompt(remain_quota)}`}
               name='remain_quota'
-              placeholder={'Please enter quota'}
+              placeholder={'请输入额度'}
               onChange={handleInputChange}
               value={remain_quota}
               autoComplete='new-password'
@@ -148,9 +207,9 @@ const EditToken = () => {
           </Form.Field>
           <Button type={'button'} onClick={() => {
             setUnlimitedQuota();
-          }}>{unlimited_quota ? 'Cancel Unlimited Quota' : 'Set as Unlimited Quota'}</Button>
-          <Button floated='right' positive onClick={submit}>Submit</Button>
-          <Button floated='right' onClick={handleCancel}>Cancel</Button>
+          }}>{unlimited_quota ? '取消无限额度' : '设为无限额度'}</Button>
+          <Button floated='right' positive onClick={submit}>提交</Button>
+          <Button floated='right' onClick={handleCancel}>取消</Button>
         </Form>
       </Segment>
     </>

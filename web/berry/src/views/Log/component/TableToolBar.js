@@ -19,7 +19,58 @@ import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import LogType from "../type/LogType";
-require("dayjs/locale/zh-cn");<InputAdornment position="start">
+require("dayjs/locale/zh-cn");
+// ----------------------------------------------------------------------
+
+export default function TableToolBar({
+  filterName,
+  handleFilterName,
+  userIsAdmin,
+}) {
+  const theme = useTheme();
+  const grey500 = theme.palette.grey[500];
+
+  return (
+    <>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 3, sm: 2, md: 4 }}
+        padding={"24px"}
+        paddingBottom={"0px"}
+      >
+        <FormControl>
+          <InputLabel htmlFor="channel-token_name-label">令牌名称</InputLabel>
+          <OutlinedInput
+            id="token_name"
+            name="token_name"
+            sx={{
+              minWidth: "100%",
+            }}
+            label="令牌名称"
+            value={filterName.token_name}
+            onChange={handleFilterName}
+            placeholder="令牌名称"
+            startAdornment={
+              <InputAdornment position="start">
+                <IconKey stroke={1.5} size="20px" color={grey500} />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="channel-model_name-label">模型名称</InputLabel>
+          <OutlinedInput
+            id="model_name"
+            name="model_name"
+            sx={{
+              minWidth: "100%",
+            }}
+            label="模型名称"
+            value={filterName.model_name}
+            onChange={handleFilterName}
+            placeholder="模型名称"
+            startAdornment={
+              <InputAdornment position="start">
                 <IconBrandGithubCopilot
                   stroke={1.5}
                   size="20px"
@@ -36,7 +87,7 @@ require("dayjs/locale/zh-cn");<InputAdornment position="start">
             adapterLocale={"zh-cn"}
           >
             <DateTimePicker
-              label="Start Time"
+              label="起始时间"
               ampm={false}
               name="start_timestamp"
               value={
@@ -70,7 +121,7 @@ require("dayjs/locale/zh-cn");<InputAdornment position="start">
             adapterLocale={"zh-cn"}
           >
             <DateTimePicker
-              label="End Time"
+              label="结束时间"
               name="end_timestamp"
               ampm={false}
               value={
@@ -85,8 +136,8 @@ require("dayjs/locale/zh-cn");<InputAdornment position="start">
                   });
                   return;
                 }
-                handleFilterName({"```
-target: { name: "end_timestamp", value: value.unix() },
+                handleFilterName({
+                  target: { name: "end_timestamp", value: value.unix() },
                 });
               }}
               slotProps={{
@@ -106,17 +157,17 @@ target: { name: "end_timestamp", value: value.unix() },
       >
         {userIsAdmin && (
           <FormControl>
-            <InputLabel htmlFor="channel-channel-label">Channel ID</InputLabel>
+            <InputLabel htmlFor="channel-channel-label">渠道ID</InputLabel>
             <OutlinedInput
               id="channel"
               name="channel"
               sx={{
                 minWidth: "100%",
               }}
-              label="Channel ID"
+              label="渠道ID"
               value={filterName.channel}
               onChange={handleFilterName}
-              placeholder="Channel ID"
+              placeholder="渠道ID"
               startAdornment={
                 <InputAdornment position="start">
                   <IconSitemap stroke={1.5} size="20px" color={grey500} />
@@ -128,17 +179,17 @@ target: { name: "end_timestamp", value: value.unix() },
 
         {userIsAdmin && (
           <FormControl>
-            <InputLabel htmlFor="channel-username-label">Username</InputLabel>
+            <InputLabel htmlFor="channel-username-label">用户名称</InputLabel>
             <OutlinedInput
               id="username"
               name="username"
               sx={{
                 minWidth: "100%",
               }}
-              label="Username"
+              label="用户名称"
               value={filterName.username}
               onChange={handleFilterName}
-              placeholder="Username"
+              placeholder="用户名称"
               startAdornment={
                 <InputAdornment position="start">
                   <IconUser stroke={1.5} size="20px" color={grey500} />
@@ -149,11 +200,11 @@ target: { name: "end_timestamp", value: value.unix() },
         )}
 
         <FormControl sx={{ minWidth: "22%" }}>
-          <InputLabel htmlFor="channel-type-label">Type</InputLabel>
+          <InputLabel htmlFor="channel-type-label">类型</InputLabel>
           <Select
             id="channel-type-label"
-            label="Type".
-```value={filterName.type}
+            label="类型"
+            value={filterName.type}
             name="type"
             onChange={handleFilterName}
             sx={{

@@ -1,5 +1,4 @@
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Label from 'ui-component/Label';
 import Tooltip from '@mui/material/Tooltip';
 import { timestamp2string } from 'utils/common';
@@ -22,15 +21,15 @@ const ResponseTimeLabel = ({ test_time, response_time, handle_action }) => {
   }
   let title = (
     <>
-      Click to test speed
+      点击测速
       <br />
-      {test_time != 0 ? 'Last test time: ' + timestamp2string(test_time) : 'Not tested'}
+      {test_time != 0 ? '上次测速时间：' + timestamp2string(test_time) : '未测试'}
     </>
   );
 
   return (
     <Tooltip title={title} placement="top" onClick={handle_action}>
-      <Label color={color}> {response_time == 0 ? 'Not tested' : time} </Label>
+      <Label color={color}> {response_time == 0 ? '未测试' : time} </Label>
     </Tooltip>
   );
 };
@@ -41,4 +40,4 @@ ResponseTimeLabel.propTypes = {
   handle_action: PropTypes.func
 };
 
-export default ResponseTimeLabel;".
+export default ResponseTimeLabel;

@@ -1,4 +1,3 @@
-```javascript
 import { Typography, Stack, OutlinedInput, InputAdornment, Button, InputLabel, FormControl } from '@mui/material';
 import { IconWallet } from '@tabler/icons-react';
 import { useTheme } from '@mui/material/styles';
@@ -18,7 +17,7 @@ const TopupCard = () => {
 
   const topUp = async () => {
     if (redemptionCode === '') {
-      showInfo('Please enter the top-up code!');
+      showInfo('请输入充值码！');
       return;
     }
     setIsSubmitting(true);
@@ -28,7 +27,7 @@ const TopupCard = () => {
       });
       const { success, message, data } = res.data;
       if (success) {
-        showSuccess('Top-up successful!');
+        showSuccess('充值成功！');
         setUserQuota((quota) => {
           return quota + data;
         });
@@ -37,7 +36,7 @@ const TopupCard = () => {
         showError(message);
       }
     } catch (err) {
-      showError('Request failed');
+      showError('请求失败');
     } finally {
       setIsSubmitting(false);
     }
@@ -45,7 +44,7 @@ const TopupCard = () => {
 
   const openTopUpLink = () => {
     if (!topUpLink) {
-      showError('Super Admin has not set the top-up link!');
+      showError('超级管理员未设置充值链接！');
       return;
     }
     window.open(topUpLink, '_blank');
@@ -74,9 +73,9 @@ const TopupCard = () => {
 
   return (
     <UserCard>
-```<Stack direction="row" alignItems="center" justifyContent="center" spacing={2} paddingTop={'20px'}>
+      <Stack direction="row" alignItems="center" justifyContent="center" spacing={2} paddingTop={'20px'}>
         <IconWallet color={theme.palette.primary.main} />
-        <Typography variant="h4">Current Quota:</Typography>
+        <Typography variant="h4">当前额度:</Typography>
         <Typography variant="h4">{renderQuota(userQuota)}</Typography>
       </Stack>
       <SubCard
@@ -85,21 +84,21 @@ const TopupCard = () => {
         }}
       >
         <FormControl fullWidth variant="outlined">
-          <InputLabel htmlFor="key">Redemption Code</InputLabel>
+          <InputLabel htmlFor="key">兑换码</InputLabel>
           <OutlinedInput
             id="key"
-            label="Redemption Code"
+            label="兑换码"
             type="text"
             value={redemptionCode}
             onChange={(e) => {
               setRedemptionCode(e.target.value);
             }}
             name="key"
-            placeholder="Please enter redemption code"
+            placeholder="请输入兑换码"
             endAdornment={
               <InputAdornment position="end">
                 <Button variant="contained" onClick={topUp} disabled={isSubmitting}>
-                  {isSubmitting ? 'Processing...' : 'Redeem'}
+                  {isSubmitting ? '兑换中...' : '兑换'}
                 </Button>
               </InputAdornment>
             }
@@ -109,10 +108,10 @@ const TopupCard = () => {
 
         <Stack justifyContent="center" alignItems={'center'} spacing={3} paddingTop={'20px'}>
           <Typography variant={'h4'} color={theme.palette.grey[700]}>
-            Don't have a redemption code yet? Click to get one:
+            还没有兑换码？ 点击获取兑换码：
           </Typography>
           <Button variant="contained" onClick={openTopUpLink}>
-            Get Redemption Code
+            获取兑换码
           </Button>
         </Stack>
       </SubCard>

@@ -1,4 +1,3 @@
-```javascript
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
@@ -36,4 +35,3 @@ const TableSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default TableSwitch;
-```

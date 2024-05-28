@@ -76,30 +76,17 @@ function GetLightOption() {
     paper: color.paper,
     backgroundDefault: color.paper,
     background: color.primaryLight,
+    darkTextPrimary: color.grey700,
+    darkTextSecondary: color.grey500,
+    textDark: color.grey900,
+    menuSelected: color.secondaryDark,
+    menuSelectedBack: color.secondaryLight,
+    divider: color.grey200,
+    borderColor: color.grey300,
+    menuButton: color.secondaryLight,
+    menuButtonColor: color.secondaryDark,
+    menuChip: color.primaryLight,
+    headBackgroundColor: color.tableBackground,
+    tableBorderBottom: color.tableBorderBottom
   };
-}"darkTextPrimary: color.grey700,
-    darkTextSecondary: color.grey500,
-    textDark: color.grey900,
-    menuSelected: color.secondaryDark,
-    menuSelectedBack: color.secondaryLight,
-    divider: color.grey200,
-    borderColor: color.grey300,
-    menuButton: color.secondaryLight,
-    menuButtonColor: color.secondaryDark,
-    menuChip: color.primaryLight,
-    headBackgroundColor: color.tableBackground,
-    tableBorderBottom: color.tableBorderBottom
-  };"
-    => "darkTextPrimary: color.grey700,
-    darkTextSecondary: color.grey500,
-    textDark: color.grey900,
-    menuSelected: color.secondaryDark,
-    menuSelectedBack: color.secondaryLight,
-    divider: color.grey200,
-    borderColor: color.grey300,
-    menuButton: color.secondaryLight,
-    menuButtonColor: color.secondaryDark,
-    menuChip: color.primaryLight,
-    headBackgroundColor: color.tableBackground,
-    tableBorderBottom: color.tableBorderBottom
-  };"
+}

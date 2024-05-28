@@ -22,8 +22,8 @@ import useRegister from "hooks/useRegister";
 import { API } from "utils/api";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Please enter a valid email address").required("Email is required"),
-  email_verification_code: Yup.string().required("Verification code is required"),
+  email: Yup.string().email("请输入正确的邮箱地址").required("邮箱不能为空"),
+  email_verification_code: Yup.string().required("验证码不能为空"),
 });
 
 const EmailModal = ({ open, handleClose, turnstileToken }) => {
@@ -41,7 +41,7 @@ const EmailModal = ({ open, handleClose, turnstileToken }) => {
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess("Email account bound successfully!");
+      showSuccess("邮箱账户绑定成功！");
       setSubmitting(false);
       setStatus({ success: true });
       handleClose();
@@ -66,14 +66,13 @@ const EmailModal = ({ open, handleClose, turnstileToken }) => {
   }, [disableButton, countdown]);
 
   const handleSendCode = async (email) => {
-    setDisableButton(true);```
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "if (email === "") {
-      showError("Please enter email");
+    setDisableButton(true);
+    if (email === "") {
+      showError("请输入邮箱");
       return;
     }
     if (turnstileToken === "") {
-      showError("Please wait a few seconds and try again, Turnstile is checking user environment!");
+      showError("请稍后几秒重试，Turnstile 正在检查用户环境！");
       return;
     }
     setLoading(true);
@@ -90,7 +89,7 @@ while maintaining the original formatting: "if (email === "") {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Bind Email</DialogTitle>
+      <DialogTitle>绑定邮箱</DialogTitle>
       <DialogContent>
         <Grid container direction="column" alignItems="center">
           <Formik
@@ -133,9 +132,8 @@ while maintaining the original formatting: "if (email === "") {
                           disabled={disableButton || loading}
                         >
                           {disableButton
-                            ? `Resend(${countdown})`".
-```Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: ": "Get Verification Code"}
+                            ? `重新发送(${countdown})`
+                            : "获取验证码"}
                         </Button>
                       </InputAdornment>
                     }
@@ -156,7 +154,7 @@ while maintaining the original formatting: ": "Get Verification Code"}
                   sx={{ ...theme.typography.customInput }}
                 >
                   <InputLabel htmlFor="email_verification_code">
-                    Verification Code
+                    验证码
                   </InputLabel>
                   <OutlinedInput
                     id="email_verification_code"
@@ -175,7 +173,7 @@ while maintaining the original formatting: ": "Get Verification Code"}
                     )}
                 </FormControl>
                 <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClose}>取消</Button>
                   <Button
                     disableElevation
                     disabled={loading}
@@ -183,16 +181,14 @@ while maintaining the original formatting: ": "Get Verification Code"}
                     variant="contained"
                     color="primary"
                   >
-                    Submit
+                    提交
                   </Button>
                 </DialogActions>
               </form>
             )}
           </Formik>
-        </Grid>".
-format: Return only the translated content, not including the original text.```javascript
-Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "</DialogContent>
+        </Grid>
+      </DialogContent>
     </Dialog>
   );
 };
@@ -203,4 +199,3 @@ EmailModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
 };
-```

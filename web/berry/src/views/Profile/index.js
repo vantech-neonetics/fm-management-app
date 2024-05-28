@@ -1,6 +1,6 @@
-Import { useState, useEffect } from 'react';
-Import UserCard from 'ui-component/cards/UserCard';
-Import {
+import { useState, useEffect } from 'react';
+import UserCard from 'ui-component/cards/UserCard';
+import {
   Card,
   Button,
   InputLabel,
@@ -15,29 +15,29 @@ Import {
   Divider,
   SvgIcon
 } from '@mui/material';
-Import Grid from '@mui/material/Unstable_Grid2';
-Import SubCard from 'ui-component/cards/SubCard';
-Import { IconBrandWechat, IconBrandGithub, IconMail } from '@tabler/icons-react';
-Import Label from 'ui-component/Label';
-Import { API } from 'utils/api';
-Import { showError, showSuccess } from 'utils/common';
-Import { onGitHubOAuthClicked, onLarkOAuthClicked } from 'utils/common';
-Import * as Yup from 'yup';
-Import WechatModal from 'views/Authentication/AuthForms/WechatModal';
-Import { useSelector } from 'react-redux';
-Import EmailModal from './component/EmailModal';
-Import Turnstile from 'react-turnstile';
-Import { ReactComponent as Lark } from 'assets/images/icons/lark.svg';
+import Grid from '@mui/material/Unstable_Grid2';
+import SubCard from 'ui-component/cards/SubCard';
+import { IconBrandWechat, IconBrandGithub, IconMail } from '@tabler/icons-react';
+import Label from 'ui-component/Label';
+import { API } from 'utils/api';
+import { showError, showSuccess } from 'utils/common';
+import { onGitHubOAuthClicked, onLarkOAuthClicked, copy } from 'utils/common';
+import * as Yup from 'yup';
+import WechatModal from 'views/Authentication/AuthForms/WechatModal';
+import { useSelector } from 'react-redux';
+import EmailModal from './component/EmailModal';
+import Turnstile from 'react-turnstile';
+import { ReactComponent as Lark } from 'assets/images/icons/lark.svg';
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required('Username cannot be empty').min(3, 'Username must be at least 3 characters'),
+  username: Yup.string().required('用户名 不能为空').min(3, '用户名 不能小于 3 个字符'),
   display_name: Yup.string(),
-  password: Yup.string().test('password', 'Password must be at least 8 characters', (val) => {
+  password: Yup.string().test('password', '密码不能小于 8 个字符', (val) => {
     return !val || val.length >= 8;
   })
 });
 
-Export default function Profile() {
+export default function Profile() {
   const [inputs, setInputs] = useState([]);
   const [showAccountDeleteModal, setShowAccountDeleteModal] = useState(false);
   const [turnstileEnabled, setTurnstileEnabled] = useState(false);
@@ -58,10 +58,9 @@ Export default function Profile() {
   const handleInputChange = (event) => {
     let { name, value } = event.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-  };Instructions: Translate the following code comments from Chinese to English:
+  };
 
-```js
-const loadUser = async () => {
+  const loadUser = async () => {
     let res = await API.get(`/api/user/self`);
     const { success, message, data } = res.data;
     if (success) {
@@ -77,11 +76,11 @@ const loadUser = async () => {
       const res = await API.get(`/api/oauth/wechat/bind?code=${code}`);
       const { success, message } = res.data;
       if (success) {
-        showSuccess('WeChat account binding successful!');
+        showSuccess('微信账户绑定成功！');
       }
       return { success, message };
     } catch (err) {
-      // Request failed, set error message
+      // 请求失败，设置错误信息
       return { success: false, message: '' };
     }
   };
@@ -91,8 +90,7 @@ const loadUser = async () => {
     const { success, message, data } = res.data;
     if (success) {
       setInputs((inputs) => ({ ...inputs, access_token: data }));
-      navigator.clipboard.writeText(data);
-      showSuccess(`Token has been reset and copied to the clipboard`);
+      copy(data, '访问令牌');
     } else {
       showError(message);
     }
@@ -106,7 +104,7 @@ const loadUser = async () => {
       const res = await API.put(`/api/user/self`, inputs);
       const { success, message } = res.data;
       if (success) {
-        showSuccess('User information updated successfully!');
+        showSuccess('用户信息更新成功！');
       } else {
         showError(message);
       }
@@ -132,103 +130,89 @@ const loadUser = async () => {
           <Stack spacing={2}>
             <Stack direction="row" alignItems="center" justifyContent="center" spacing={2} sx={{ paddingBottom: '20px' }}>
               <Label variant="ghost" color={inputs.wechat_id ? 'primary' : 'default'}>
-                <IconBrandWechat /> {inputs.wechat_id || 'Not bound'}
+                <IconBrandWechat /> {inputs.wechat_id || '未绑定'}
               </Label>
-            </Stack>
-          </Stack>
-        </Card>
-      </UserCard>
-    </>
-  );
-}
-```<Label variant="ghost" color={inputs.github_id ? 'primary' : 'default'}>
-                <IconBrandGithub /> {inputs.github_id || 'Not Bound'}
+              <Label variant="ghost" color={inputs.github_id ? 'primary' : 'default'}>
+                <IconBrandGithub /> {inputs.github_id || '未绑定'}
               </Label>
               <Label variant="ghost" color={inputs.email ? 'primary' : 'default'}>
-                <IconMail /> {inputs.email || 'Not Bound'}
+                <IconMail /> {inputs.email || '未绑定'}
               </Label>
               <Label variant="ghost" color={inputs.lark_id ? 'primary' : 'default'}>
-                <SvgIcon component={Lark} inheritViewBox="0 0 24 24" /> {inputs.lark_id || 'Not Bound'}
+                <SvgIcon component={Lark} inheritViewBox="0 0 24 24" /> {inputs.lark_id || '未绑定'}
               </Label>
             </Stack>
-            <SubCard title="Personal Information">
+            <SubCard title="个人信息">
               <Grid container spacing={2}>
                 <Grid xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="username">Username</InputLabel>
+                    <InputLabel htmlFor="username">用户名</InputLabel>
                     <OutlinedInput
                       id="username"
-                      label="Username"
+                      label="用户名"
                       type="text"
                       value={inputs.username || ''}
                       onChange={handleInputChange}
                       name="username"
-                      placeholder="Please enter username"
+                      placeholder="请输入用户名"
                     />
                   </FormControl>
                 </Grid>
                 <Grid xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <InputLabel htmlFor="password">密码</InputLabel>
                     <OutlinedInput
                       id="password"
-                      label="Password"
+                      label="密码"
                       type="password"
                       value={inputs.password || ''}
                       onChange={handleInputChange}
                       name="password"
-                      placeholder="Please enter password"
+                      placeholder="请输入密码"
                     />
                   </FormControl>
                 </Grid>
                 <Grid xs={12}>
                   <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="display_name">Display Name</InputLabel>
+                    <InputLabel htmlFor="display_name">显示名称</InputLabel>
                     <OutlinedInput
                       id="display_name"
-                      label="Display Name"
+                      label="显示名称"
                       type="text"
                       value={inputs.display_name || ''}
                       onChange={handleInputChange}
                       name="display_name"
-                      placeholder="Please enter display name"
-                    />
-                  </FormControl>
-                </Grid>"type="text"
-                      value={inputs.display_name || ''}
-                      onChange={handleInputChange}
-                      name="display_name"
-                      placeholder="Please enter the display name"
+                      placeholder="请输入显示名称"
                     />
                   </FormControl>
                 </Grid>
                 <Grid xs={12}>
                   <Button variant="contained" color="primary" onClick={submit}>
-                    Submit
+                    提交
                   </Button>
                 </Grid>
               </Grid>
             </SubCard>
-            <SubCard title="Account Binding">
+            <SubCard title="账号绑定">
               <Grid container spacing={2}>
                 {status.wechat_login && !inputs.wechat_id && (
                   <Grid xs={12} md={4}>
                     <Button variant="contained" onClick={handleWechatOpen}>
-                      Bind WeChat Account
+                      绑定微信账号
                     </Button>
                   </Grid>
                 )}
                 {status.github_oauth && !inputs.github_id && (
                   <Grid xs={12} md={4}>
                     <Button variant="contained" onClick={() => onGitHubOAuthClicked(status.github_client_id, true)}>
-                      Bind GitHub Account
+                      绑定 GitHub 账号
                     </Button>
                   </Grid>
                 )}
                 {status.lark_client_id && !inputs.lark_id && (
                   <Grid xs={12} md={4}>
                     <Button variant="contained" onClick={() => onLarkOAuthClicked(status.lark_client_id)}>
-                      Bind Lark Account
+                      绑定 飞书 账号
                     </Button>
                   </Grid>
                 )}
@@ -239,20 +223,71 @@ const loadUser = async () => {
                       setOpenEmail(true);
                     }}
                   >
-                    {inputs.email ? 'Change Email' : 'Bind Email'}
+                    {inputs.email ? '更换邮箱' : '绑定邮箱'}
                   </Button>
                   {turnstileEnabled ? (
                     <Turnstile
                       sitekey={turnstileSiteKey}
-                      onVerify={(token) => {"- Notice, the token generated here is for system management, not for requesting services related to OpenAI.  
-- Your access token is: <b>{inputs.access_token}</b> <br />
-  Please keep it safe. If leaked, reset immediately.  
-- Reset access token  
-- Delete account  
-- Dangerous operation  
-- You are deleting your account, which will clear all data and cannot be recovered.  
-- Cancel">
-            Confirm
+                      onVerify={(token) => {
+                        setTurnstileToken(token);
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </Grid>
+              </Grid>
+            </SubCard>
+            <SubCard title="其他">
+              <Grid container spacing={2}>
+                <Grid xs={12}>
+                  <Alert severity="info">注意，此处生成的令牌用于系统管理，而非用于请求 OpenAI 相关的服务，请知悉。</Alert>
+                </Grid>
+                {inputs.access_token && (
+                  <Grid xs={12}>
+                    <Alert severity="error">
+                      你的访问令牌是: <b>{inputs.access_token}</b> <br />
+                      请妥善保管。如有泄漏，请立即重置。
+                    </Alert>
+                  </Grid>
+                )}
+                <Grid xs={12}>
+                  <Button variant="contained" onClick={generateAccessToken}>
+                    {inputs.access_token ? '重置访问令牌' : '生成访问令牌'}
+                  </Button>
+                </Grid>
+
+                <Grid xs={12}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      setShowAccountDeleteModal(true);
+                    }}
+                  >
+                    删除帐号
+                  </Button>
+                </Grid>
+              </Grid>
+            </SubCard>
+          </Stack>
+        </Card>
+      </UserCard>
+      <Dialog open={showAccountDeleteModal} onClose={() => setShowAccountDeleteModal(false)} maxWidth={'md'}>
+        <DialogTitle sx={{ margin: '0px', fontWeight: 500, lineHeight: '1.55556', padding: '24px', fontSize: '1.125rem' }}>
+          危险操作
+        </DialogTitle>
+        <Divider />
+        <DialogContent>您正在删除自己的帐户，将清空所有数据且不可恢复</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowAccountDeleteModal(false)}>取消</Button>
+          <Button
+            sx={{ color: 'error.main' }}
+            onClick={async () => {
+              setShowAccountDeleteModal(false);
+            }}
+          >
+            确定
           </Button>
         </DialogActions>
       </Dialog>
@@ -266,4 +301,4 @@ const loadUser = async () => {
       />
     </>
   );
-}".
+}

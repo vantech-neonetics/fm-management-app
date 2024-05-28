@@ -1,12 +1,12 @@
-"Import React from 'react';
-Import UsersTable from '../../components/UsersTable';
-Import {Layout} from "@douyinfe/semi-ui";
+import React from 'react';
+import UsersTable from '../../components/UsersTable';
+import {Layout} from "@douyinfe/semi-ui";
 
 const User = () => (
   <>
     <Layout>
         <Layout.Header>
-            <h3>Manage Users</h3>
+            <h3>管理用户</h3>
         </Layout.Header>
         <Layout.Content>
             <UsersTable/>
@@ -15,4 +15,4 @@ const User = () => (
   </>
 );
 
-Export default User;"
+export default User;

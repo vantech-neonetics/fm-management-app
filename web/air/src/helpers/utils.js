@@ -1,7 +1,7 @@
 import { Toast } from '@douyinfe/semi-ui';
 import { toastConstants } from '../constants';
 import React from 'react';
-import {toast} from 'react-toastify';
+import {toast} from "react-toastify";
 
 const HTMLToastContent = ({ htmlContent }) => {
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
@@ -74,30 +74,30 @@ if (isMobile()) {
 
 export function showError(error) {
   console.error(error);
-  if (error.message) {"```javascript
-if (error.name === 'AxiosError') {
+  if (error.message) {
+    if (error.name === 'AxiosError') {
       switch (error.response.status) {
         case 401:
-          // toast.error('Error: Not logged in or session expired, please log in again!', showErrorOptions);
+          // toast.error('错误：未登录或登录已过期，请重新登录！', showErrorOptions);
           window.location.href = '/login?expired=true';
           break;
         case 429:
-          Toast.error('Error: Too many requests, please try again later!');
+          Toast.error('错误：请求次数过多，请稍后再试！');
           break;
         case 500:
-          Toast.error('Error: Internal server error, please contact the administrator!');
+          Toast.error('错误：服务器内部错误，请联系管理员！');
           break;
         case 405:
-          Toast.info('This site is for demonstration only, no server-side service!');
+          Toast.info('本站仅作演示之用，无服务端！');
           break;
         default:
-          Toast.error('Error: ' + error.message);
+          Toast.error('错误：' + error.message);
       }
       return;
     }
-    Toast.error('Error: ' + error.message);
+    Toast.error('错误：' + error.message);
   } else {
-    Toast.error('Error: ' + error);
+    Toast.error('错误：' + error);
   }
 }
 
@@ -170,8 +170,64 @@ export function timestamp2string(timestamp) {
     second
   );
 }
-```输出功能函数将时间戳转换为字符串格式
-输出功能函数将文本下载为文件
-输出以验证JSON格式的常量
-输出功能函数确定是否显示提示
-输出功能函数设置显示提示
+
+export function timestamp2string1(timestamp, dataExportDefaultTime = 'hour') {
+  let date = new Date(timestamp * 1000);
+  // let year = date.getFullYear().toString();
+  let month = (date.getMonth() + 1).toString();
+  let day = date.getDate().toString();
+  let hour = date.getHours().toString();
+  if (month.length === 1) {
+    month = '0' + month;
+  }
+  if (day.length === 1) {
+    day = '0' + day;
+  }
+  if (hour.length === 1) {
+    hour = '0' + hour;
+  }
+  let str = month + '-' + day
+  if (dataExportDefaultTime === 'hour') {
+    str += ' ' + hour + ":00"
+  } else if (dataExportDefaultTime === 'week') {
+    let nextWeek = new Date(timestamp * 1000 + 6 * 24 * 60 * 60 * 1000);
+    let nextMonth = (nextWeek.getMonth() + 1).toString();
+    let nextDay = nextWeek.getDate().toString();
+    if (nextMonth.length === 1) {
+        nextMonth = '0' + nextMonth;
+    }
+    if (nextDay.length === 1) {
+        nextDay = '0' + nextDay;
+    }
+    str += ' - ' + nextMonth + '-' + nextDay
+  }
+  return str;
+}
+
+export function downloadTextAsFile(text, filename) {
+  let blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+}
+
+export const verifyJSON = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
+export function shouldShowPrompt(id) {
+  let prompt = localStorage.getItem(`prompt-${id}`);
+  return !prompt;
+
+}
+
+export function setPromptShown(id) {
+  localStorage.setItem(`prompt-${id}`, 'true');
+}

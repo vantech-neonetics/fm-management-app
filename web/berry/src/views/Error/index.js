@@ -5,7 +5,7 @@ import NotFound from 'assets/images/404.svg';
 import { useNavigate } from 'react-router';
 
 // ----------------------------------------------------------------------
-  
+
 export default function NotFoundView() {
   const navigate = useNavigate();
   const goBack = () => {
@@ -38,7 +38,7 @@ export default function NotFoundView() {
           />
 
           <Button size="large" variant="contained" onClick={goBack}>
-            Back
+            返回
           </Button>
         </Box>
       </Container>

@@ -17,5 +17,5 @@ Before you start editing, make sure your `Actions on Save` options have `Optimiz
 
 ## Reference
 
-1. [OIerDb](https://github.com/OIerDb-ng/OIerDb)
-2. [React Hooks Redux Registration Login Example](https://github.com/cornflourblue/react-hooks-redux-registration-login-example)
+1. https://github.com/OIerDb-ng/OIerDb
+2. https://github.com/cornflourblue/react-hooks-redux-registration-login-example

@@ -76,30 +76,29 @@ if (isMobile()) {
 export function showError(error) {
   console.error(error);
   if (error.message) {
-    if (error.name === 'AxiosError') ".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: 
-- "switch (error.response.status) {
+    if (error.name === 'AxiosError') {
+      switch (error.response.status) {
         case 401:
-          // toast.error('Error: Not logged in or the login has expired, please log in again!', showErrorOptions);
+          // toast.error('错误：未登录或登录已过期，请重新登录！', showErrorOptions);
           window.location.href = '/login?expired=true';
           break;
         case 429:
-          toast.error('Error: Too many requests, please try again later!', showErrorOptions);
+          toast.error('错误：请求次数过多，请稍后再试！', showErrorOptions);
           break;
         case 500:
-          toast.error('Error: Internal server error, please contact the administrator!', showErrorOptions);
+          toast.error('错误：服务器内部错误，请联系管理员！', showErrorOptions);
           break;
         case 405:
-          toast.info('This site is for demonstration only, no server-side service!');
+          toast.info('本站仅作演示之用，无服务端！');
           break;
         default:
-          toast.error('Error: ' + error.message, showErrorOptions);
+          toast.error('错误：' + error.message, showErrorOptions);
       }
       return;
     }
-    toast.error('Error: ' + error.message, showErrorOptions);
+    toast.error('错误：' + error.message, showErrorOptions);
   } else {
-    toast.error('Error: ' + error, showErrorOptions);
+    toast.error('错误：' + error, showErrorOptions);
   }
 }
 
@@ -171,13 +170,6 @@ export function timestamp2string(timestamp) {
     ':' +
     second
   );
-}."' ' +
-    hour +
-    ':' +
-    minute +
-    ':' +
-    second
-  );
 }
 
 export function downloadTextAsFile(text, filename) {
@@ -232,4 +224,4 @@ export function getChannelModels(type) {
     return channelModels[type];
   }
   return [];
-}"
+}

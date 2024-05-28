@@ -73,35 +73,50 @@ const StatisticalLineChartCard = ({ isLoading, title, chartData, todayValue }) =
                       <Grid item>
                         <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                           {todayValue || '0'}
-                        </Typography>Instructions: 
-```jsx
-<Grid>
-    <Grid item></Grid>
-    <Grid item xs={12}>
-        <Typography
-            sx={{
-                fontSize: '1rem',
-                fontWeight: 500,
-                color: theme.palette.primary[200]
-            }}
-        >
-            {title}
-        </Typography>
-    </Grid>
-</Grid>
-<Grid item xs={6}>
-    {chartData ? (
-        <Chart {...chartData} />
-    ) : (
-        <Typography
-            sx={{
-                fontSize: '1rem',
-                fontWeight: 500,
-                color: theme.palette.primary[200]
-            }}
-        >
-            No data
-        </Typography>
-    )}
-</Grid>
-```
+                        </Typography>
+                      </Grid>
+                      <Grid item></Grid>
+                      <Grid item xs={12}>
+                        <Typography
+                          sx={{
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: theme.palette.primary[200]
+                          }}
+                        >
+                          {title}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6}>
+                    {chartData ? (
+                      <Chart {...chartData} />
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: theme.palette.primary[200]
+                        }}
+                      >
+                        无数据
+                      </Typography>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </CardWrapper>
+      )}
+    </>
+  );
+};
+
+StatisticalLineChartCard.propTypes = {
+  isLoading: PropTypes.bool,
+  title: PropTypes.string
+};
+
+export default StatisticalLineChartCard;

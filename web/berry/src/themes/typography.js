@@ -96,7 +96,50 @@ export default function themeTypography(theme) {
       minHeight: 'calc(100vh - 88px)',
       flexGrow: 1,
       padding: '20px',
-      marginTop: '88px',".```
+      marginTop: '88px',
+      marginRight: '20px',
+      borderRadius: `${theme?.customization?.borderRadius}px`
+    },
+    menuCaption: {
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      color: theme.heading,
+      padding: '6px',
+      textTransform: 'capitalize',
+      marginTop: '10px'
+    },
+    subMenuCaption: {
+      fontSize: '0.6875rem',
+      fontWeight: 500,
+      color: theme.darkTextSecondary,
+      textTransform: 'capitalize'
+    },
+    commonAvatar: {
+      cursor: 'pointer',
+      borderRadius: '8px'
+    },
+    smallAvatar: {
+      width: '22px',
+      height: '22px',
+      fontSize: '1rem'
+    },
+    mediumAvatar: {
+      width: '34px',
+      height: '34px',
+      fontSize: '1.2rem'
+    },
+    largeAvatar: {
+      width: '44px',
+      height: '44px',
+      fontSize: '1.5rem'
+    },
+    menuButton: {
+      color: theme.menuButtonColor,
+      background: theme.menuButton
+    },
+    menuChip: {
+      background: theme.menuChip
+    },
     CardWrapper: {
       backgroundColor: theme.mode === 'dark' ? theme.colors.darkLevel2 : theme.colors.primaryDark
     },
@@ -104,4 +147,4 @@ export default function themeTypography(theme) {
       border: theme.mode === 'dark' ? '1px solid rgba(227, 232, 239, 0.2)' : '1px solid rgb(227, 232, 239)'
     }
   };
-```
+}

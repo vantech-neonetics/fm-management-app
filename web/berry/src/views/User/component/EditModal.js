@@ -1,38 +1,82 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-{...} from '@mui/material';
-{...} from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  Select,
+  MenuItem,
+  IconButton,
+  FormHelperText
+} from '@mui/material';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 import { renderQuotaWithPrompt, showSuccess, showError } from 'utils/common';
 import { API } from 'utils/api';
 
 const validationSchema = Yup.object().shape({
   is_edit: Yup.boolean(),
-  username: Yup.string().required('Username cannot be empty'),
-{...}
+  username: Yup.string().required('用户名 不能为空'),
+  display_name: Yup.string(),
+  password: Yup.string().when('is_edit', {
+    is: false,
+    then: Yup.string().required('密码 不能为空'),
+    otherwise: Yup.string()
+  }),
+  group: Yup.string().when('is_edit', {
+    is: false,
+    then: Yup.string().required('用户组 不能为空'),
+    otherwise: Yup.string()
+  }),
+  quota: Yup.number().when('is_edit', {
+    is: false,
+    then: Yup.number().min(0, '额度 不能小于 0'),
+    otherwise: Yup.number()
+  })
 });
 
 const originInputs = {
   is_edit: false,
   username: '',
-{...}
+  display_name: '',
+  password: '',
+  group: 'default',
+  quota: 0
 };
 
 const EditModal = ({ open, userId, onCancel, onOk }) => {
-{...}
+  const theme = useTheme();
   const [inputs, setInputs] = useState(originInputs);
-{...}
   const [groupOptions, setGroupOptions] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
   const submit = async (values, { setErrors, setStatus, setSubmitting }) => {
-{...}
+    setSubmitting(true);
+
+    let res;
     if (values.is_edit) {
       res = await API.put(`/api/user/`, { ...values, id: parseInt(userId) });
     } else {
       res = await API.post(`/api/user/`, values);
     }
-{...}Show success ('User created successfully!');
+    const { success, message } = res.data;
+    if (success) {
+      if (values.is_edit) {
+        showSuccess('用户更新成功！');
+      } else {
+        showSuccess('用户创建成功！');
       }
       setSubmitting(false);
       setStatus({ success: true });
@@ -83,7 +127,7 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth={'md'}>
       <DialogTitle sx={{ margin: '0px', fontWeight: 700, lineHeight: '1.55556', padding: '24px', fontSize: '1.125rem' }}>
-        {userId ? 'Edit User' : 'Create User'}
+        {userId ? '编辑用户' : '新建用户'}
       </DialogTitle>
       <Divider />
       <DialogContent>
@@ -91,15 +135,15 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
           {({ errors, handleBlur, handleChange, handleSubmit, touched, values, isSubmitting }) => (
             <form noValidate onSubmit={handleSubmit}>
               <FormControl fullWidth error={Boolean(touched.username && errors.username)} sx={{ ...theme.typography.otherInput }}>
-                <InputLabel htmlFor="channel-username-label">Username</InputLabel>
+                <InputLabel htmlFor="channel-username-label">用户名</InputLabel>
                 <OutlinedInput
                   id="channel-username-label"
-                  label="Username"
+                  label="用户名"
                   type="text"
                   value={values.username}
                   name="username"
-                  onBlur={handleBlur}".Instructions: Translate the following content to English while keeping the original formatting:
-"onChange={handleChange}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
                   inputProps={{ autoComplete: 'username' }}
                   aria-describedby="helper-text-channel-username-label"
                 />
@@ -111,10 +155,10 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
               </FormControl>
 
               <FormControl fullWidth error={Boolean(touched.display_name && errors.display_name)} sx={{ ...theme.typography.otherInput }}>
-                <InputLabel htmlFor="channel-display_name-label">Display Name</InputLabel>
+                <InputLabel htmlFor="channel-display_name-label">显示名称</InputLabel>
                 <OutlinedInput
                   id="channel-display_name-label"
-                  label="Display Name"
+                  label="显示名称"
                   type="text"
                   value={values.display_name}
                   name="display_name"
@@ -131,18 +175,18 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
               </FormControl>
 
               <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.otherInput }}>
-                <InputLabel htmlFor="channel-password-label">Password</InputLabel>
+                <InputLabel htmlFor="channel-password-label">密码</InputLabel>
                 <OutlinedInput
                   id="channel-password-label"
-                  label="Password"
+                  label="密码"
                   type={showPassword ? 'text' : 'password'}
                   value={values.password}
                   name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   inputProps={{ autoComplete: 'password' }}
-                  endAdornment={"```jsx
-<InputAdornment position="end">
+                  endAdornment={
+                    <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
@@ -166,10 +210,10 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
               {values.is_edit && (
                 <>
                   <FormControl fullWidth error={Boolean(touched.quota && errors.quota)} sx={{ ...theme.typography.otherInput }}>
-                    <InputLabel htmlFor="channel-quota-label">Quota</InputLabel>
+                    <InputLabel htmlFor="channel-quota-label">额度</InputLabel>
                     <OutlinedInput
                       id="channel-quota-label"
-                      label="Quota"
+                      label="额度"
                       type="number"
                       value={values.quota}
                       name="quota"
@@ -186,12 +230,12 @@ const EditModal = ({ open, userId, onCancel, onOk }) => {
                       </FormHelperText>
                     )}
                   </FormControl>
-```Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "<FormControl fullWidth error={Boolean(touched.group && errors.group)} sx={{ ...theme.typography.otherInput }}>
-                    <InputLabel htmlFor="channel-group-label">Group</InputLabel>
+
+                  <FormControl fullWidth error={Boolean(touched.group && errors.group)} sx={{ ...theme.typography.otherInput }}>
+                    <InputLabel htmlFor="channel-group-label">分组</InputLabel>
                     <Select
                       id="channel-group-label"
-                      label="Group"
+                      label="分组"
                       value={values.group}
                       name="group"
                       onBlur={handleBlur}
@@ -221,9 +265,9 @@ while maintaining the original formatting: "<FormControl fullWidth error={Boolea
                 </>
               )}
               <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
+                <Button onClick={onCancel}>取消</Button>
                 <Button disableElevation disabled={isSubmitting} type="submit" variant="contained" color="primary">
-                  Submit
+                  提交
                 </Button>
               </DialogActions>
             </form>
@@ -241,4 +285,4 @@ EditModal.propTypes = {
   userId: PropTypes.number,
   onCancel: PropTypes.func,
   onOk: PropTypes.func
-};".
+};

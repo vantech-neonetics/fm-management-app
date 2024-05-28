@@ -47,6 +47,75 @@ export default function UserCard({ children }) {
         width: '100%',
         height: 62,
         zIndex: 10,
-        bottom: -26,".```jsx
-format: Return only the translated content, not including the original text.
-```
+        bottom: -26,
+        position: 'absolute',
+        color: 'background.paper'
+      }}
+    />
+  );
+
+  const renderAvatar = (
+    <Avatar
+      src={userAvatar}
+      sx={{
+        zIndex: 11,
+        width: 64,
+        height: 64,
+        position: 'absolute',
+        alignItems: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        left: 0,
+        right: 0,
+        bottom: (theme) => theme.spacing(-4)
+      }}
+    />
+  );
+
+  const renderCover = (
+    <Box
+      component="img"
+      src={coverAvatar}
+      sx={{
+        top: 0,
+        width: 1,
+        height: 1,
+        objectFit: 'cover',
+        position: 'absolute'
+      }}
+    />
+  );
+
+  return (
+    <Card>
+      <Box
+        sx={{
+          position: 'relative',
+          '&:after': {
+            top: 0,
+            content: "''",
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.42)
+          },
+          pt: {
+            xs: 'calc(100% / 3)',
+            sm: 'calc(100% / 4.66)'
+          }
+        }}
+      >
+        {renderShape}
+        {renderAvatar}
+        {renderCover}
+      </Box>
+      <Box
+        sx={{
+          p: (theme) => theme.spacing(4, 3, 3, 3)
+        }}
+      >
+        {children}
+      </Box>
+    </Card>
+  );
+}

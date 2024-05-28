@@ -34,7 +34,7 @@ const ResetPassword = () => {
                       <Grid item>
                         <Stack alignItems="center" justifyContent="center" spacing={1}>
                           <Typography color={theme.palette.primary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                            Confirm Password Reset
+                            密码重置确认
                           </Typography>
                         </Stack>
                       </Grid>
@@ -45,12 +45,22 @@ const ResetPassword = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />
-                  </Grid>```
-<Grid item xs={12}>
-  <Grid item container direction="column" alignItems="center" xs={12}>
-    <Typography component={Link} to="/login" variant="subtitle1" sx={{ textDecoration: 'none' }}>
-      Login
-    </Typography>
-  </Grid>
-</Grid>
-```
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid item container direction="column" alignItems="center" xs={12}>
+                      <Typography component={Link} to="/login" variant="subtitle1" sx={{ textDecoration: 'none' }}>
+                        登录
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </AuthCardWrapper>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </AuthWrapper>
+  );
+};
+
+export default ResetPassword;

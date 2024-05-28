@@ -46,97 +46,149 @@ const RegisterForm = () => {
 
   async function handleSubmit(e) {
     if (password.length < 8) {
-      showInfo('Password length must not be less than 8 characters!');
+      showInfo('密码长度不得小于 8 位！');
       return;
     }
     if (password !== password2) {
-      showInfo('The passwords entered twice do not match');
+      showInfo('两次输入的密码不一致');
       return;
     }
     if (username && password) {
       if (turnstileEnabled && turnstileToken === '') {
-        showInfo('Please wait a few seconds and try again, Turnstile is checking the user environment!');
+        showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
         return;
       }
       setLoading(true);
       if (!affCode) {
         affCode = localStorage.getItem('aff');
       }
-      inputs.aff_code = affCode;const res = await API.post(
-      `/api/user/register?turnstile=${turnstileToken}`,
-      inputs
+      inputs.aff_code = affCode;
+      const res = await API.post(
+        `/api/user/register?turnstile=${turnstileToken}`,
+        inputs
+      );
+      const { success, message } = res.data;
+      if (success) {
+        navigate('/login');
+        showSuccess('注册成功！');
+      } else {
+        showError(message);
+      }
+      setLoading(false);
+    }
+  }
+
+  const sendVerificationCode = async () => {
+    if (inputs.email === '') return;
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
+      return;
+    }
+    setLoading(true);
+    const res = await API.get(
+      `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`
     );
     const { success, message } = res.data;
     if (success) {
-      navigate('/login');
-      showSuccess('Registration successful!');
+      showSuccess('验证码发送成功，请检查你的邮箱！');
     } else {
       showError(message);
     }
     setLoading(false);
-  }
-}
+  };
 
-const sendVerificationCode = async () => {
-  if (inputs.email === '') return;
-  if (turnstileEnabled && turnstileToken === '') {
-    showInfo('Please retry in a few seconds, Turnstile is checking the user environment!');
-    return;
-  }
-  setLoading(true);
-  const res = await API.get(
-    `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`
+  return (
+    <Grid textAlign='center' style={{ marginTop: '48px' }}>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Header as='h2' color='' textAlign='center'>
+          <Image src={logo} /> 新用户注册
+        </Header>
+        <Form size='large'>
+          <Segment>
+            <Form.Input
+              fluid
+              icon='user'
+              iconPosition='left'
+              placeholder='输入用户名，最长 12 位'
+              onChange={handleChange}
+              name='username'
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              iconPosition='left'
+              placeholder='输入密码，最短 8 位，最长 20 位'
+              onChange={handleChange}
+              name='password'
+              type='password'
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              iconPosition='left'
+              placeholder='输入密码，最短 8 位，最长 20 位'
+              onChange={handleChange}
+              name='password2'
+              type='password'
+            />
+            {showEmailVerification ? (
+              <>
+                <Form.Input
+                  fluid
+                  icon='mail'
+                  iconPosition='left'
+                  placeholder='输入邮箱地址'
+                  onChange={handleChange}
+                  name='email'
+                  type='email'
+                  action={
+                    <Button onClick={sendVerificationCode} disabled={loading}>
+                      获取验证码
+                    </Button>
+                  }
+                />
+                <Form.Input
+                  fluid
+                  icon='lock'
+                  iconPosition='left'
+                  placeholder='输入验证码'
+                  onChange={handleChange}
+                  name='verification_code'
+                />
+              </>
+            ) : (
+              <></>
+            )}
+            {turnstileEnabled ? (
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <Button
+              color='green'
+              fluid
+              size='large'
+              onClick={handleSubmit}
+              loading={loading}
+            >
+              注册
+            </Button>
+          </Segment>
+        </Form>
+        <Message>
+          已有账户？
+          <Link to='/login' className='btn btn-link'>
+            点击登录
+          </Link>
+        </Message>
+      </Grid.Column>
+    </Grid>
   );
-  const { success, message } = res.data;
-  if (success) {
-    showSuccess('Verification code sent successfully, please check your email!');
-  } else {
-    showError(message);
-  }
-  setLoading(false);
 };
 
-return (
-  <Grid textAlign='center' style={{ marginTop: '48px' }}>
-    <Grid.Column style={{ maxWidth: 450 }}>
-      <Header as='h2' color='' textAlign='center'>
-        <Image src={logo} /> New User Registration
-      </Header>
-      <Form size='large'>
-        <Segment>
-          <Form.Input
-            fluid
-            icon='user'
-            iconPosition='left'
-            placeholder='Enter username, up to 12 characters'
-            onChange={handleChange}
-            name='username'
-          />
-          <Form.Input
-            fluid
-            icon='lock'
-            iconPosition='left'
-            placeholder='Enter password, minimum 8 characters, maximum 20 characters'
-            onChange={handleChange}
-            name='password'
-            type='password'
-          />
-          <Form.Input
-            fluid
-            icon='lock'
-            iconPosition='left'
-            placeholder='Confirm password, minimum 8 characters, maximum 20 characters'
-            onChange={handleChange}
-            name='password2'
-            type='password'
-          />
-          {showEmailVerification ? (
-            <>
-              <Form.Input
-                fluid
-                icon='mail'- `placeholder='Enter email address'`
-- `获取验证码` translates to `Get verification code`
-- `placeholder='Enter verification code'`
-- `注册` translates to `Register`
-- `已有账户？` translates to `Already have an account?`
-- `点击登录` translates to `Click to log in`
+export default RegisterForm;

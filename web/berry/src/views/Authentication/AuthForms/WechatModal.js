@@ -7,7 +7,7 @@ import { showError } from 'utils/common';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
-  code: Yup.string().required('Verification code cannot be empty') // 验证码不能为空
+  code: Yup.string().required('验证码不能为空')
 });
 
 const WechatModal = ({ open, handleClose, wechatLogin, qrCode }) => {
@@ -16,22 +16,22 @@ const WechatModal = ({ open, handleClose, wechatLogin, qrCode }) => {
     if (success) {
       handleClose();
     } else {
-      showError(message || 'Unknown error'); // 未知错误
+      showError(message || '未知错误');
     }
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>WeChat Verification Code Login</DialogTitle> // 微信验证码登录
+      <DialogTitle>微信验证码登录</DialogTitle>
       <DialogContent>
         <Grid container direction="column" alignItems="center">
-          <img src={qrCode} alt="QR Code" style={{ maxWidth: '300px', maxHeight: '300px', width: 'auto', height: 'auto' }} />
+          <img src={qrCode} alt="二维码" style={{ maxWidth: '300px', maxHeight: '300px', width: 'auto', height: 'auto' }} />
           <Typography
             variant="body2"
             color="text.secondary"
             style={{ marginTop: '10px', textAlign: 'center', wordWrap: 'break-word', maxWidth: '300px' }}
           >
-            Please use WeChat to scan the QR code to follow the official account and enter the "verification code" to get the code (valid for three minutes) // 请使用微信扫描二维码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+            请使用微信扫描二维码关注公众号，输入「验证码」获取验证码（三分钟内有效）
           </Typography>
           <Formik initialValues={{ code: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
             {({ errors, touched }) => (
@@ -40,7 +40,7 @@ const WechatModal = ({ open, handleClose, wechatLogin, qrCode }) => {
                   <Field
                     as={TextField}
                     name="code"
-                    label="Verification Code" // 验证码
+                    label="验证码"
                     error={touched.code && Boolean(errors.code)}
                     helperText={touched.code && errors.code}
                     fullWidth
@@ -48,13 +48,21 @@ const WechatModal = ({ open, handleClose, wechatLogin, qrCode }) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Button type="submit" fullWidth>
-                    Submit // 提交
+                    提交
                   </Button>
                 </Grid>
               </Form>
             )}
           </Formik>
-        </Grid>.WechatModal.propTypes = {
+        </Grid>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default WechatModal;
+
+WechatModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
   wechatLogin: PropTypes.func,

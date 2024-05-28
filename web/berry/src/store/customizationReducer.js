@@ -1,11 +1,11 @@
-// 项目导入
+// project imports
 import config from 'config';
 
-// 动作 - 状态管理
+// action - state management
 import * as actionTypes from './actions';
 
 export const initialState = {
-  isOpen: [], // 用于默认菜单的活动状态
+  isOpen: [], // for active default menu
   defaultId: 'default',
   fontFamily: config.fontFamily,
   borderRadius: config.borderRadius,
@@ -13,7 +13,7 @@ export const initialState = {
   theme: 'light'
 };
 
-// ==============================|| 自定义化减速器 ||============================== //
+// ==============================|| CUSTOMIZATION REDUCER ||============================== //
 
 const customizationReducer = (state = initialState, action) => {
   let id;

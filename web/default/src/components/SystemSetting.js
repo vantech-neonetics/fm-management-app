@@ -1,4 +1,3 @@
-```javascript
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Form, Grid, Header, Modal, Message } from 'semantic-ui-react';
 import { API, removeTrailingSlash, showError } from '../helpers';
@@ -65,8 +64,8 @@ const SystemSetting = () => {
   useEffect(() => {
     getOptions().then();
   }, []);
-``````javascript
-const updateOption = async (key, value) => {
+
+  const updateOption = async (key, value) => {
     setLoading(true);
     switch (key) {
       case 'PasswordLoginEnabled':
@@ -136,16 +135,76 @@ const updateOption = async (key, value) => {
     if (originInputs['SMTPServer'] !== inputs.SMTPServer) {
       await updateOption('SMTPServer', inputs.SMTPServer);
     }
-``````javascript
-// Submit email domain whitelist 
-// 提交电子邮件域名白名单
+    if (originInputs['SMTPAccount'] !== inputs.SMTPAccount) {
+      await updateOption('SMTPAccount', inputs.SMTPAccount);
+    }
+    if (originInputs['SMTPFrom'] !== inputs.SMTPFrom) {
+      await updateOption('SMTPFrom', inputs.SMTPFrom);
+    }
+    if (
+      originInputs['SMTPPort'] !== inputs.SMTPPort &&
+      inputs.SMTPPort !== ''
+    ) {
+      await updateOption('SMTPPort', inputs.SMTPPort);
+    }
+    if (
+      originInputs['SMTPToken'] !== inputs.SMTPToken &&
+      inputs.SMTPToken !== ''
+    ) {
+      await updateOption('SMTPToken', inputs.SMTPToken);
+    }
+  };
 
-// Submit WeChat settings 
-// 提交微信设置
 
-// Submit message pusher settings 
-// 提交消息推送者设置
-```const submitGitHubOAuth = async () => {
+  const submitEmailDomainWhitelist = async () => {
+    if (
+      originInputs['EmailDomainWhitelist'] !== inputs.EmailDomainWhitelist.join(',') &&
+      inputs.SMTPToken !== ''
+    ) {
+      await updateOption('EmailDomainWhitelist', inputs.EmailDomainWhitelist.join(','));
+    }
+  };
+
+  const submitWeChat = async () => {
+    if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
+      await updateOption(
+        'WeChatServerAddress',
+        removeTrailingSlash(inputs.WeChatServerAddress)
+      );
+    }
+    if (
+      originInputs['WeChatAccountQRCodeImageURL'] !==
+      inputs.WeChatAccountQRCodeImageURL
+    ) {
+      await updateOption(
+        'WeChatAccountQRCodeImageURL',
+        inputs.WeChatAccountQRCodeImageURL
+      );
+    }
+    if (
+      originInputs['WeChatServerToken'] !== inputs.WeChatServerToken &&
+      inputs.WeChatServerToken !== ''
+    ) {
+      await updateOption('WeChatServerToken', inputs.WeChatServerToken);
+    }
+  };
+
+  const submitMessagePusher = async () => {
+    if (originInputs['MessagePusherAddress'] !== inputs.MessagePusherAddress) {
+      await updateOption(
+        'MessagePusherAddress',
+        removeTrailingSlash(inputs.MessagePusherAddress)
+      );
+    }
+    if (
+      originInputs['MessagePusherToken'] !== inputs.MessagePusherToken &&
+      inputs.MessagePusherToken !== ''
+    ) {
+      await updateOption('MessagePusherToken', inputs.MessagePusherToken);
+    }
+  };
+
+  const submitGitHubOAuth = async () => {
     if (originInputs['GitHubClientId'] !== inputs.GitHubClientId) {
       await updateOption('GitHubClientId', inputs.GitHubClientId);
     }
@@ -157,7 +216,7 @@ const updateOption = async (key, value) => {
     }
   };
 
-  const submitLarkOAuth = async () => {
+   const submitLarkOAuth = async () => {
     if (originInputs['LarkClientId'] !== inputs.LarkClientId) {
       await updateOption('LarkClientId', inputs.LarkClientId);
     }
@@ -201,24 +260,25 @@ const updateOption = async (key, value) => {
     <Grid columns={1}>
       <Grid.Column>
         <Form loading={loading}>
-          <Header as='h3'>General Settings</Header>
+          <Header as='h3'>通用设置</Header>
           <Form.Group widths='equal'>
             <Form.Input
-              label='Server Address'
-              placeholder='For example: https://yourdomain.com'
-              value={inputs.ServerAddress}".name='ServerAddress'
+              label='服务器地址'
+              placeholder='例如：https://yourdomain.com'
+              value={inputs.ServerAddress}
+              name='ServerAddress'
               onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Button onClick={submitServerAddress}>
-            Update Server Address
+            更新服务器地址
           </Form.Button>
           <Divider />
-          <Header as='h3'>Configure Login and Register</Header>
+          <Header as='h3'>配置登录注册</Header>
           <Form.Group inline>
             <Form.Checkbox
               checked={inputs.PasswordLoginEnabled === 'true'}
-              label='Allow login with password'
+              label='允许通过密码进行登录'
               name='PasswordLoginEnabled'
               onChange={handleInputChange}
             />
@@ -230,12 +290,12 @@ const updateOption = async (key, value) => {
                 size={'tiny'}
                 style={{ maxWidth: '450px' }}
               >
-                <Modal.Header>Warning</Modal.Header>
+                <Modal.Header>警告</Modal.Header>
                 <Modal.Content>
-                  <p>Disabling password login will prevent all users (including administrators) without other login methods from logging in with password. Are you sure to disable?</p>
+                  <p>取消密码登录将导致所有未绑定其他登录方式的用户（包括管理员）无法通过密码登录，确认取消？</p>
                 </Modal.Content>
                 <Modal.Actions>
-                  <Button onClick={() => setShowPasswordWarningModal(false)}>Cancel</Button>
+                  <Button onClick={() => setShowPasswordWarningModal(false)}>取消</Button>
                   <Button
                     color='yellow'
                     onClick={async () => {
@@ -243,31 +303,32 @@ const updateOption = async (key, value) => {
                       await updateOption('PasswordLoginEnabled', 'false');
                     }}
                   >
-                    Confirm
+                    确定
                   </Button>
                 </Modal.Actions>
               </Modal>
             }
             <Form.Checkbox
               checked={inputs.PasswordRegisterEnabled === 'true'}
-              label='Allow registration with password'
+              label='允许通过密码进行注册'
               name='PasswordRegisterEnabled'
               onChange={handleInputChange}
             />
             <Form.Checkbox
               checked={inputs.EmailVerificationEnabled === 'true'}
-              label='Require email verification when registering with password'
+              label='通过密码注册时需要进行邮箱验证'
               name='EmailVerificationEnabled'
               onChange={handleInputChange}
             />
-            <Form.Checkboxchecked={inputs.GitHubOAuthEnabled === 'true'}
-              label='Allow login and registration via GitHub account'
+            <Form.Checkbox
+              checked={inputs.GitHubOAuthEnabled === 'true'}
+              label='允许通过 GitHub 账户登录 & 注册'
               name='GitHubOAuthEnabled'
               onChange={handleInputChange}
             />
             <Form.Checkbox
               checked={inputs.WeChatAuthEnabled === 'true'}
-              label='Allow login and registration via WeChat account'
+              label='允许通过微信登录 & 注册'
               name='WeChatAuthEnabled'
               onChange={handleInputChange}
             />
@@ -275,25 +336,25 @@ const updateOption = async (key, value) => {
           <Form.Group inline>
             <Form.Checkbox
               checked={inputs.RegisterEnabled === 'true'}
-              label='Allow new user registration (if set to "no", new users will not be able to register in any way)'
+              label='允许新用户注册（此项为否时，新用户将无法以任何方式进行注册）'
               name='RegisterEnabled'
               onChange={handleInputChange}
             />
             <Form.Checkbox
               checked={inputs.TurnstileCheckEnabled === 'true'}
-              label='Enable Turnstile user verification'
+              label='启用 Turnstile 用户校验'
               name='TurnstileCheckEnabled'
               onChange={handleInputChange}
             />
           </Form.Group>
           <Divider />
           <Header as='h3'>
-            Configure Email Domain Whitelist
-            <Header.Subheader>Used to prevent malicious users from registering in bulk using temporary email addresses</Header.Subheader>
+            配置邮箱域名白名单
+            <Header.Subheader>用以防止恶意用户利用临时邮箱批量注册</Header.Subheader>
           </Header>
           <Form.Group widths={3}>
             <Form.Checkbox
-              label='Enable Email Domain Whitelist'
+              label='启用邮箱域名白名单'
               name='EmailDomainRestrictionEnabled'
               onChange={handleInputChange}
               checked={inputs.EmailDomainRestrictionEnabled === 'true'}
@@ -301,8 +362,8 @@ const updateOption = async (key, value) => {
           </Form.Group>
           <Form.Group widths={2}>
             <Form.Dropdown
-              label='Allowed Email Domains'
-              placeholder='Allowed Email Domains'
+              label='允许的邮箱域名'
+              placeholder='允许的邮箱域名'
               name='EmailDomainWhitelist'
               required
               fluid
@@ -314,10 +375,11 @@ const updateOption = async (key, value) => {
               options={EmailDomainWhitelist}
             />
             <Form.Input
-              label='Add new allowed Email Domain'
+              label='添加新的允许的邮箱域名'
               action={
-                <Button type='button' onClick={() => {".Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: "Enter</Button>
+                <Button type='button' onClick={() => {
+                  submitNewRestrictedDomain();
+                }}>填入</Button>
               }
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -325,79 +387,79 @@ while maintaining the original formatting: "Enter</Button>
                 }
               }}
               autoComplete='new-password'
-              placeholder='Enter new allowed email domain'
+              placeholder='输入新的允许的邮箱域名'
               value={restrictedDomainInput}
               onChange={(e, { value }) => {
                 setRestrictedDomainInput(value);
               }}
             />
           </Form.Group>
-          <Form.Button onClick={submitEmailDomainWhitelist}>Save Email Domain Whitelist Settings</Form.Button>
+          <Form.Button onClick={submitEmailDomainWhitelist}>保存邮箱域名白名单设置</Form.Button>
           <Divider />
           <Header as='h3'>
-            Configure SMTP
-            <Header.Subheader>Used to support system email sending</Header.Subheader>
+            配置 SMTP
+            <Header.Subheader>用以支持系统的邮件发送</Header.Subheader>
           </Header>
           <Form.Group widths={3}>
             <Form.Input
-              label='SMTP Server Address'
+              label='SMTP 服务器地址'
               name='SMTPServer'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.SMTPServer}
-              placeholder='Example: smtp.qq.com'
+              placeholder='例如：smtp.qq.com'
             />
             <Form.Input
-              label='SMTP Port'
+              label='SMTP 端口'
               name='SMTPPort'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.SMTPPort}
-              placeholder='Default: 587'
+              placeholder='默认: 587'
             />
             <Form.Input
-              label='SMTP Account'
+              label='SMTP 账户'
               name='SMTPAccount'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.SMTPAccount}
-              placeholder='Usually an email address'
+              placeholder='通常是邮箱地址'
             />
           </Form.Group>
           <Form.Group widths={3}>
             <Form.Input
-              label='SMTP Sender Email'
+              label='SMTP 发送者邮箱'
               name='SMTPFrom'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.SMTPFrom}
-              placeholder='Usually consistent with email address'
+              placeholder='通常和邮箱地址保持一致'
             />
             <Form.Input
-              label='SMTP Access Token'
+              label='SMTP 访问凭证'
               name='SMTPToken'
-              onChange={handleInputChange>".```jsx
-type='password'
+              onChange={handleInputChange}
+              type='password'
               autoComplete='new-password'
               checked={inputs.RegisterEnabled === 'true'}
-              placeholder='Sensitive information will not be sent to the frontend for display'
+              placeholder='敏感信息不会发送到前端显示'
             />
           </Form.Group>
-          <Form.Button onClick={submitSMTP}>Save SMTP settings</Form.Button>
+          <Form.Button onClick={submitSMTP}>保存 SMTP 设置</Form.Button>
           <Divider />
           <Header as='h3'>
-            Configure GitHub OAuth App
+            配置 GitHub OAuth App
             <Header.Subheader>
-              To support logging in and registering through GitHub,
+              用以支持通过 GitHub 进行登录注册，
               <a href='https://github.com/settings/developers' target='_blank'>
-                click here
+                点击此处
               </a>
-              to manage your GitHub OAuth App
+              管理你的 GitHub OAuth App
             </Header.Subheader>
           </Header>
           <Message>
-            Fill in Homepage URL with <code>{inputs.ServerAddress}</code>
-            , and Authorization callback URL with{' '}
+            Homepage URL 填 <code>{inputs.ServerAddress}</code>
+            ，Authorization callback URL 填{' '}
             <code>{`${inputs.ServerAddress}/oauth/github`}</code>
           </Message>
           <Form.Group widths={3}>
@@ -407,7 +469,7 @@ type='password'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.GitHubClientId}
-              placeholder='Enter the ID of your registered GitHub OAuth APP'
+              placeholder='输入你注册的 GitHub OAuth APP 的 ID'
             />
             <Form.Input
               label='GitHub Client Secret'
@@ -416,156 +478,167 @@ type='password'
               type='password'
               autoComplete='new-password'
               value={inputs.GitHubClientSecret}
-              placeholder='Sensitive information will not be sent to the frontend for display'
+              placeholder='敏感信息不会发送到前端显示'
             />
           </Form.Group>
           <Form.Button onClick={submitGitHubOAuth}>
-            Save GitHub OAuth settings
+            保存 GitHub OAuth 设置
           </Form.Button>
           <Divider />
           <Header as='h3'>
-            Configure Feishu authorization login
+            配置飞书授权登录
             <Header.Subheader>
-              To support logging in and registering through Feishu,
+              用以支持通过飞书进行登录注册，
               <a href='https://open.feishu.cn/app' target='_blank'>
-                click here
+                点击此处
               </a>
-              to manage your Feishu application
+              管理你的飞书应用
             </Header.Subheader>
           </Header>
           <Message>
-            Fill in the homepage link with <code>{inputs.ServerAddress}</code>
-```，redirect URL填{' '}
-    <code>{`${inputs.ServerAddress}/oauth/lark`}</code>
-  </Message>
-  <Form.Group widths={3}>
-    <Form.Input
-      label='App ID'
-      name='LarkClientId'
-      onChange={handleInputChange}
-      autoComplete='new-password'
-      value={inputs.LarkClientId}
-      placeholder='Enter App ID'
-    />
-    <Form.Input
-      label='App Secret'
-      name='LarkClientSecret'
-      onChange={handleInputChange}
-      type='password'
-      autoComplete='new-password'
-      value={inputs.LarkClientSecret}
-      placeholder="Sensitive information won't be displayed on the frontend"
-    />
-  </Form.Group>
-  <Form.Button onClick={submitLarkOAuth}>
-    Save Lark OAuth Settings
-  </Form.Button>
-  <Divider />
-  <Header as='h3'>
-    Configure WeChat Server
-    <Header.Subheader>
-      To support login and registration via WeChat,
-      <a
-        href='https://github.com/songquanpeng/wechat-server'
-        target='_blank'
-      >
-        Click here
-      </a>
-      to learn about WeChat Server
-    </Header.Subheader>
-  </Header>
-  <Form.Group widths={3}>
-    <Form.Input
-      label='WeChat Server Address'
-      name='WeChatServerAddress'
-      placeholder='For example: https://yourdomain.com'
-      onChange={handleInputChange}
-      autoComplete='new-password'
-      value={inputs.WeChatServerAddress}
-    />
-    <Form.Input
-      label='WeChat Server Access Token'
-      name='WeChatServerToken'
-      type='password'
-      onChange={handleInputChange}
-      autoComplete='new-password'
-      value={inputs.WeChatServerToken}
-      placeholder="Sensitive information won't be displayed on the frontend"
-    />
-    <Form.Input
-      label='WeChat Official Account QR Code Image URL'Instructions: Translate the following Chinese text to English
-while maintaining the original formatting:
-"onChange={handleInputChange}
+            主页链接填 <code>{inputs.ServerAddress}</code>
+            ，重定向 URL 填{' '}
+            <code>{`${inputs.ServerAddress}/oauth/lark`}</code>
+          </Message>
+          <Form.Group widths={3}>
+            <Form.Input
+              label='App ID'
+              name='LarkClientId'
+              onChange={handleInputChange}
               autoComplete='new-password'
-              value={inputs.WeChatAccountQRCodeImageURL}
-              placeholder='Enter an image link'
+              value={inputs.LarkClientId}
+              placeholder='输入 App ID'
+            />
+            <Form.Input
+              label='App Secret'
+              name='LarkClientSecret'
+              onChange={handleInputChange}
+              type='password'
+              autoComplete='new-password'
+              value={inputs.LarkClientSecret}
+              placeholder='敏感信息不会发送到前端显示'
             />
           </Form.Group>
-          <Form.Button onClick={submitWeChat}>
-            Save WeChat Server Settings
+          <Form.Button onClick={submitLarkOAuth}>
+            保存飞书 OAuth 设置
           </Form.Button>
           <Divider />
           <Header as='h3'>
-            Configure Message Pusher
+            配置 WeChat Server
             <Header.Subheader>
-              Used to push alarm messages,
+              用以支持通过微信进行登录注册，
               <a
-                href='https://github.com/songquanpeng/message-pusher'
+                href='https://github.com/songquanpeng/wechat-server'
                 target='_blank'
               >
-                Click here
+                点击此处
               </a>
-              to learn about Message Pusher
+              了解 WeChat Server
             </Header.Subheader>
           </Header>
           <Form.Group widths={3}>
             <Form.Input
-              label='Message Pusher Push Address'
+              label='WeChat Server 服务器地址'
+              name='WeChatServerAddress'
+              placeholder='例如：https://yourdomain.com'
+              onChange={handleInputChange}
+              autoComplete='new-password'
+              value={inputs.WeChatServerAddress}
+            />
+            <Form.Input
+              label='WeChat Server 访问凭证'
+              name='WeChatServerToken'
+              type='password'
+              onChange={handleInputChange}
+              autoComplete='new-password'
+              value={inputs.WeChatServerToken}
+              placeholder='敏感信息不会发送到前端显示'
+            />
+            <Form.Input
+              label='微信公众号二维码图片链接'
+              name='WeChatAccountQRCodeImageURL'
+              onChange={handleInputChange}
+              autoComplete='new-password'
+              value={inputs.WeChatAccountQRCodeImageURL}
+              placeholder='输入一个图片链接'
+            />
+          </Form.Group>
+          <Form.Button onClick={submitWeChat}>
+            保存 WeChat Server 设置
+          </Form.Button>
+          <Divider />
+          <Header as='h3'>
+            配置 Message Pusher
+            <Header.Subheader>
+              用以推送报警信息，
+              <a
+                href='https://github.com/songquanpeng/message-pusher'
+                target='_blank'
+              >
+                点击此处
+              </a>
+              了解 Message Pusher
+            </Header.Subheader>
+          </Header>
+          <Form.Group widths={3}>
+            <Form.Input
+              label='Message Pusher 推送地址'
               name='MessagePusherAddress'
-              placeholder='For example: https://msgpusher.com/push/your_username'
+              placeholder='例如：https://msgpusher.com/push/your_username'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.MessagePusherAddress}
             />
             <Form.Input
-              label='Message Pusher Access Token'
+              label='Message Pusher 访问凭证'
               name='MessagePusherToken'
               type='password'
               onChange={handleInputChange}
               autoComplete='new-password'
               value={inputs.MessagePusherToken}
-              placeholder='Sensitive information will not be sent to the front end for display'
+              placeholder='敏感信息不会发送到前端显示'
             />
           </Form.Group>
           <Form.Button onClick={submitMessagePusher}>
-            Save Message Pusher Settings
+            保存 Message Pusher 设置
           </Form.Button>
           <Divider />
           <Header as='h3'>
-            Configure Turnstile
+            配置 Turnstile
             <Header.Subheader>
-              Used to support user verification,
+              用以支持用户校验，
               <a href='https://dash.cloudflare.com/' target='_blank'>
-                Click here
+                点击此处
               </a>
-              to manage your Turnstile Sites, it is recommended to choose Invisible Widget Type
+              管理你的 Turnstile Sites，推荐选择 Invisible Widget Type
             </Header.Subheader>
           </Header>
           <Form.Group widths={3}>
             <Form.Input
               label='Turnstile Site Key'
-              name='TurnstileSiteKey'".onChange={handleInputChange}  // Translate: onChange={handleInputChange}
-autoComplete='new-password'  // Translate: autoComplete='new-password'
-value={inputs.TurnstileSiteKey}  // Translate: value={inputs.TurnstileSiteKey}
-placeholder='输入你注册的 Turnstile Site Key'  // Translate: placeholder='Enter your registered Turnstile Site Key'
+              name='TurnstileSiteKey'
+              onChange={handleInputChange}
+              autoComplete='new-password'
+              value={inputs.TurnstileSiteKey}
+              placeholder='输入你注册的 Turnstile Site Key'
+            />
+            <Form.Input
+              label='Turnstile Secret Key'
+              name='TurnstileSecretKey'
+              onChange={handleInputChange}
+              type='password'
+              autoComplete='new-password'
+              value={inputs.TurnstileSecretKey}
+              placeholder='敏感信息不会发送到前端显示'
+            />
+          </Form.Group>
+          <Form.Button onClick={submitTurnstile}>
+            保存 Turnstile 设置
+          </Form.Button>
+        </Form>
+      </Grid.Column>
+    </Grid>
+  );
+};
 
-label='Turnstile Secret Key'  // Translate: label='Turnstile Secret Key'
-name='TurnstileSecretKey'  // Translate: name='TurnstileSecretKey'
-onChange={handleInputChange}  // Translate: onChange={handleInputChange}
-type='password'  // Translate: type='password'
-autoComplete='new-password'  // Translate: autoComplete='new-password'
-value={inputs.TurnstileSecretKey}  // Translate: value={inputs.TurnstileSecretKey}
-placeholder='敏感信息不会发送到前端显示'  // Translate: placeholder='Sensitive information will not be sent to the front end for display'
-
-<Form.Button onClick={submitTurnstile}>  // Translate: <Form.Button onClick={submitTurnstile}>
-保存 Turnstile 设置  // Translate: Save Turnstile settings
+export default SystemSetting;

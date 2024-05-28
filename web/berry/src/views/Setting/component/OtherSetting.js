@@ -65,7 +65,7 @@ const OtherSetting = () => {
     const { success, message } = res.data;
     if (success) {
       setInputs((inputs) => ({ ...inputs, [key]: value }));
-      showSuccess('Saved successfully');
+      showSuccess('保存成功');
     } else {
       showError(message);
     }
@@ -83,7 +83,9 @@ const OtherSetting = () => {
 
   const submitFooter = async () => {
     await updateOption('Footer', inputs.Footer);
-  };const submitSystemName = async () => {
+  };
+
+  const submitSystemName = async () => {
     await updateOption('SystemName', inputs.SystemName);
   };
 
@@ -111,7 +113,7 @@ const OtherSetting = () => {
     const res = await API.get('https://api.github.com/repos/songquanpeng/one-api/releases/latest');
     const { tag_name, body } = res.data;
     if (tag_name === process.env.REACT_APP_VERSION) {
-      showSuccess(`Current version is up to date: ${tag_name}`);
+      showSuccess(`已是最新版本：${tag_name}`);
     } else {
       setUpdateData({
         tag_name: tag_name,
@@ -124,11 +126,11 @@ const OtherSetting = () => {
   return (
     <>
       <Stack spacing={2}>
-        <SubCard title="General Settings">
+        <SubCard title="通用设置">
           <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12}>
               <Button variant="contained" onClick={checkUpdate}>
-                Check for Updates
+                检查更新
               </Button>
             </Grid>
             <Grid xs={12}>
@@ -137,99 +139,99 @@ const OtherSetting = () => {
                   multiline
                   maxRows={15}
                   id="Notice"
-                  label="Notice"
+                  label="公告"
                   value={inputs.Notice}
                   name="Notice"
                   onChange={handleInputChange}
                   minRows={10}
-                  placeholder="Enter new notice content here, supports Markdown & HTML code"
+                  placeholder="在此输入新的公告内容，支持 Markdown & HTML 代码"
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitNotice}>
-                Save Notice
+                保存公告
               </Button>
             </Grid>
           </Grid>
         </SubCard>
-        <SubCard title="Personalized Settings"><Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
+        <SubCard title="个性化设置">
+          <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
             <Grid xs={12}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="SystemName">System Name</InputLabel>
+                <InputLabel htmlFor="SystemName">系统名称</InputLabel>
                 <OutlinedInput
                   id="SystemName"
                   name="SystemName"
                   value={inputs.SystemName || ''}
                   onChange={handleInputChange}
-                  label="System Name"
-                  placeholder="Enter the system name here"
+                  label="系统名称"
+                  placeholder="在此输入系统名称"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitSystemName}>
-                Set System Name
+                设置系统名称
               </Button>
             </Grid>
             <Grid xs={12}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="Theme">Theme Name</InputLabel>
+                <InputLabel htmlFor="Theme">主题名称</InputLabel>
                 <OutlinedInput
                     id="Theme"
                     name="Theme"
                     value={inputs.Theme || ''}
                     onChange={handleInputChange}
-                    label="Theme Name"
-                    placeholder="Enter the theme name here"
+                    label="主题名称"
+                    placeholder="请输入主题名称"
                     disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitTheme}>
-                Set Theme (will take effect after restart)
+                设置主题（重启生效）
               </Button>
             </Grid>
             <Grid xs={12}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="Logo">Logo Image URL</InputLabel>
+                <InputLabel htmlFor="Logo">Logo 图片地址</InputLabel>
                 <OutlinedInput
                   id="Logo"
                   name="Logo"
                   value={inputs.Logo || ''}
                   onChange={handleInputChange}
-                  label="Logo Image URL"
-                  placeholder="Enter the logo image URL here"
+                  label="Logo 图片地址"
+                  placeholder="在此输入Logo 图片地址"
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitLogo}>
-                Set Logo
-              </Button>Instructions: Translate the following Chinese text to English 
-while maintaining the original formatting: 
-"</Grid>
+                设置 Logo
+              </Button>
+            </Grid>
             <Grid xs={12}>
               <FormControl fullWidth>
                 <TextField
                   multiline
                   maxRows={15}
                   id="HomePageContent"
-                  label="Homepage Content"
+                  label="首页内容"
                   value={inputs.HomePageContent}
                   name="HomePageContent"
                   onChange={handleInputChange}
                   minRows={10}
-                  placeholder="Enter the homepage content here, supporting Markdown & HTML code. After setting, the status information on the homepage will no longer be displayed. If a link is entered, it will be used as the src attribute of the iframe, allowing you to set any webpage as the homepage."
+                  placeholder="在此输入首页内容，支持 Markdown & HTML 代码，设置后首页的状态信息将不再显示。如果输入的是一个链接，则会使用该链接作为 iframe 的 src 属性，这允许你设置任意网页作为首页。"
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={() => submitOption('HomePageContent')}>
-                Save Homepage Content
+                保存首页内容
               </Button>
             </Grid>
             <Grid xs={12}>
@@ -238,23 +240,23 @@ while maintaining the original formatting:
                   multiline
                   maxRows={15}
                   id="About"
-                  label="About"
+                  label="关于"
                   value={inputs.About}
                   name="About"
                   onChange={handleInputChange}
                   minRows={10}
-                  placeholder="Enter new about content here, supporting Markdown & HTML code. If a link is entered, it will be used as the src attribute of the iframe, allowing you to set any webpage as the About page."
+                  placeholder="在此输入新的关于内容，支持 Markdown & HTML 代码。如果输入的是一个链接，则会使用该链接作为 iframe 的 src 属性，这允许你设置任意网页作为关于页面。"
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitAbout}>
-                Save About
+                保存关于
               </Button>
             </Grid>
             <Grid xs={12}>
               <Alert severity="warning">
-                Removing the copyright notice of One API must be authorized first. Project maintenance requires a great deal of effort. If this project is meaningful to you, please actively support it.
+                移除 One API 的版权标识必须首先获得授权，项目维护需要花费大量精力，如果本项目对你有意义，请主动支持本项目。
               </Alert>
             </Grid>
             <Grid xs={12}>
@@ -263,17 +265,18 @@ while maintaining the original formatting:
                   multiline
                   maxRows={15}
                   id="Footer"
-                  label="Footer"
+                  label="页脚"
                   value={inputs.Footer}
                   name="Footer"
                   onChange={handleInputChange}
-                  minRows={10}"."placeholder="Enter new footer here, leave blank to use default footer, supports HTML code"
+                  minRows={10}
+                  placeholder="在此输入新的页脚，留空则使用默认页脚，支持 HTML 代码"
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
               <Button variant="contained" onClick={submitFooter}>
-                Set Footer
+                设置页脚
               </Button>
             </Grid>
           </Grid>
@@ -281,7 +284,7 @@ while maintaining the original formatting:
       </Stack>
       <Dialog open={showUpdateModal} onClose={() => setShowUpdateModal(false)} fullWidth maxWidth={'md'}>
         <DialogTitle sx={{ margin: '0px', fontWeight: 700, lineHeight: '1.55556', padding: '24px', fontSize: '1.125rem' }}>
-          New Version: {updateData.tag_name}
+          新版本：{updateData.tag_name}
         </DialogTitle>
         <Divider />
         <DialogContent>
@@ -289,14 +292,14 @@ while maintaining the original formatting:
           <div dangerouslySetInnerHTML={{ __html: updateData.content }}></div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowUpdateModal(false)}>Close</Button>
+          <Button onClick={() => setShowUpdateModal(false)}>关闭</Button>
           <Button
             onClick={async () => {
               setShowUpdateModal(false);
               openGitHubRelease();
             }}
           >
-            View on GitHub
+            去GitHub查看
           </Button>
         </DialogActions>
       </Dialog>
@@ -304,4 +307,4 @@ while maintaining the original formatting:
   );
 };
 
-export default OtherSetting;"
+export default OtherSetting;

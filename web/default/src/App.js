@@ -46,170 +46,257 @@ function App() {
     if (success) {
       localStorage.setItem('status', JSON.stringify(data));
       statusDispatch({ type: 'set', payload: data });
-    }- Update local storage with system information such as system name, logo, footer HTML, quota per unit, and display in currency. If chat link data is provided, set it in local storage; otherwise, remove it.
-- If the API version is different from the React app version and both are not empty, show a notification with the new version information.
-- If there is an error connecting to the server, show an error message.
-- In the `useEffect` hook, load user and status information. Update the document title with the system name, and set the favicon with the logo if available.
-- Define routes for different paths like homepage, channel, token, and their respective components like Home, Channel, EditChannel, and Token. Use Suspense with Loading component for async loading. Use PrivateRoute for restricted access.<Route
-    path='/token/add'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <EditToken />
-      </Suspense>
+      localStorage.setItem('system_name', data.system_name);
+      localStorage.setItem('logo', data.logo);
+      localStorage.setItem('footer_html', data.footer_html);
+      localStorage.setItem('quota_per_unit', data.quota_per_unit);
+      localStorage.setItem('display_in_currency', data.display_in_currency);
+      if (data.chat_link) {
+        localStorage.setItem('chat_link', data.chat_link);
+      } else {
+        localStorage.removeItem('chat_link');
+      }
+      if (
+        data.version !== process.env.REACT_APP_VERSION &&
+        data.version !== 'v0.0.0' &&
+        process.env.REACT_APP_VERSION !== ''
+      ) {
+        showNotice(
+          `新版本可用：${data.version}，请使用快捷键 Shift + F5 刷新页面`
+        );
+      }
+    } else {
+      showError('无法正常连接至服务器！');
     }
-  />
-  <Route
-    path='/redemption'
-    element={
-      <PrivateRoute>
-        <Redemption />
-      </PrivateRoute>
+  };
+
+  useEffect(() => {
+    loadUser();
+    loadStatus().then();
+    let systemName = getSystemName();
+    if (systemName) {
+      document.title = systemName;
     }
-  />
-  <Route
-    path='/redemption/edit/:id'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <EditRedemption />
-      </Suspense>
+    let logo = getLogo();
+    if (logo) {
+      let linkElement = document.querySelector("link[rel~='icon']");
+      if (linkElement) {
+        linkElement.href = logo;
+      }
     }
-  />
-  <Route
-    path='/redemption/add'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <EditRedemption />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/user'
-    element={
-      <PrivateRoute>
-        <User />
-      </PrivateRoute>
-    }
-  />
-  <Route
-    path='/user/edit/:id'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <EditUser />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/user/edit'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <EditUser />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/user/add'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <AddUser />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/user/reset'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <PasswordResetConfirm />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/login'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <LoginForm />
-      </Suspense>
-    }
-  />
-  <Route
-    path='/register'
-    element={
-      <Suspense fallback={<Loading></Loading>}>
-        <RegisterForm />
-      </Suspense>
-    }
-  />
-  <RouteInstructions: Translate the following Chinese text to English while maintaining the original formatting: "路径='/reset'
-        元素={
-          <悬念 fallback={<Loading></Loading>}>
-            <密码重置表单 />
-          </悬念>
+  }, []);
+
+  return (
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <Home />
+          </Suspense>
         }
       />
-      <路由
-        路径='/oauth/github'
-        元素={
-          <悬念 fallback={<Loading></Loading>}>
-            <GitHub认证 />
-          </悬念>
+      <Route
+        path='/channel'
+        element={
+          <PrivateRoute>
+            <Channel />
+          </PrivateRoute>
         }
       />
-      <路由
-        路径='/oauth/lark'
-        元素={
-          <悬念 fallback={<Loading></Loading>}>
-            <Lark认证 />
-          </悬念>
+      <Route
+        path='/channel/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditChannel />
+          </Suspense>
         }
       />
-      <路由
-        路径='/设置'
-        元素={
-          <私人路由>
-            <悬念 fallback={<Loading></Loading>}>
-              <设置 />
-            </悬念>
-          </私人路由>
+      <Route
+        path='/channel/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditChannel />
+          </Suspense>
         }
       />
-      <路由
-        路径='/充值'
-        元素={
-        <私人路由>
-          <悬念 fallback={<Loading></Loading>}>
-            <充值 />
-          </悬念>
-        </私人路由>
+      <Route
+        path='/token'
+        element={
+          <PrivateRoute>
+            <Token />
+          </PrivateRoute>
         }
       />
-      <路由
-        路径='/日志'
-        元素={
-          <私人路由>
-            <日志 />
-          </私人路由>
+      <Route
+        path='/token/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditToken />
+          </Suspense>
         }
       />
-      <路由
-        路径='/关于'
-        元素={
-          <悬念 fallback={<Loading></Loading>}>
-            <关于 />
-          </悬念>
+      <Route
+        path='/token/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditToken />
+          </Suspense>
         }
       />
-      <路由
-        路径='/聊天'
-        元素={
-          <悬念 fallback={<Loading></Loading>}>
-            <聊天 />
-          </悬念>
+      <Route
+        path='/redemption'
+        element={
+          <PrivateRoute>
+            <Redemption />
+          </PrivateRoute>
         }
       />
-      <路由 路径='*' 元素={
-          <未找到 />
+      <Route
+        path='/redemption/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditRedemption />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/redemption/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditRedemption />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/user'
+        element={
+          <PrivateRoute>
+            <User />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/user/edit/:id'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditUser />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/user/edit'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <EditUser />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/user/add'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <AddUser />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/user/reset'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <PasswordResetConfirm />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/login'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <LoginForm />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/register'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <RegisterForm />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/reset'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <PasswordResetForm />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/oauth/github'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <GitHubOAuth />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/oauth/lark'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <LarkOAuth />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/setting'
+        element={
+          <PrivateRoute>
+            <Suspense fallback={<Loading></Loading>}>
+              <Setting />
+            </Suspense>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/topup'
+        element={
+        <PrivateRoute>
+          <Suspense fallback={<Loading></Loading>}>
+            <TopUp />
+          </Suspense>
+        </PrivateRoute>
+        }
+      />
+      <Route
+        path='/log'
+        element={
+          <PrivateRoute>
+            <Log />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path='/about'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <About />
+          </Suspense>
+        }
+      />
+      <Route
+        path='/chat'
+        element={
+          <Suspense fallback={<Loading></Loading>}>
+            <Chat />
+          </Suspense>
+        }
+      />
+      <Route path='*' element={
+          <NotFound />
       } />
-    </路由>
+    </Routes>
   );
 }
 
-导出 默认 App;"
+export default App;

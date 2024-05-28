@@ -1,4 +1,3 @@
-// Importing necessary libraries and components
 import { useState, useEffect } from 'react';
 import { showError, showSuccess } from 'utils/common';
 
@@ -21,9 +20,7 @@ import { IconRefresh, IconPlus } from '@tabler/icons-react';
 import EditeModal from './component/EditModal';
 
 // ----------------------------------------------------------------------
-// Function component for Users
 export default function Users() {
-  // State variables initialization
   const [users, setUsers] = useState([]);
   const [activePage, setActivePage] = useState(0);
   const [searching, setSearching] = useState(false);
@@ -31,7 +28,6 @@ export default function Users() {
   const [openModal, setOpenModal] = useState(false);
   const [editUserId, setEditUserId] = useState(0);
 
-  // Function to load users data
   const loadUsers = async (startIdx) => {
     setSearching(true);
     const res = await API.get(`/api/user/?p=${startIdx}`);
@@ -50,14 +46,10 @@ export default function Users() {
     setSearching(false);
   };
 
-  // Function to handle pagination change
   const onPaginationChange = (event, activePage) => {
     (async () => {
       if (activePage === Math.ceil(users.length / ITEMS_PER_PAGE)) {
-      // More code can be added here
-    }
-  };
-}// In this case we have to load more data and then append them.
+        // In this case we have to load more data and then append them.
         await loadUsers(activePage);
       }
       setActivePage(activePage);
@@ -106,7 +98,7 @@ export default function Users() {
     res = await API.post(url, data);
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Successful operation!');
+      showSuccess('操作成功完成！');
       await loadUsers(activePage);
     } else {
       showError(message);
@@ -115,7 +107,7 @@ export default function Users() {
     return res.data;
   };
 
-  // Handle refresh
+  // 处理刷新
   const handleRefresh = async () => {
     await loadUsers(activePage);
   };
@@ -147,10 +139,11 @@ export default function Users() {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2.5}>".<Typography variant="h4">Users</Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2.5}>
+        <Typography variant="h4">用户</Typography>
 
         <Button variant="contained" color="primary" startIcon={<IconPlus />} onClick={() => handleOpenModal(0)}>
-          Create a User
+          新建用户
         </Button>
       </Stack>
       <Card>
@@ -158,7 +151,7 @@ export default function Users() {
           <TableToolBar
             filterName={searchKeyword}
             handleFilterName={handleSearchKeyword}
-            placeholder={'Search for User ID, Username, Display Name, and Email Address...'}
+            placeholder={'搜索用户的ID，用户名，显示名称，以及邮箱地址...'}
           />
         </Box>
         <Toolbar
@@ -173,7 +166,7 @@ export default function Users() {
           <Container>
             <ButtonGroup variant="outlined" aria-label="outlined small primary button group" sx={{marginBottom: 2}}>
               <Button onClick={handleRefresh} startIcon={<IconRefresh width={'18px'} />}>
-                Refresh
+                刷新
               </Button>
             </ButtonGroup>
           </Container>
@@ -201,10 +194,12 @@ export default function Users() {
           page={activePage}
           component="div"
           count={users.length + (users.length % ITEMS_PER_PAGE === 0 ? 1 : 0)}
-          rowsPerPage={ITEMS_PER_PAGE}"onPageChange={onPaginationChange} 
+          rowsPerPage={ITEMS_PER_PAGE}
+          onPageChange={onPaginationChange}
           rowsPerPageOptions={[ITEMS_PER_PAGE]}
         />
       </Card>
       <EditeModal open={openModal} onCancel={handleCloseModal} onOk={handleOkModal} userId={editUserId} />
     </>
   );
+}

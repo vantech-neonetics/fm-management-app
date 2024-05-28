@@ -17,19 +17,140 @@ import TableToolBar from 'ui-component/TableToolBar';
 import { API } from 'utils/api';
 import { ITEMS_PER_PAGE } from 'constants';
 import { IconRefresh, IconPlus } from '@tabler/icons-react';
-import EditModal from './component/EditModal';// Handle refresh```jsx
-return (
+import EditeModal from './component/EditModal';
+
+// ----------------------------------------------------------------------
+export default function Redemption() {
+  const [redemptions, setRedemptions] = useState([]);
+  const [activePage, setActivePage] = useState(0);
+  const [searching, setSearching] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [openModal, setOpenModal] = useState(false);
+  const [editRedemptionId, setEditRedemptionId] = useState(0);
+
+  const loadRedemptions = async (startIdx) => {
+    setSearching(true);
+    const res = await API.get(`/api/redemption/?p=${startIdx}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      if (startIdx === 0) {
+        setRedemptions(data);
+      } else {
+        let newRedemptions = [...redemptions];
+        newRedemptions.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);
+        setRedemptions(newRedemptions);
+      }
+    } else {
+      showError(message);
+    }
+    setSearching(false);
+  };
+
+  const onPaginationChange = (event, activePage) => {
+    (async () => {
+      if (activePage === Math.ceil(redemptions.length / ITEMS_PER_PAGE)) {
+        // In this case we have to load more data and then append them.
+        await loadRedemptions(activePage);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const searchRedemptions = async (event) => {
+    event.preventDefault();
+    if (searchKeyword === '') {
+      await loadRedemptions(0);
+      setActivePage(0);
+      return;
+    }
+    setSearching(true);
+    const res = await API.get(`/api/redemption/search?keyword=${searchKeyword}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      setRedemptions(data);
+      setActivePage(0);
+    } else {
+      showError(message);
+    }
+    setSearching(false);
+  };
+
+  const handleSearchKeyword = (event) => {
+    setSearchKeyword(event.target.value);
+  };
+
+  const manageRedemptions = async (id, action, value) => {
+    const url = '/api/redemption/';
+    let data = { id };
+    let res;
+    switch (action) {
+      case 'delete':
+        res = await API.delete(url + id);
+        break;
+      case 'status':
+        res = await API.put(url + '?status_only=true', {
+          ...data,
+          status: value
+        });
+        break;
+    }
+    const { success, message } = res.data;
+    if (success) {
+      showSuccess('操作成功完成！');
+      if (action === 'delete') {
+        await loadRedemptions(0);
+      }
+    } else {
+      showError(message);
+    }
+
+    return res.data;
+  };
+
+  // 处理刷新
+  const handleRefresh = async () => {
+    await loadRedemptions(0);
+    setActivePage(0);
+    setSearchKeyword('');
+  };
+
+  const handleOpenModal = (redemptionId) => {
+    setEditRedemptionId(redemptionId);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setEditRedemptionId(0);
+  };
+
+  const handleOkModal = (status) => {
+    if (status === true) {
+      handleCloseModal();
+      handleRefresh();
+    }
+  };
+
+  useEffect(() => {
+    loadRedemptions(0)
+      .then()
+      .catch((reason) => {
+        showError(reason);
+      });
+  }, []);
+
+  return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2.5}>
-        <Typography variant="h4">Redemption</Typography>
+        <Typography variant="h4">兑换</Typography>
 
         <Button variant="contained" color="primary" startIcon={<IconPlus />} onClick={() => handleOpenModal(0)}>
-          Create Redemption Code
+          新建兑换码
         </Button>
       </Stack>
       <Card>
         <Box component="form" onSubmit={searchRedemptions} noValidate sx={{marginTop: 2}}>
-          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'Search for ID and name of redemption code...'} />
+          <TableToolBar filterName={searchKeyword} handleFilterName={handleSearchKeyword} placeholder={'搜索兑换码的ID和名称...'} />
         </Box>
         <Toolbar
           sx={{
@@ -43,7 +164,7 @@ return (
           <Container>
             <ButtonGroup variant="outlined" aria-label="outlined small primary button group" sx={{marginBottom: 2}}>
               <Button onClick={handleRefresh} startIcon={<IconRefresh width={'18px'} />}>
-                Refresh
+                刷新
               </Button>
             </ButtonGroup>
           </Container>
@@ -70,8 +191,7 @@ return (
         <TablePagination
           page={activePage}
           component="div"
-```Translated content:
-"count={redemptions.length + (redemptions.length % ITEMS_PER_PAGE === 0 ? 1 : 0)}
+          count={redemptions.length + (redemptions.length % ITEMS_PER_PAGE === 0 ? 1 : 0)}
           rowsPerPage={ITEMS_PER_PAGE}
           onPageChange={onPaginationChange}
           rowsPerPageOptions={[ITEMS_PER_PAGE]}
@@ -80,4 +200,4 @@ return (
       <EditeModal open={openModal} onCancel={handleCloseModal} onOk={handleOkModal} redemptiondId={editRedemptionId} />
     </>
   );
-}".
+}

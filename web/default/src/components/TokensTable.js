@@ -29,15 +29,15 @@ function renderTimestamp(timestamp) {
 function renderStatus(status) {
   switch (status) {
     case 1:
-      return <Label basic color='green'>Enabled</Label>;
+      return <Label basic color='green'>已启用</Label>;
     case 2:
-      return <Label basic color='red'> Disabled </Label>;
+      return <Label basic color='red'> 已禁用 </Label>;
     case 3:
-      return <Label basic color='yellow'> Expired </Label>;
+      return <Label basic color='yellow'> 已过期 </Label>;
     case 4:
-      return <Label basic color='grey'> Depleted </Label>;
+      return <Label basic color='grey'> 已耗尽 </Label>;
     default:
-      return <Label basic color='black'> Unknown Status </Label>;
+      return <Label basic color='black'> 未知状态 </Label>;
   }
 }
 
@@ -58,12 +58,81 @@ const TokensTable = () => {
       if (startIdx === 0) {
         setTokens(data);
       } else {
-        let newTokens = [...tokens];```jsx
-// In this case we have to load more data and then append them.
-    showSuccess('已复制到剪贴板！');
-    showWarning('无法复制到剪贴板，请手动复制，已将令牌填入搜索框。');
-``````javascript
-if (serverAddress === '') {
+        let newTokens = [...tokens];
+        newTokens.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);
+        setTokens(newTokens);
+      }
+    } else {
+      showError(message);
+    }
+    setLoading(false);
+  };
+
+  const onPaginationChange = (e, { activePage }) => {
+    (async () => {
+      if (activePage === Math.ceil(tokens.length / ITEMS_PER_PAGE) + 1) {
+        // In this case we have to load more data and then append them.
+        await loadTokens(activePage - 1, orderBy);
+      }
+      setActivePage(activePage);
+    })();
+  };
+
+  const refresh = async () => {
+    setLoading(true);
+    await loadTokens(activePage - 1);
+  };
+
+  const onCopy = async (type, key) => {
+    let status = localStorage.getItem('status');
+    let serverAddress = '';
+    if (status) {
+      status = JSON.parse(status);
+      serverAddress = status.server_address;
+    }
+    if (serverAddress === '') {
+      serverAddress = window.location.origin;
+    }
+    let encodedServerAddress = encodeURIComponent(serverAddress);
+    const nextLink = localStorage.getItem('chat_link');
+    let nextUrl;
+  
+    if (nextLink) {
+      nextUrl = nextLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    } else {
+      nextUrl = `https://app.nextchat.dev/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    }
+
+    let url;
+    switch (type) {
+      case 'ama':
+        url = `ama://set-api-key?server=${encodedServerAddress}&key=sk-${key}`;
+        break;
+      case 'opencat':
+        url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
+        break;
+      case 'next':
+        url = nextUrl;
+        break;
+      default:
+        url = `sk-${key}`;
+    }
+    if (await copy(url)) {
+      showSuccess('已复制到剪贴板！');
+    } else {
+      showWarning('无法复制到剪贴板，请手动复制，已将令牌填入搜索框。');
+      setSearchKeyword(url);
+    }
+  };
+
+  const onOpenLink = async (type, key) => {
+    let status = localStorage.getItem('status');
+    let serverAddress = '';
+    if (status) {
+      status = JSON.parse(status);
+      serverAddress = status.server_address; 
+    }
+    if (serverAddress === '') {
       serverAddress = window.location.origin;
     }
     let encodedServerAddress = encodeURIComponent(serverAddress);
@@ -118,7 +187,7 @@ if (serverAddress === '') {
     }
     const { success, message } = res.data;
     if (success) {
-      showSuccess('Operation completed successfully!');
+      showSuccess('操作成功完成！');
       let token = res.data.data;
       let newTokens = [...tokens];
       let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
@@ -137,95 +206,147 @@ if (serverAddress === '') {
     if (searchKeyword === '') {
       // if keyword is blank, load files instead.
       await loadTokens(0);
-``````javascript
-setActivePage(1);
-setOrderBy('');
-return;
-}
-setSearching(true);
-const res = await API.get(`/api/token/search?keyword=${searchKeyword}`);
-const { success, message, data } = res.data;
-if (success) {
-  setTokens(data);
-  setActivePage(1);
-} else {
-  showError(message);
-}
-setSearching(false);
-};
-
-const handleKeywordChange = async (e, { value }) => {
-  setSearchKeyword(value.trim());
-};
-
-const sortToken = (key) => {
-  if (tokens.length === 0) return;
-  setLoading(true);
-  let sortedTokens = [...tokens];
-  sortedTokens.sort((a, b) => {
-    if (!isNaN(a[key])) {
-      // If the value is numeric, subtract to sort
-      return a[key] - b[key];
-    } else {
-      // If the value is not numeric, sort as strings
-      return ('' + a[key]).localeCompare(b[key]);
+      setActivePage(1);
+      setOrderBy('');
+      return;
     }
-  });
-  if (sortedTokens[0].id === tokens[0].id) {
-    sortedTokens.reverse();
-  }
-  setTokens(sortedTokens);
-  setLoading(false);
-};
+    setSearching(true);
+    const res = await API.get(`/api/token/search?keyword=${searchKeyword}`);
+    const { success, message, data } = res.data;
+    if (success) {
+      setTokens(data);
+      setActivePage(1);
+    } else {
+      showError(message);
+    }
+    setSearching(false);
+  };
 
-const handleOrderByChange = (e, { value }) => {
-  setOrderBy(value);
-  setActivePage(1);
-};
+  const handleKeywordChange = async (e, { value }) => {
+    setSearchKeyword(value.trim());
+  };
 
-return (
-  <>
-    <Form onSubmit={searchTokens}>
-      <Form.Input
-        icon='search'
-        fluid
-        iconPosition='left'
-        placeholder='Search for token name ...'
-        value={searchKeyword}
-        loading={searching}
-        onChange={handleKeywordChange}
-      />
-    </Form>
+  const sortToken = (key) => {
+    if (tokens.length === 0) return;
+    setLoading(true);
+    let sortedTokens = [...tokens];
+    sortedTokens.sort((a, b) => {
+      if (!isNaN(a[key])) {
+        // If the value is numeric, subtract to sort
+        return a[key] - b[key];
+      } else {
+        // If the value is not numeric, sort as strings
+        return ('' + a[key]).localeCompare(b[key]);
+      }
+    });
+    if (sortedTokens[0].id === tokens[0].id) {
+      sortedTokens.reverse();
+    }
+    setTokens(sortedTokens);
+    setLoading(false);
+  };
 
-    <Table basic compact size='small'>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              sortToken('name');
-            }}
-          >
-            Name
-          </Table.HeaderCell>
-          <Table.HeaderCell
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              sortToken('status');
-            }}
-          >
-            Status
-          </Table.HeaderCell>
-          <Table.HeaderCell
-            style={{ cursor: 'pointer' }}```Expire Time
-Remaining Quota
-Creation Time
-Used Quota
-ActiononClick={async () => {
+  const handleOrderByChange = (e, { value }) => {
+    setOrderBy(value);
+    setActivePage(1);
+  };
+
+  return (
+    <>
+      <Form onSubmit={searchTokens}>
+        <Form.Input
+          icon='search'
+          fluid
+          iconPosition='left'
+          placeholder='搜索令牌的名称 ...'
+          value={searchKeyword}
+          loading={searching}
+          onChange={handleKeywordChange}
+        />
+      </Form>
+
+      <Table basic compact size='small'>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('name');
+              }}
+            >
+              名称
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('status');
+              }}
+            >
+              状态
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('used_quota');
+              }}
+            >
+              已用额度
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('remain_quota');
+              }}
+            >
+              剩余额度
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('created_time');
+              }}
+            >
+              创建时间
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                sortToken('expired_time');
+              }}
+            >
+              过期时间
+            </Table.HeaderCell>
+            <Table.HeaderCell>操作</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+
+        <Table.Body>
+          {tokens
+            .slice(
+              (activePage - 1) * ITEMS_PER_PAGE,
+              activePage * ITEMS_PER_PAGE
+            )
+            .map((token, idx) => {
+              if (token.deleted) return <></>;
+              return (
+                <Table.Row key={token.id}>
+                  <Table.Cell>{token.name ? token.name : '无'}</Table.Cell>
+                  <Table.Cell>{renderStatus(token.status)}</Table.Cell>
+                  <Table.Cell>{renderQuota(token.used_quota)}</Table.Cell>
+                  <Table.Cell>{token.unlimited_quota ? '无限制' : renderQuota(token.remain_quota, 2)}</Table.Cell>
+                  <Table.Cell>{renderTimestamp(token.created_time)}</Table.Cell>
+                  <Table.Cell>{token.expired_time === -1 ? '永不过期' : renderTimestamp(token.expired_time)}</Table.Cell>
+                  <Table.Cell>
+                    <div>
+                    <Button.Group color='green' size={'small'}>
+                        <Button
+                          size={'small'}
+                          positive
+                          onClick={async () => {
                             await onCopy('', token.key);
                           }}
                         >
-                          Copy
+                          复制
                         </Button>
                         <Dropdown
                           className='button icon'
@@ -247,7 +368,7 @@ ActiononClick={async () => {
                             onClick={() => {     
                               onOpenLink('', token.key);       
                             }}>
-                            Chat
+                            聊天
                           </Button>
                           <Dropdown   
                             className="button icon"       
@@ -265,11 +386,12 @@ ActiononClick={async () => {
                       <Popup
                         trigger={
                           <Button size='small' negative>
-                            Delete
+                            删除
                           </Button>
                         }
                         on='click'
-                        flowinghoverable
+                        flowing
+                        hoverable
                       >
                         <Button
                           negative
@@ -277,7 +399,7 @@ ActiononClick={async () => {
                             manageToken(token.id, 'delete', idx);
                           }}
                         >
-                          Delete Token {token.name}
+                          删除令牌 {token.name}
                         </Button>
                       </Popup>
                       <Button
@@ -290,14 +412,14 @@ ActiononClick={async () => {
                           );
                         }}
                       >
-                        {token.status === 1 ? 'Disable' : 'Enable'}
+                        {token.status === 1 ? '禁用' : '启用'}
                       </Button>
                       <Button
                         size={'small'}
                         as={Link}
                         to={'/token/edit/' + token.id}
                       >
-                        Edit
+                        编辑
                       </Button>
                     </div>
                   </Table.Cell>
@@ -310,24 +432,22 @@ ActiononClick={async () => {
           <Table.Row>
             <Table.HeaderCell colSpan='7'>
               <Button size='small' as={Link} to='/token/add' loading={loading}>
-                Add New Token
+                添加新的令牌
               </Button>
-              <Button size='small' onClick={refresh} loading={loading}>Refresh</Button>
+              <Button size='small' onClick={refresh} loading={loading}>刷新</Button>
               <Dropdown
-                placeholder='Sort method'
+                placeholder='排序方式'
                 selection
                 options={[
-                  { key: '', text: 'Default sorting', value: '' },
-                  { key: 'remain_quota', text: 'Sort by remaining quota', value: 'remain_quota' },
-                  { key: 'used_quota', text: 'Sort by used quota', value: 'used_quota' },
+                  { key: '', text: '默认排序', value: '' },
+                  { key: 'remain_quota', text: '按剩余额度排序', value: 'remain_quota' },
+                  { key: 'used_quota', text: '按已用额度排序', value: 'used_quota' },
                 ]}
                 value={orderBy}
                 onChange={handleOrderByChange}
                 style={{ marginLeft: '10px' }}
-              />"TokensTable.js
-
-```javascript
-            <Pagination
+              />
+              <Pagination
                 floated='right'
                 activePage={activePage}
                 onPageChange={onPaginationChange}
@@ -337,4 +457,13 @@ ActiononClick={async () => {
                   Math.ceil(tokens.length / ITEMS_PER_PAGE) +
                   (tokens.length % ITEMS_PER_PAGE === 0 ? 1 : 0)
                 }
-```
+              />
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
+    </>
+  );
+};
+
+export default TokensTable;

@@ -42,7 +42,7 @@ const ForgetPasswordForm = ({ ...others }) => {
     setDisableButton(true);
     setSubmitting(true);
     if (turnstileEnabled && turnstileToken === "") {
-      showInfo("Please wait a few seconds and try again, Turnstile is checking the user environment!");
+      showInfo("请稍后几秒重试，Turnstile 正在检查用户环境！");
       setSubmitting(false);
       return;
     }
@@ -51,7 +51,7 @@ const ForgetPasswordForm = ({ ...others }) => {
     );
     const { success, message } = res.data;
     if (success) {
-      showSuccess("Reset email sent successfully, please check your email!");
+      showSuccess("重置邮件发送成功，请检查邮箱！");
       setSendEmail(true);
     } else {
       showError(message);
@@ -67,7 +67,8 @@ const ForgetPasswordForm = ({ ...others }) => {
       countdownInterval = setInterval(() => {
         setCountdown(countdown - 1);
       }, 1000);
-    } else if (countdown === 0) {""setDisableButton(false);
+    } else if (countdown === 0) {
+      setDisableButton(false);
       setCountdown(30);
     }
     return () => clearInterval(countdownInterval);
@@ -84,7 +85,7 @@ const ForgetPasswordForm = ({ ...others }) => {
     <>
       {sendEmail ? (
         <Typography variant="h3" padding={"20px"}>
-          Reset email sent successfully, please check your inbox!
+          重置邮件发送成功，请检查邮箱！
         </Typography>
       ) : (
         <Formik
@@ -93,9 +94,9 @@ const ForgetPasswordForm = ({ ...others }) => {
           }}
           validationSchema={Yup.object().shape({
             email: Yup.string()
-              .email("Must be a valid email address")
+              .email("必须是有效的Email地址")
               .max(255)
-              .required("Email is required"),
+              .required("Email是必填项"),
           })}
           onSubmit={submit}
         >
@@ -136,7 +137,8 @@ const ForgetPasswordForm = ({ ...others }) => {
                 )}
               </FormControl>
 
-              {turnstileEnabled ? ("<Turnstile
+              {turnstileEnabled ? (
+                <Turnstile
                   sitekey={turnstileSiteKey}
                   onVerify={(token) => {
                     setTurnstileToken(token);
@@ -157,7 +159,7 @@ const ForgetPasswordForm = ({ ...others }) => {
                     variant="contained"
                     color="primary"
                   >
-                    {disableButton ? `Retry (${countdown})` : "Submit"}
+                    {disableButton ? `重试 (${countdown})` : "提交"}
                   </Button>
                 </AnimateButton>
               </Box>

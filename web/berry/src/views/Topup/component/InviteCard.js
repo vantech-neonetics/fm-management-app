@@ -4,7 +4,7 @@ import SubCard from 'ui-component/cards/SubCard';
 import inviteImage from 'assets/images/invite/cwok_casual_19.webp';
 import { useState } from 'react';
 import { API } from 'utils/api';
-import { showError, showSuccess } from 'utils/common';
+import { showError, copy } from 'utils/common';
 
 const InviteCard = () => {
   const theme = useTheme();
@@ -12,8 +12,7 @@ const InviteCard = () => {
 
   const handleInviteUrl = async () => {
     if (inviteUl) {
-      navigator.clipboard.writeText(inviteUl);
-      showSuccess(`Invitation link copied to clipboard`);
+      copy(inviteUl, '邀请链接');
       return;
     }
     const res = await API.get('/api/user/aff');
@@ -21,8 +20,7 @@ const InviteCard = () => {
     if (success) {
       let link = `${window.location.origin}/register?aff=${data}`;
       setInviteUrl(link);
-      navigator.clipboard.writeText(link);
-      showSuccess(`Invitation link copied to clipboard`);
+      copy(link, '邀请链接');
     } else {
       showError(message);
     }
@@ -48,30 +46,23 @@ const InviteCard = () => {
       >
         <Stack justifyContent="center" alignItems={'center'} spacing={3}>
           <Typography variant="h3" sx={{ color: theme.palette.primary.dark }}>
-            Invite Rewards
+            邀请奖励
           </Typography>
           <Typography variant="body" sx={{ color: theme.palette.primary.dark }}>
-            Share your invitation link, invite friends to register, and get rewards!
+            分享您的邀请链接，邀请好友注册，即可获得奖励！
           </Typography>
 
           <OutlinedInput
             id="invite-url"
-            label="Invitation Link"
+            label="邀请链接"
             type="text"
             value={inviteUl}
             name="invite-url"
-          />
-       </Stack>
-     </SubCard>
-   </Box>
-  );
-};
-
-export default InviteCard;"placeholder="Click to generate invitation link"
+            placeholder="点击生成邀请链接"
             endAdornment={
               <InputAdornment position="end">
                 <Button variant="contained" onClick={handleInviteUrl}>
-                  {inviteUl ? 'Copy' : 'Generate'}
+                  {inviteUl ? '复制' : '生成'}
                 </Button>
               </InputAdornment>
             }
@@ -84,4 +75,4 @@ export default InviteCard;"placeholder="Click to generate invitation link"
   );
 };
 
-export default InviteCard;".
+export default InviteCard;
